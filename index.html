@@ -345,6 +345,287 @@ body.card-lg .card .s{font-size:18px}
 body.card-lg .card.sm{width:38px;height:54px;border-radius:6px}
 body.card-lg .card.sm .r{font-size:13px}
 body.card-lg .card.sm .s{font-size:14px}
+
+/* ============ BIDDING HINT PANEL ============ */
+#hint-panel{display:none;margin-top:12px;padding:14px 16px;
+  background:rgba(255,193,7,.08);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,193,7,.2);border-radius:12px;
+  font-size:12px;line-height:1.6;color:rgba(255,255,255,.9);
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s ease,padding .3s ease,padding-bottom .3s ease}
+#hint-panel.show{display:block;max-height:600px;opacity:1;
+  animation:hintSlideIn .4s cubic-bezier(.4,0,.2,1)}
+@keyframes hintSlideIn{from{max-height:0;opacity:0}to{max-height:600px;opacity:1}}
+#hint-panel .hint-title{font-weight:700;font-size:13px;color:#ffd54f;margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:center}
+#hint-panel .hint-rec{background:rgba(255,193,7,.15);padding:8px 12px;border-radius:8px;
+  border:1px solid rgba(255,193,7,.25);margin-bottom:8px}
+#hint-panel .hint-rec .bid-name{font-size:16px;font-weight:800;color:#ffd54f}
+#hint-panel .hint-rec .bid-why{font-size:11px;color:rgba(255,255,255,.7);margin-top:3px}
+#hint-panel .hint-alt{margin:4px 0}
+#hint-panel .hint-alt-title{font-size:11px;color:rgba(255,255,255,.5);font-weight:600;margin-bottom:3px}
+#hint-panel .hint-alt-item{display:inline-block;padding:3px 10px;margin:2px 4px 2px 0;
+  border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);
+  font-size:11px}
+#hint-panel .hint-tip{margin-top:8px;padding:8px 12px;
+  background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.2);
+  border-radius:8px;font-size:11px;color:#81c784}
+#hint-panel .hint-tip::before{content:'💡 ';font-size:12px}
+#btn-hint-toggle{display:block;margin:8px auto 0;padding:5px 16px;border:none;border-radius:8px;
+  cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;
+  background:linear-gradient(135deg,#f9a825,#f57f17);color:#fff;
+  transition:all .2s ease;box-shadow:0 2px 8px rgba(249,168,37,.3)}
+#btn-hint-toggle:hover{background:linear-gradient(135deg,#fdd835,#f9a825);
+  box-shadow:0 4px 12px rgba(249,168,37,.4);transform:translateY(-1px)}
+#btn-hint-toggle.hidden-hint{background:linear-gradient(135deg,#616161,#424242)}
+
+@media(max-width:768px){
+  #hint-panel{padding:10px 12px;font-size:11px}
+  #hint-panel .hint-rec .bid-name{font-size:14px}
+}
+
+/* ============ TUTORIAL PANEL ============ */
+#tutorial-overlay{display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:280}
+#tutorial-overlay.show{display:block}
+#tutorial-panel{position:fixed;top:0;right:0;width:480px;height:100vh;
+  background:rgba(10,20,10,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-left:1px solid rgba(255,193,7,.15);z-index:290;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  box-shadow:-8px 0 32px rgba(0,0,0,.5)}
+#tutorial-panel.open{transform:translateX(0)}
+#tutorial-panel .tut-header{display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid rgba(255,193,7,.1);flex-shrink:0}
+#tutorial-panel .tut-header h3{font-size:17px;font-weight:700;color:#ffd54f;letter-spacing:.5px}
+#tutorial-panel .tut-header button{background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+#tutorial-panel .tut-header button:hover{background:rgba(255,255,255,.1);color:#fff}
+#tutorial-panel .tut-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;overflow-x:auto}
+#tutorial-panel .tut-tab{padding:10px 16px;cursor:pointer;font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.5);border-bottom:2px solid transparent;white-space:nowrap;
+  transition:all .2s}
+#tutorial-panel .tut-tab:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.03)}
+#tutorial-panel .tut-tab.active{color:#ffd54f;border-bottom-color:#ffd54f;
+  background:rgba(255,193,7,.05)}
+#tutorial-panel .tut-body{flex:1;overflow-y:auto;padding:16px 20px;font-size:13px;
+  line-height:1.7;color:rgba(255,255,255,.85)}
+#tutorial-panel .tut-section{display:none}
+#tutorial-panel .tut-section.active{display:block}
+#tutorial-panel .tut-lesson-title{font-size:16px;font-weight:700;color:#ffd54f;margin-bottom:12px}
+#tutorial-panel .tut-text{margin-bottom:16px}
+#tutorial-panel .tut-text p{margin-bottom:8px}
+#tutorial-panel .tut-text strong{color:#ffd54f}
+#tutorial-panel .tut-example{background:rgba(255,193,7,.06);border:1px solid rgba(255,193,7,.12);
+  border-radius:10px;padding:14px 16px;margin-bottom:12px}
+#tutorial-panel .tut-example-title{font-size:12px;font-weight:700;color:#ffd54f;margin-bottom:8px}
+#tutorial-panel .tut-hand-display{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;font-size:13px}
+#tutorial-panel .tuit-suit-group{margin-right:12px}
+#tutorial-panel .tut-quiz-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#tutorial-panel .tut-quiz-btn{padding:8px 16px;border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.9);
+  transition:all .2s ease}
+#tutorial-panel .tut-quiz-btn:hover{background:rgba(255,255,255,.15);
+  border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
+#tutorial-panel .tut-quiz-btn.correct{background:rgba(76,175,80,.3);border-color:rgba(76,175,80,.5);
+  color:#81c784;pointer-events:none}
+#tutorial-panel .tut-quiz-btn.wrong{background:rgba(244,67,54,.3);border-color:rgba(244,67,54,.5);
+  color:#ef9a9a;pointer-events:none}
+#tutorial-panel .tut-feedback{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:12px;
+  line-height:1.5;display:none}
+#tutorial-panel .tut-feedback.show{display:block}
+#tutorial-panel .tut-feedback.correct-fb{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.25);color:#81c784}
+#tutorial-panel .tut-feedback.wrong-fb{background:rgba(244,67,54,.12);border:1px solid rgba(244,67,54,.25);color:#ef9a9a}
+#tutorial-panel .tut-score{margin-top:16px;padding:12px 16px;
+  background:rgba(255,193,7,.1);border:1px solid rgba(255,193,7,.2);
+  border-radius:10px;text-align:center}
+#tutorial-panel .tut-score .score-num{font-size:28px;font-weight:800;color:#ffd54f}
+#tutorial-panel .tut-score .score-label{font-size:12px;color:rgba(255,255,255,.5)}
+#tutorial-panel .tut-next-btn{display:block;margin:12px auto 0;padding:8px 24px;
+  border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;
+  background:linear-gradient(135deg,#f9a825,#f57f17);color:#fff;
+  transition:all .2s ease;box-shadow:0 2px 8px rgba(249,168,37,.3)}
+#tutorial-panel .tut-next-btn:hover{background:linear-gradient(135deg,#fdd835,#f9a825);
+  box-shadow:0 4px 12px rgba(249,168,37,.4);transform:translateY(-1px)}
+#tutorial-panel .tut-progress{display:flex;gap:4px;margin-top:12px;justify-content:center}
+#tutorial-panel .tut-progress-dot{width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,.15);transition:all .2s}
+#tutorial-panel .tut-progress-dot.done{background:#ffd54f}
+#tutorial-panel .tut-progress-dot.current{background:#f9a825;box-shadow:0 0 6px rgba(249,168,37,.5)}
+
+@media(max-width:768px){
+  #tutorial-panel{width:100vw}
+  #tutorial-panel .tut-body{padding:12px 14px;font-size:12px}
+  #tutorial-panel .tut-quiz-btn{padding:6px 12px;font-size:12px}
+}
+
+/* ============ CHEAT SHEET PANEL ============ */
+#cheat-overlay{display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:280}
+#cheat-overlay.show{display:block}
+#cheat-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(10,20,10,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,193,7,.15);border-radius:18px;padding:24px 28px;z-index:290;
+  max-width:90vw;max-height:85vh;overflow-y:auto;width:680px;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);display:none}
+#cheat-panel.show{display:block}
+#cheat-panel .cheat-header{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px}
+#cheat-panel .cheat-header h3{font-size:17px;font-weight:700;color:#ffd54f;letter-spacing:.5px}
+#cheat-panel .cheat-header button{background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+#cheat-panel .cheat-header button:hover{background:rgba(255,255,255,.1);color:#fff}
+#cheat-panel .cheat-section{margin-bottom:16px}
+#cheat-panel .cheat-section h4{font-size:14px;font-weight:700;color:#ffd54f;margin-bottom:8px;
+  padding-bottom:6px;border-bottom:1px solid rgba(255,193,7,.15)}
+#cheat-panel table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px}
+#cheat-panel th{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.5px;
+  text-transform:uppercase;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);
+  text-align:left;font-weight:600}
+#cheat-panel td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.03);
+  color:rgba(255,255,255,.85)}
+#cheat-panel tr:hover td{background:rgba(255,255,255,.03)}
+#cheat-panel .cheat-note{font-size:11px;color:rgba(255,255,255,.4);font-style:italic;margin-top:4px}
+
+@media(max-width:768px){
+  #cheat-panel{width:95vw;padding:16px 18px;max-height:90vh}
+  #cheat-panel table{font-size:11px}
+  #cheat-panel td,#cheat-panel th{padding:5px 6px}
+}
+
+/* ============ LEARNING BUTTONS IN INFO BAR ============ */
+.learn-btn{cursor:pointer;transition:all .2s;font-size:13px;padding:3px 10px;border-radius:8px;
+  background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.15);
+  color:#ffd54f;font-weight:500;user-select:none;white-space:nowrap}
+.learn-btn:hover{background:rgba(255,193,7,.25);border-color:rgba(255,193,7,.3);transform:scale(1.03)}
+
+/* ============ PRACTICE MODE ============ */
+#practice-overlay{display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#practice-overlay.show{display:flex;align-items:center;justify-content:center}
+#practice-modal{background:rgba(10,20,10,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 32px;
+  width:640px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);color:rgba(255,255,255,.9);font-size:13px;position:relative}
+#practice-modal h2{text-align:center;font-size:20px;font-weight:700;color:#ffd54f;letter-spacing:.5px;margin-bottom:16px}
+.pr-hand{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0;padding:14px;
+  background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08)}
+.pr-card{width:42px;height:60px;border-radius:6px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;font-weight:600;background:linear-gradient(135deg,#fff,#f5f5f5);color:#333;
+  box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pr-card .r{font-size:14px;font-weight:800;line-height:1}
+.pr-card .s{font-size:13px;line-height:1}
+.pr-card.red{color:#c62828}
+.pr-card.black{color:#1a1a1a}
+.pr-info{display:flex;gap:12px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+.pr-tag{padding:4px 12px;border-radius:10px;background:rgba(255,193,7,.12);
+  border:1px solid rgba(255,193,7,.2);font-size:12px;font-weight:600;color:#ffd54f}
+.pr-scenario{text-align:center;margin:14px 0;padding:14px 18px;
+  background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.2);border-radius:12px}
+.pr-scenario .ps-title{font-size:15px;font-weight:700;color:#64b5f6;margin-bottom:6px}
+.pr-scenario .ps-desc{font-size:13px;color:rgba(255,255,255,.8)}
+.pr-context{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0}
+.pr-bid-chip{padding:4px 10px;border-radius:10px;font-size:12px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.06)}
+.pr-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.pr-opt{padding:8px 18px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.9);
+  transition:all .2s ease}
+.pr-opt:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
+.pr-opt.correct{background:rgba(76,175,80,.3);border-color:rgba(76,175,80,.5);color:#81c784;
+  animation:prBounce .4s ease;pointer-events:none}
+.pr-opt.wrong{background:rgba(244,67,54,.3);border-color:rgba(244,67,54,.5);color:#ef9a9a;
+  animation:prShake .4s ease;pointer-events:none}
+.pr-opt.disabled{pointer-events:none;opacity:.5}
+.pr-opt.show-correct{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.4);color:#81c784}
+.pr-feedback{margin:12px 0;padding:12px 16px;border-radius:12px;font-size:13px;line-height:1.6;display:none}
+.pr-feedback.show{display:block}
+.pr-feedback.correct-fb{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.25);color:#81c784}
+.pr-feedback.wrong-fb{background:rgba(244,67,54,.12);border:1px solid rgba(244,67,54,.25);color:#ef9a9a}
+.pr-score{text-align:center;margin:16px 0;padding:16px;
+  background:rgba(255,193,7,.1);border:1px solid rgba(255,193,7,.2);border-radius:14px}
+.pr-score .ps-num{font-size:36px;font-weight:800;color:#ffd54f}
+.pr-score .ps-label{font-size:13px;color:rgba(255,255,255,.5)}
+.pr-progress{display:flex;gap:4px;justify-content:center;margin:10px 0}
+.pr-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .2s}
+.pr-dot.done{background:#ffd54f}
+.pr-dot.current{background:#f9a825;box-shadow:0 0 6px rgba(249,168,37,.5)}
+.pr-dot.wrong-dot{background:#ef5350}
+.pr-btn{padding:10px 28px;border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;
+  color:#fff;transition:all .2s ease;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+.pr-btn.primary{background:linear-gradient(135deg,#f9a825,#f57f17)}
+.pr-btn.primary:hover{background:linear-gradient(135deg,#fdd835,#f9a825);box-shadow:0 4px 14px rgba(249,168,37,.4);transform:translateY(-1px)}
+.pr-btn.secondary{background:linear-gradient(135deg,#616161,#424242)}
+.pr-btn.secondary:hover{background:linear-gradient(135deg,#9e9e9e,#757575)}
+.pr-close{position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,.5);
+  font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+.pr-close:hover{background:rgba(255,255,255,.1);color:#fff}
+.pr-btns{display:flex;gap:10px;justify-content:center;margin:14px 0}
+@keyframes prBounce{0%{transform:scale(.8);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+@keyframes prShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* ============ ERROR NOTIFICATION ============ */
+#error-notify{position:fixed;top:60px;right:20px;z-index:350;
+  background:rgba(10,20,10,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,193,7,.25);border-radius:12px;padding:12px 18px;
+  max-width:320px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.9);
+  box-shadow:0 8px 28px rgba(0,0,0,.5);transform:translateX(120%);
+  transition:transform .4s cubic-bezier(.4,0,.2,1)}
+#error-notify.show{transform:translateX(0)}
+#error-notify .en-title{font-weight:700;color:#ffd54f;margin-bottom:4px}
+#error-notify .en-close{position:absolute;top:8px;right:10px;cursor:pointer;
+  color:rgba(255,255,255,.4);font-size:14px}
+#error-notify .en-close:hover{color:#fff}
+
+/* ============ STATS OVERLAY ============ */
+#stats-overlay{display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#stats-overlay.show{display:flex;align-items:center;justify-content:center}
+#stats-modal{background:rgba(10,20,10,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 32px;
+  width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;position:relative;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);color:rgba(255,255,255,.9);font-size:13px}
+#stats-modal h2{text-align:center;font-size:20px;font-weight:700;color:#ffd54f;letter-spacing:.5px;margin-bottom:16px}
+.st-accuracy{text-align:center;margin:14px 0;padding:16px;
+  background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.2);border-radius:14px}
+.st-accuracy .sa-num{font-size:42px;font-weight:800;color:#81c784}
+.st-accuracy .sa-label{font-size:13px;color:rgba(255,255,255,.5)}
+.st-bars{margin:14px 0}
+.st-bar-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.st-bar-label{width:80px;font-size:12px;color:rgba(255,255,255,.6);text-align:right}
+.st-bar-track{flex:1;height:20px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
+.st-bar-fill{height:100%;border-radius:10px;transition:width .6s ease;background:linear-gradient(90deg,#4caf50,#81c784)}
+.st-bar-value{width:50px;font-size:12px;font-weight:600;color:rgba(255,255,255,.8)}
+.st-section{margin:16px 0;padding:14px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);border-radius:12px}
+.st-section h4{font-size:14px;font-weight:700;color:#ffd54f;margin-bottom:10px}
+.st-mistake{padding:8px 12px;margin:4px 0;background:rgba(244,67,54,.06);
+  border:1px solid rgba(244,67,54,.1);border-radius:8px;font-size:12px}
+.st-recommend{padding:12px 16px;background:rgba(33,150,243,.08);
+  border:1px solid rgba(33,150,243,.2);border-radius:10px;margin:10px 0}
+.st-recommend .sr-title{font-weight:700;color:#64b5f6;margin-bottom:4px}
+.st-trend{display:flex;gap:3px;align-items:flex-end;justify-content:center;height:60px;margin:10px 0}
+.st-trend-bar{width:16px;background:linear-gradient(0deg,#4caf50,#81c784);
+  border-radius:4px 4px 0 0;transition:height .4s ease;min-height:2px}
+
+/* ============ DAILY CHALLENGE ============ */
+#daily-overlay{display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#daily-overlay.show{display:flex;align-items:center;justify-content:center}
+#daily-modal{background:rgba(10,20,10,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:28px 32px;
+  width:640px;max-width:95vw;max-height:90vh;overflow-y:auto;position:relative;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);color:rgba(255,255,255,.9);font-size:13px}
+#daily-modal h2{text-align:center;font-size:20px;font-weight:700;color:#ffd54f;letter-spacing:.5px;margin-bottom:6px}
+.dy-date{text-align:center;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:14px}
+.dy-best{text-align:center;padding:10px 16px;background:rgba(255,215,0,.08);
+  border:1px solid rgba(255,215,0,.15);border-radius:10px;margin-bottom:14px;font-size:13px}
+.medal{font-size:28px;margin:0 4px;vertical-align:middle}
+.dy-complete{text-align:center;margin:16px 0}
+.dy-complete .dc-score{font-size:48px;font-weight:800}
+.dy-complete .dc-label{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px}
 </style>
 </head>
 <body>
@@ -358,6 +639,11 @@ body.card-lg .card.sm .s{font-size:14px}
     <span class="tag" id="btn-score-toggle" onclick="toggleScoreHistory()">📊 记分板</span>
     <span class="ctrl-btn" id="btn-sound" onclick="toggleSound()" title="音效开关">🔊 音效</span>
     <span class="ctrl-btn" id="btn-settings" onclick="openSettings()" title="设置">⚙️</span>
+    <span class="learn-btn" id="btn-tutorial" onclick="openTutorial()" title="学习模式">🎓 学习模式</span>
+    <span class="learn-btn" id="btn-cheat" onclick="openCheatSheet()" title="叫牌速查表">📋 叫牌表</span>
+    <span class="learn-btn" id="btn-practice" onclick="openPractice()" title="练习模式">🎯 练习模式</span>
+    <span class="learn-btn" id="btn-stats" onclick="openStats()" title="学习统计">📊 学习统计</span>
+    <span class="learn-btn" id="btn-daily" onclick="openDailyChallenge()" title="每日挑战">🏆 每日挑战</span>
   </div>
   <div id="table">
     <div id="hand-N" class="hand"></div>
@@ -379,6 +665,8 @@ body.card-lg .card.sm .s{font-size:14px}
       <h3>叫牌</h3>
       <div id="bid-hist"></div>
       <div id="bid-btns"></div>
+      <button id="btn-hint-toggle" onclick="toggleHint()">💡 提示</button>
+      <div id="hint-panel"></div>
     </div>
     <div id="score-popup">
       <h3>本副计分</h3>
@@ -442,6 +730,45 @@ body.card-lg .card.sm .s{font-size:14px}
       </div>
     </div>
     <div class="sh-body" id="sh-body"></div>
+  </div>
+  <div id="tutorial-overlay" onclick="closeTutorial()"></div>
+  <div id="tutorial-panel">
+    <div class="tut-header">
+      <h3>🎓 桥牌学习模式</h3>
+      <button onclick="closeTutorial()">✕</button>
+    </div>
+    <div class="tut-tabs" id="tut-tabs"></div>
+    <div class="tut-body" id="tut-body"></div>
+  </div>
+  <div id="cheat-overlay" onclick="closeCheatSheet()"></div>
+  <div id="cheat-panel">
+    <div class="cheat-header">
+      <h3>📋 叫牌速查表</h3>
+      <button onclick="closeCheatSheet()">✕</button>
+    </div>
+    <div id="cheat-body"></div>
+  </div>
+  <!-- Practice Mode Overlay -->
+  <div id="practice-overlay">
+    <div id="practice-modal"></div>
+  </div>
+  <!-- Error Notification -->
+  <div id="error-notify">
+    <span class="en-close" onclick="dismissErrorNotify()">✕</span>
+    <div class="en-title">💡 学习建议</div>
+    <div class="en-body"></div>
+  </div>
+  <!-- Stats Overlay -->
+  <div id="stats-overlay" onclick="closeStats()">
+    <div id="stats-modal" onclick="event.stopPropagation()">
+      <button class="pr-close" onclick="closeStats()">✕</button>
+      <h2>📊 学习统计</h2>
+      <div id="stats-body"></div>
+    </div>
+  </div>
+  <!-- Daily Challenge Overlay -->
+  <div id="daily-overlay">
+    <div id="daily-modal"></div>
   </div>
   <div id="status">
     <span id="stxt"></span>
@@ -830,118 +1157,1731 @@ function showBidUI(){
 }
 
 function submitBid(pos,bid){
+  // Error analysis: compare with recommendation before processing
+  if(pos===(G.humanSeat||'S')&&G.phase==='bidding'){
+    try{
+      let hintData=generateHint();
+      if(hintData&&hintData.recommended&&bid!==hintData.recommended){
+        trackBidError(bid,hintData.recommended,hintData);
+        showErrorNotification(bid,hintData.recommended,hintData);
+      }
+      trackBidMade(bid,hintData);
+    }catch(e){}
+  }
   hideTooltip();
   document.getElementById('bid-panel').classList.remove('show');
   playSound('bid');
   processBid(pos,bid);
 }
 
+// =========================================================================
+// Standard American 5-Card Major Bidding System
+// =========================================================================
+// Modular design with sub-functions for each bidding phase:
+//   - openingBid()          : Opening bids (12+ HCP)
+//   - respondTo1NT()        : Responses to partner's 1NT opening
+//   - respondToMajor()      : Responses to partner's 1♥/1♠ opening
+//   - respondToMinor()      : Responses to partner's 1♣/1♦ opening
+//   - openerRebid()         : Opener's rebid after partner responds
+//   - responderRebid()      : Responder's second bid
+//   - competitiveBid()      : Overcalls, doubles, competitive situations
+//   - continueBidding()     : Further bidding (4th+ round)
+// =========================================================================
+
+// ---- Hand Analysis Helpers ----
+
+/** Count high card points for a hand */
+function evalHCP(hand){
+  let hcp=0;
+  hand.forEach(c=>{
+    if(c.rank==='A')hcp+=4;
+    else if(c.rank==='K')hcp+=3;
+    else if(c.rank==='Q')hcp+=2;
+    else if(c.rank==='J')hcp+=1;
+  });
+  return hcp;
+}
+
+/** Get count of each suit: {♠:n, ♥:n, ♦:n, ♣:n} */
+function evalSuits(hand){
+  let suits={};S4.forEach(s=>suits[s]=0);
+  hand.forEach(c=>suits[c.suit]++);
+  return suits;
+}
+
+/** Get long suits (5+ cards), sorted by length descending, then rank */
+function evalLongSuits(suits){
+  let ls=[];
+  S4.forEach(s=>{if(suits[s]>=5)ls.push({suit:s,len:suits[s]})});
+  ls.sort((a,b)=>b.len-a.len||S4.indexOf(a.suit)-S4.indexOf(b.suit));
+  return ls;
+}
+
+/** Check if hand is balanced: 4333, 4432, or 5332 with 5-card minor */
+function isBalanced(suits,hand){
+  let dist=S4.map(s=>suits[s]).sort((a,b)=>b-a).join('');
+  if(dist==='4333')return true;
+  if(dist==='4432')return true;
+  if(dist==='5332'){
+    // Only balanced if the 5-card suit is a minor
+    let fiveSuit=S4.find(s=>suits[s]===5);
+    return fiveSuit==='♣'||fiveSuit==='♦';
+  }
+  return false;
+}
+
+/** Check if hand is semi-balanced (5-card major with 5332) */
+function is5332(suits){
+  let dist=S4.map(s=>suits[s]).sort((a,b)=>b-a).join('');
+  return dist==='5332';
+}
+
+/** Count controls: A=2, K=1 */
+function countControls(hand){
+  let c=0;
+  hand.forEach(card=>{if(card.rank==='A')c+=2;else if(card.rank==='K')c++});
+  return c;
+}
+
+/** Count total losers (rough approximation for suit contracts) */
+function countLosers(hand,suits){
+  let losers=0;
+  S4.forEach(s=>{
+    let sc=hand.filter(c=>c.suit===s).sort((a,b)=>RV[b.rank]-RV[a.rank]);
+    if(sc.length===0){losers+=3;return}
+    if(sc.length===1){losers+=(sc[0].rank==='A')?0:2;return}
+    if(sc.length===2){
+      losers+=(sc[0].rank==='A')?0:(sc[0].rank==='K')?1:2;
+      losers+=(sc[1].rank==='A'||sc[1].rank==='K')?0:1;
+      return;
+    }
+    // 3+ cards: count losers in top 3
+    for(let i=0;i<3&&i<sc.length;i++){
+      if(sc[i].rank==='A')continue;
+      if(sc[i].rank==='K'){if(i===0||sc[0].rank==='A')continue;losers++;continue}
+      if(sc[i].rank==='Q'){if(i<=1&&(sc[0].rank==='A'||sc[0].rank==='K'))continue;losers++;continue}
+      losers++;
+    }
+  });
+  return losers;
+}
+
+/** Check if hand has a 4-card major */
+function has4CardMajor(suits){
+  return suits['♠']>=4||suits['♥']>=4;
+}
+
+/** Get singleton/void suit (for splinter bids) or null */
+function getShortSuit(suits,partnerSuit){
+  for(let s of S4){
+    if(s===partnerSuit)continue;
+    if(suits[s]<=1)return s;
+  }
+  return null;
+}
+
+/** Get dummy partner's position */
+function getPartner(pos){return{'S':'N','N':'S','E':'W','W':'E'}[pos]}
+
+// ---- Bid History Analysis ----
+
+/** Get partner's real (non-pass) bids */
+function getPartnerBids(pos){
+  let partner=getPartner(pos);
+  return G.bids.filter(b=>b.pos===partner&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+}
+
+/** Get my own real bids */
+function getMyBids(pos){
+  return G.bids.filter(b=>b.pos===pos&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+}
+
+/** Get opponent's real bids */
+function getOpponentBids(pos){
+  let partner=getPartner(pos);
+  return G.bids.filter(b=>b.pos!==pos&&b.pos!==partner&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+}
+
+/** Get partner's first suit bid (if any) */
+function getPartnerSuit(pos){
+  let pb=getPartnerBids(pos);
+  for(let b of pb){let s=b.bid.slice(1);if(s!=='NT')return s}
+  return null;
+}
+
+/** Get my last real suit bid */
+function getMyLastSuit(pos){
+  let mb=getMyBids(pos);
+  for(let i=mb.length-1;i>=0;i--){let s=mb[i].bid.slice(1);if(s!=='NT')return s}
+  return null;
+}
+
+/** Find the position of the player who first bid a given suit in our side */
+function whoOpenedSuit(suit,pos){
+  let partner=getPartner(pos);
+  for(let b of G.bids){
+    if((b.pos===pos||b.pos===partner)&&b.bid.slice(1)===suit&&b.bid!=='Pass')return b.pos;
+  }
+  return null;
+}
+
+/** Get the level and suit of a bid string like '1♥' -> {level:1, suit:'♥'} */
+function parseBid(bid){
+  if(!bid||bid==='Pass'||bid==='X'||bid==='XX')return null;
+  return{level:+bid[0],suit:bid.slice(1)};
+}
+
+/** Check if a bid is a raise of partner's suit */
+function isRaiseOf(bid,partnerSuit){
+  let p=parseBid(bid);
+  return p&&p.suit===partnerSuit;
+}
+
+// =========================================================================
+// MAIN AI BID FUNCTION
+// =========================================================================
 function aiBid(pos){
-  let h=G.hands[pos];
-  let hcp=0,suits={};S4.forEach(s=>suits[s]=0);
-  h.forEach(c=>{suits[c.suit]++;if(c.rank==='A')hcp+=4;else if(c.rank==='K')hcp+=3;else if(c.rank==='Q')hcp+=2;else if(c.rank==='J')hcp+=1});
-
-  let longSuits=[];
-  S4.forEach(s=>{if(suits[s]>=5)longSuits.push({suit:s,len:suits[s]})});
-  longSuits.sort((a,b)=>b.len-a.len);
-
-  let isBalanced=longSuits.filter(s=>s.len>=5).length===0;
-
-  function bestSuit(){return longSuits.length?longSuits[0].suit:'♣'}
-
-  let partner={'S':'N','N':'S','E':'W','W':'E'};
-  let myPartner=partner[pos];
-
-  let hasBidBefore=G.bids.some(b=>b.pos===pos&&b.bid!=='Pass');
-  let partnerHasBid=G.bids.some(b=>b.pos===myPartner&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
-  let opponentHasBid=false;
-  ['S','N','E','W'].forEach(p=>{if(p!==pos&&p!==myPartner){if(G.bids.some(b=>b.pos===p&&b.bid!=='Pass'))opponentHasBid=true}});
-
-  let isOpener=!G.highestBid;
-  let isResponder=partnerHasBid&&!isOpener;
-  let isOvercaller=opponentHasBid&&!partnerHasBid&&!isOpener;
-
+  let hand=G.hands[pos];
+  let hcp=evalHCP(hand);
+  let suits=evalSuits(hand);
+  let longSuits=evalLongSuits(suits);
+  let balanced=isBalanced(suits,hand);
+  let partner=getPartner(pos);
   let lastNP=getLastNonPass();
 
-  // If partner doubled, consider passing for penalty or bidding
-  if(lastNP&&lastNP.pos===myPartner&&(lastNP.bid==='X'||lastNP.bid==='XX')){
+  // ---- Determine bidding phase ----
+  let realBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  let noRealBids=realBids.length===0;
+  let myBids=getMyBids(pos);
+  let partnerBids=getPartnerBids(pos);
+  let oppBids=getOpponentBids(pos);
+  let hasBidBefore=myBids.length>0;
+  let partnerHasBid=partnerBids.length>0;
+
+  // Who opened? (first non-pass bid by our side)
+  let ourSideFirstBid=null;
+  for(let b of G.bids){
+    if((b.pos===pos||b.pos===partner)&&(b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX')){
+      ourSideFirstBid=b;break;
+    }
+  }
+  let iAmOpener=ourSideFirstBid&&ourSideFirstBid.pos===pos;
+  let partnerIsOpener=ourSideFirstBid&&ourSideFirstBid.pos===partner;
+
+  // Partner's opening bid info
+  let partnerOpening=partnerBids.length>0?partnerBids[0]:null;
+  let partnerOpenBid=partnerOpening?partnerOpening.bid:null;
+  let partnerOpenParsed=parseBid(partnerOpenBid);
+
+  // ---- Handle partner's double/redouble ----
+  if(lastNP&&lastNP.pos===partner&&(lastNP.bid==='X'||lastNP.bid==='XX')){
     if(hcp<8){processBid(pos,'Pass');return}
-    // With strong hand, bid instead of passing
     if(hcp<12){processBid(pos,'Pass');return}
-  }
-
-  // Consider takeout Double of opponent's bid
-  if(lastNP&&isOpponent(pos,lastNP.pos)&&lastNP.bid!=='X'&&lastNP.bid!=='XX'){
-    if(hcp>=12&&(!longSuits.length||longSuits[0].len<5||hcp>=16)){
-      processBid(pos,'X');return;
+    // Strong hand: bid our best suit
+    if(longSuits.length){
+      let b=longSuits[0].suit;
+      let v='1'+b;
+      if(!G.highestBid||bidVal(v)>bidVal(G.highestBid)){processBid(pos,v);return}
     }
-  }
-
-  function mkBid(lv,suit){return lv+suit}
-
-  if(isOpener){
-    if(hcp<10){processBid(pos,'Pass');return}
-    if(hcp>=10&&hcp<=11){
-      if(longSuits.length&&longSuits[0].len>=6){processBid(pos,mkBid(1,longSuits[0].suit));return}
-      processBid(pos,'Pass');return;
-    }
-    if(hcp>=12&&longSuits.length&&longSuits[0].len>=5){processBid(pos,mkBid(1,longSuits[0].suit));return}
-    if(hcp>=12&&isBalanced){processBid(pos,'1NT');return}
-    if(hcp>=14&&longSuits.length&&longSuits[0].len>=5){processBid(pos,mkBid(1,longSuits[0].suit));return}
-    if(hcp>=14&&isBalanced){processBid(pos,'1NT');return}
     processBid(pos,'Pass');return;
   }
 
-  if(isResponder){
-    let partnerSuit=null;
-    G.bids.forEach(b=>{if(b.pos===myPartner&&b.bid!=='Pass'){let s=b.bid.slice(1);if(s!=='NT')partnerSuit=s}});
-    if(partnerSuit&&suits[partnerSuit]>=3){
-      if(hcp>=13){let gLv=4;processBid(pos,mkBid(gLv,partnerSuit));return}
-      if(hcp>=10){
-        let minLv=Math.floor(bidVal(G.highestBid)/5)+1;
-        let raiseLv=Math.max(minLv,2);
-        if(raiseLv<=7){processBid(pos,mkBid(raiseLv,partnerSuit));return}
+  // =========================================================================
+  // PHASE 1: OPENING BID (no real bids yet)
+  // =========================================================================
+  if(noRealBids){
+    openingBid(pos,hand,hcp,suits,longSuits,balanced);
+    return;
+  }
+
+  // =========================================================================
+  // PHASE 2: RESPONSES (partner opened, I haven't bid yet)
+  // =========================================================================
+  if(partnerIsOpener&&!hasBidBefore){
+    // Response to partner's opening
+    if(partnerOpenParsed){
+      if(partnerOpenParsed.suit==='NT'&&partnerOpenParsed.level===1){
+        respondTo1NT(pos,hand,hcp,suits,longSuits,balanced);
+        return;
       }
-      if(hcp>=6){
-        let minLv=Math.floor(bidVal(G.highestBid)/5)+1;
-        if(minLv<=7){processBid(pos,mkBid(minLv,partnerSuit));return}
+      if(partnerOpenParsed.suit==='♥'||partnerOpenParsed.suit==='♠'){
+        respondToMajor(pos,hand,hcp,suits,longSuits,balanced,partnerOpenParsed);
+        return;
       }
-      processBid(pos,'Pass');return;
+      if(partnerOpenParsed.suit==='♣'||partnerOpenParsed.suit==='♦'){
+        respondToMinor(pos,hand,hcp,suits,longSuits,balanced,partnerOpenParsed);
+        return;
+      }
     }
-    if(hcp>=6&&longSuits.length&&longSuits[0].len>=5){
-      let ownSuit=longSuits[0].suit;
-      if(G.highestBid){
-        let ownVal=bidVal(mkBid(1,ownSuit));
-        if(ownVal>bidVal(G.highestBid)){processBid(pos,mkBid(1,ownSuit));return}
-      }else{processBid(pos,mkBid(1,ownSuit));return}
+    // Response to 2♣ strong
+    if(partnerOpenBid==='2♣'){
+      respondTo2C(pos,hand,hcp,suits,longSuits);
+      return;
     }
+    // Response to weak 2
+    if(partnerOpenParsed&&partnerOpenParsed.level===2&&partnerOpenParsed.suit!=='♣'){
+      respondToWeak2(pos,hand,hcp,suits,longSuits,balanced,partnerOpenParsed);
+      return;
+    }
+    // Response to 2NT opening
+    if(partnerOpenBid==='2NT'){
+      respondTo2NT(pos,hand,hcp,suits,longSuits);
+      return;
+    }
+    // Response to preempt
+    if(partnerOpenParsed&&partnerOpenParsed.level>=3){
+      respondToPreempt(pos,hand,hcp,suits,longSuits,partnerOpenParsed);
+      return;
+    }
+    // Default: pass
     processBid(pos,'Pass');return;
   }
 
-  if(isOvercaller){
-    if(hcp>=16&&(!G.highestBid||bidVal('1NT')>bidVal(G.highestBid))){
-      let hasStop=S4.some(s=>suits[s]>=2&&(suits[s]>=3||h.some(c=>c.suit===s&&(c.rank==='A'||c.rank==='K'||c.rank==='Q'))));
-      if(hasStop){processBid(pos,'1NT');return}
-    }
-    if(hcp>=12&&longSuits.length&&longSuits[0].len>=5){
-      let nv=bidVal(mkBid(1,longSuits[0].suit));
-      if(nv>bidVal(G.highestBid)){processBid(pos,mkBid(1,longSuits[0].suit));return}
-    }
-    processBid(pos,'Pass');return;
+  // =========================================================================
+  // PHASE 3: OPENER'S REBID (I opened, partner responded)
+  // =========================================================================
+  if(iAmOpener&&partnerHasBid){
+    openerRebid(pos,hand,hcp,suits,longSuits,balanced,myBids,partnerBids);
+    return;
   }
 
-  if(hcp>=14){
-    let curLv=+G.highestBid[0];
-    if(longSuits.length&&longSuits[0].len>=5){
-      let ownSuit=longSuits[0].suit;
-      let ownVal=bidVal(mkBid(1,ownSuit));
-      if(ownVal>bidVal(G.highestBid)){processBid(pos,mkBid(1,ownSuit));return}
-    }
-    if(isBalanced&&curLv<7){
-      if(bidVal('1NT')>bidVal(G.highestBid)){processBid(pos,'1NT');return}
+  // =========================================================================
+  // PHASE 4: RESPONDER'S REBID (I responded, opener rebid)
+  // =========================================================================
+  if(!iAmOpener&&hasBidBefore&&partnerHasBid){
+    responderRebid(pos,hand,hcp,suits,longSuits,balanced,myBids,partnerBids);
+    return;
+  }
+
+  // =========================================================================
+  // PHASE 5: COMPETITIVE / CONTINUED BIDDING
+  // =========================================================================
+  if(oppBids.length>0&&!hasBidBefore){
+    competitiveBid(pos,hand,hcp,suits,longSuits,balanced,lastNP);
+    return;
+  }
+
+  // Fallback: continued bidding
+  continueBidding(pos,hand,hcp,suits,longSuits,balanced,myBids,partnerBids);
+}
+
+// =========================================================================
+// OPENING BIDS
+// =========================================================================
+function openingBid(pos,hand,hcp,suits,longSuits,balanced){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    // Store meaning on the last bid
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- Preempts (7-card suit, 5-10 HCP) ----
+  if(hcp>=5&&hcp<=10){
+    for(let s of S4){
+      if(suits[s]>=7){
+        let lv=s==='♣'?3:3; // 3-level preempt
+        let b='3'+s;
+        if(!G.highestBid||bidVal(b)>bidVal(G.highestBid)){
+          bid(b,'阻击叫，7+'+SN[s]+'，5-10HCP');
+          return;
+        }
+      }
     }
   }
+
+  // ---- 2NT: 20-21 HCP balanced ----
+  if(hcp>=20&&hcp<=21&&balanced){
+    bid('2NT','20-21HCP，均型牌');
+    return;
+  }
+
+  // ---- 2♣: 22+ HCP or 9+ tricks (strong, artificial) ----
+  if(hcp>=22){
+    bid('2♣','强2♣，22+HCP，逼叫');
+    return;
+  }
+  if(countControls(hand)>=5&&hcp>=19&&longSuits.length&&longSuits[0].len>=6){
+    // Estimate 9+ tricks with strong suit
+    let losers=countLosers(hand,suits);
+    if(losers<=4){
+      bid('2♣','强2♣，9+赢墩');
+      return;
+    }
+  }
+
+  // ---- Weak 2: 5-11 HCP, 6-card suit, no 4-card major ----
+  if(hcp>=5&&hcp<=11&&!has4CardMajor(suits)){
+    for(let s of['♦','♥','♠']){
+      if(suits[s]===6){
+        let b='2'+s;
+        if(!G.highestBid||bidVal(b)>bidVal(G.highestBid)){
+          bid(b,'弱二开叫，6张'+SN[s]+'，5-11HCP');
+          return;
+        }
+      }
+    }
+  }
+
+  // ---- 1NT: 15-17 HCP balanced ----
+  if(hcp>=15&&hcp<=17&&balanced){
+    bid('1NT','15-17HCP，均型牌');
+    return;
+  }
+
+  // ---- 1-level suit openings: 12+ HCP ----
+  if(hcp>=12){
+    // 5-card majors first
+    // With 5-5 in majors, prefer spades
+    if(suits['♠']>=5&&suits['♥']>=5){
+      bid('1♠','12+HCP，5+♠(5-5高花选♠)');
+      return;
+    }
+    if(suits['♠']>=5){
+      bid('1♠','12+HCP，5+♠');
+      return;
+    }
+    if(suits['♥']>=5){
+      bid('1♥','12+HCP，5+♥');
+      return;
+    }
+
+    // No 5-card major: open longer minor
+    // 1♦: diamonds longer than clubs
+    // 1♣: clubs ≥ diamonds (or equal)
+    if(suits['♦']>suits['♣']){
+      bid('1♦','12+HCP，♦≥♣，无5张高花');
+      return;
+    }else{
+      // Equal length or clubs longer: open 1♣
+      bid('1♣','12+HCP，♣≥♦，无5张高花');
+      return;
+    }
+  }
+
+  // ---- Sub-opening hands: pass ----
   processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONSES TO 1NT OPENING (15-17)
+// =========================================================================
+function respondTo1NT(pos,hand,hcp,suits,longSuits,balanced){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- Texas Transfer: 3♦=transfer to 4♥, 3♥=transfer to 4♠ (6+ card) ----
+  if(suits['♠']>=6&&hcp>=10){
+    bid('3♥','德州转移，6+♠，要求开叫人叫3♠/4♠');
+    return;
+  }
+  if(suits['♥']>=6&&hcp>=10){
+    bid('3♦','德州转移，6+♥，要求开叫人叫3♥/4♥');
+    return;
+  }
+
+  // ---- Jacoby Transfer: 2♦=hearts, 2♥=spades (5+ card) ----
+  if(suits['♥']>=5){
+    bid('2♦','雅可比转移，5+♥，要求开叫人叫2♥');
+    return;
+  }
+  if(suits['♠']>=5){
+    bid('2♥','雅可比转移，5+♠，要求开叫人叫2♠');
+    return;
+  }
+
+  // ---- Stayman: 2♣ with 8+ HCP and a 4-card major ----
+  if(hcp>=8&&has4CardMajor(suits)){
+    bid('2♣','斯台曼，8+HCP，有4张高花');
+    return;
+  }
+
+  // ---- 2♠: Minor suit Stayman ----
+  if(hcp>=8&&suits['♣']>=4&&suits['♦']>=4&&!has4CardMajor(suits)){
+    bid('2♠','低花斯台曼，问4张低花');
+    return;
+  }
+
+  // ---- 3♣/3♦: Long minor, to play (weak) ----
+  if(suits['♣']>=6&&hcp<8){
+    bid('3♣','长♣弱牌，打3♣');
+    return;
+  }
+  if(suits['♦']>=6&&hcp<8){
+    bid('3♦','长♦弱牌，打3♦');
+    return;
+  }
+
+  // ---- 2NT: 8-9 HCP, invitational ----
+  if(hcp>=8&&hcp<=9&&balanced){
+    bid('2NT','8-9HCP，邀请3NT');
+    return;
+  }
+
+  // ---- 3NT: 10+ HCP, to play ----
+  if(hcp>=10){
+    bid('3NT','10+HCP，打3NT');
+    return;
+  }
+
+  // ---- 4NT: Quantitative invite to 6NT ----
+  if(hcp>=15&&balanced){
+    bid('4NT','量性满贯邀叫，15+HCP');
+    return;
+  }
+
+  // ---- Pass with weak hands ----
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONSES TO MAJOR OPENING (1♥/1♠)
+// =========================================================================
+function respondToMajor(pos,hand,hcp,suits,longSuits,balanced,partnerOpenParsed){
+  let pSuit=partnerOpenParsed.suit; // ♥ or ♠
+  let support=suits[pSuit]; // number of cards in partner's suit
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- Splinter: 13+ HCP, 4+ support, singleton/void in bid suit ----
+  if(hcp>=13&&support>=4){
+    let shortSuit=getShortSuit(suits,pSuit);
+    if(shortSuit&&suits[shortSuit]<=1){
+      // Splinter bid: jump shift to the short suit
+      let splBid;
+      if(pSuit==='♥'){
+        if(shortSuit==='♣')splBid='4♣';
+        else if(shortSuit==='♦')splBid='4♦';
+        // Can't splinter in own suit
+      }else if(pSuit==='♠'){
+        if(shortSuit==='♣')splBid='4♣';
+        else if(shortSuit==='♦')splBid='4♦';
+        else if(shortSuit==='♥')splBid='4♥';
+      }
+      if(splBid&&(!G.highestBid||bidVal(splBid)>bidVal(G.highestBid))){
+        bid(splBid,'斯泼林特，13+HCP，4+'+SN[pSuit]+'支持，'+SN[shortSuit]+'单缺');
+        return;
+      }
+    }
+  }
+
+  // ---- Jacoby 2NT: 13+ HCP, 4+ support, no shortness ----
+  if(hcp>=13&&support>=4){
+    let short=getShortSuit(suits,pSuit);
+    if(!short){
+      bid('2NT','雅可比2NT，13+HCP，4+'+SN[pSuit]+'支持，无单缺');
+      return;
+    }
+  }
+
+  // ---- Limit raise: 10-12 HCP, 3+ support ----
+  if(hcp>=10&&hcp<=12&&support>=3){
+    let jumpBid='3'+pSuit;
+    bid(jumpBid,'限制性加叫，10-12HCP，3+'+SN[pSuit]+'支持');
+    return;
+  }
+
+  // ---- Single raise: 6-9 HCP, 3+ support ----
+  if(hcp>=6&&hcp<=9&&support>=3){
+    let raiseBid='2'+pSuit;
+    bid(raiseBid,'简单加叫，6-9HCP，3+'+SN[pSuit]+'支持');
+    return;
+  }
+
+  // ---- 1♠ response to 1♥: 6+ HCP, 4+ spades ----
+  if(pSuit==='♥'&&suits['♠']>=4&&hcp>=6){
+    bid('1♠','1♠应叫，6+HCP，4+♠，逼叫');
+    return;
+  }
+
+  // ---- New suit at 2-level (2/1): 12+ HCP, game forcing ----
+  // Prefer longest non-partner suit with 5+ cards
+  let newSuits=S4.filter(s=>s!==pSuit&&suits[s]>=5);
+  newSuits.sort((a,b)=>suits[b]-suits[a]);
+  if(hcp>=12&&newSuits.length>0){
+    let ns=newSuits[0];
+    // Must be lower ranking than partner's suit for 2/1
+    let newBid='2'+ns;
+    if(bidVal(newBid)>bidVal(G.highestBid)){
+      bid(newBid,'二盖一，12+HCP，5+'+SN[ns]+'，逼叫到局');
+      return;
+    }
+  }
+
+  // ---- 1NT forcing: 6-10 HCP, no 3+ support, no better bid ----
+  if(hcp>=6&&hcp<=10&&support<3){
+    bid('1NT','1NT逼叫，6-10HCP');
+    return;
+  }
+
+  // ---- New suit at 1-level (other than spade over heart): 6+ HCP ----
+  // This would be caught by 1♠ over 1♥ above
+  // For 1-level minor responses, only possible if partner opened 1♥ and we bid 1♠ (covered above)
+
+  // ---- Jump to game in partner's major: 4+ support, less than limit raise ----
+  if(support>=4&&hcp>=6&&hcp<=9){
+    let gameBid='4'+pSuit;
+    if(!G.highestBid||bidVal(gameBid)>bidVal(G.highestBid)){
+      bid(gameBid,'直接进局，4+'+SN[pSuit]+'支持');
+      return;
+    }
+  }
+
+  // ---- Weak hand with long suit: 6+ cards ----
+  if(hcp>=6&&longSuits.length>0&&longSuits[0].len>=6){
+    let ls=longSuits[0].suit;
+    if(ls!==pSuit){
+      let newBid='2'+ls;
+      if(bidVal(newBid)>bidVal(G.highestBid)){
+        bid(newBid,'新花色，6张'+SN[ls]);
+        return;
+      }
+    }
+  }
+
+  // ---- Default: pass ----
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONSES TO MINOR OPENING (1♣/1♦)
+// =========================================================================
+function respondToMinor(pos,hand,hcp,suits,longSuits,balanced,partnerOpenParsed){
+  let pSuit=partnerOpenParsed.suit; // ♣ or ♦
+  let support=suits[pSuit];
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- 1♥/1♠: 6+ HCP, 4+ suit (forcing) ----
+  // Prefer longer major; with equal length prefer spades
+  if(hcp>=6){
+    if(suits['♥']>=4&&suits['♠']>=4){
+      // Both 4+: bid longer, or spades if equal
+      if(suits['♠']>=suits['♥']){
+        bid('1♠','1♠应叫，6+HCP，4+♠，逼叫');return;
+      }else{
+        bid('1♥','1♥应叫，6+HCP，4+♥，逼叫');return;
+      }
+    }
+    if(suits['♠']>=4){
+      bid('1♠','1♠应叫，6+HCP，4+♠，逼叫');return;
+    }
+    if(suits['♥']>=4){
+      bid('1♥','1♥应叫，6+HCP，4+♥，逼叫');return;
+    }
+  }
+
+  // ---- 1NT: 6-10 HCP, no 4-card major ----
+  if(hcp>=6&&hcp<=10&&!has4CardMajor(suits)){
+    bid('1NT','1NT应叫，6-10HCP，无4张高花');
+    return;
+  }
+
+  // ---- 2NT: 13+ HCP, balanced, no 4-card major ----
+  if(hcp>=13&&balanced&&!has4CardMajor(suits)){
+    bid('2NT','2NT应叫，13+HCP，均型无4张高花');
+    return;
+  }
+
+  // ---- 3NT: 13-15 HCP, balanced ----
+  if(hcp>=13&&hcp<=15&&balanced&&!has4CardMajor(suits)){
+    bid('3NT','3NT，13-15HCP，均型');
+    return;
+  }
+
+  // ---- Raise same minor: 6-9 HCP, 5+ support ----
+  if(hcp>=6&&hcp<=9&&support>=5){
+    let raiseBid='2'+pSuit;
+    if(bidVal(raiseBid)>bidVal(G.highestBid)){
+      bid(raiseBid,'加叫'+SN[pSuit]+'，6-9HCP，5+支持');
+      return;
+    }
+  }
+
+  // ---- 2/1 in new minor: 12+ HCP, forcing ----
+  if(hcp>=12){
+    let otherMinor=pSuit==='♣'?'♦':'♣';
+    if(suits[otherMinor]>=5){
+      let newBid='2'+otherMinor;
+      if(bidVal(newBid)>bidVal(G.highestBid)){
+        bid(newBid,'二盖一，12+HCP，5+'+SN[otherMinor]+'，逼叫到局');
+        return;
+      }
+    }
+  }
+
+  // ---- New minor at 1-level if possible (rare, usually covered by major) ----
+  // This case is unusual since minors are at 1-level already
+
+  // ---- Default ----
+  // With 6-10 HCP and a 4-card major that we couldn't show at 1-level
+  // (shouldn't happen at 1♣/1♦ since 1♥/1♠ are available)
+  if(hcp>=6&&hcp<=10){
+    bid('1NT','1NT应叫，6-10HCP');
+    return;
+  }
+
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONSES TO 2♣ OPENING (strong, artificial)
+// =========================================================================
+function respondTo2C(pos,hand,hcp,suits,longSuits){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // 2♦: Waiting (0-7 HCP or any hand not meeting positive response)
+  if(hcp<8){
+    bid('2♦','等待叫，弱牌');
+    return;
+  }
+
+  // 8+ HCP: positive response showing longest suit
+  if(hcp>=8){
+    if(suits['♥']>=5){bid('2♥','积极应叫，5+♥，8+HCP');return}
+    if(suits['♠']>=5){bid('2♠','积极应叫，5+♠，8+HCP');return}
+    if(suits['♣']>=5){bid('3♣','积极应叫，5+♣，8+HCP');return}
+    if(suits['♦']>=5){bid('3♦','积极应叫，5+♦，8+HCP');return}
+    // Balanced positive: bid 2NT
+    bid('2NT','积极应叫，8+HCP，均型');
+    return;
+  }
+}
+
+// =========================================================================
+// RESPONSES TO WEAK 2 (2♦/2♥/2♠)
+// =========================================================================
+function respondToWeak2(pos,hand,hcp,suits,longSuits,balanced,partnerOpenParsed){
+  let pSuit=partnerOpenParsed.suit;
+  let support=suits[pSuit];
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // 2NT: Feature ask (12+ HCP, forcing)
+  if(hcp>=12&&balanced){
+    bid('2NT','奥古斯特问叫，12+HCP');
+    return;
+  }
+
+  // Raise to 3: weak, 3+ support
+  if(hcp<10&&support>=3){
+    bid('3'+pSuit,'加叫弱二，阻击');
+    return;
+  }
+
+  // Raise to 4: 4+ support, some values
+  if(hcp>=8&&support>=4){
+    bid('4'+pSuit,'加叫到局，4+支持');
+    return;
+  }
+
+  // New suit: forcing (12+ HCP)
+  if(hcp>=12){
+    let newSuits=S4.filter(s=>s!==pSuit&&suits[s]>=5);
+    newSuits.sort((a,b)=>suits[b]-suits[a]);
+    if(newSuits.length>0){
+      let ns=newSuits[0];
+      let b='3'+ns;
+      if(bidVal(b)>bidVal(G.highestBid)){
+        bid(b,'新花色，12+HCP，5+'+SN[ns]+'，逼叫');
+        return;
+      }
+    }
+  }
+
+  // 3NT: to play
+  if(hcp>=12&&balanced){
+    bid('3NT','3NT，有止张');
+    return;
+  }
+
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONSES TO 2NT OPENING (20-21)
+// =========================================================================
+function respondTo2NT(pos,hand,hcp,suits,longSuits){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // Stayman: 3♣ with 4-card major
+  if(has4CardMajor(suits)&&hcp>=4){
+    bid('3♣','斯台曼，有4张高花');
+    return;
+  }
+
+  // Jacoby Transfer: 3♦=hearts, 3♥=spades
+  if(suits['♥']>=5){bid('3♦','雅可比转移，5+♥');return}
+  if(suits['♠']>=5){bid('3♥','雅可比转移，5+♠');return}
+
+  // 4NT: quantitative
+  if(hcp>=8&&balanced){bid('4NT','量性满贯邀叫');return}
+
+  // 3NT: to play
+  if(hcp>=4){bid('3NT','打3NT');return}
+
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONSES TO PREEMPT (3-level opening)
+// =========================================================================
+function respondToPreempt(pos,hand,hcp,suits,longSuits,partnerOpenParsed){
+  let pSuit=partnerOpenParsed.suit;
+  let support=suits[pSuit];
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // Raise to game with enough
+  if(support>=3&&hcp>=12){
+    if(pSuit==='♥'||pSuit==='♠'){bid('4'+pSuit,'加叫到局');return}
+    bid('5'+pSuit,'加叫到局');return;
+  }
+
+  // 3NT: to play
+  if(hcp>=15&&balanced){bid('3NT','打3NT');return}
+
+  // New suit: forcing
+  if(hcp>=14&&longSuits.length>0){
+    let ns=longSuits[0].suit;
+    if(ns!==pSuit){
+      let b='3'+ns;
+      if(bidVal(b)>bidVal(G.highestBid)){bid(b,'新花色，逼叫');return}
+    }
+  }
+
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// OPENER'S REBID
+// =========================================================================
+function openerRebid(pos,hand,hcp,suits,longSuits,balanced,myBids,partnerBids){
+  let myOpening=myBids[0].bid;
+  let myOpenParsed=parseBid(myOpening);
+  if(!myOpenParsed){processBid(pos,'Pass');return}
+  let myOpenSuit=myOpenParsed.suit; // The suit I opened
+
+  let partnerBid=partnerBids[partnerBids.length-1].bid;
+  let partnerParsed=parseBid(partnerBid);
+  if(!partnerParsed){processBid(pos,'Pass');return}
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- After I opened 1NT and partner responded ----
+  if(myOpenSuit==='NT'&&myOpenParsed.level===1){
+    openerRebidAfter1NT(pos,hand,hcp,suits,longSuits,balanced,partnerBid,partnerParsed);
+    return;
+  }
+
+  // ---- After I opened 2♣ and partner responded ----
+  if(myOpening==='2♣'){
+    openerRebidAfter2C(pos,hand,hcp,suits,longSuits,balanced,partnerBid,partnerParsed);
+    return;
+  }
+
+  // ---- After I opened a suit at 1-level ----
+  let pSuit=partnerParsed.suit;
+
+  // Partner raised my suit
+  if(pSuit===myOpenSuit){
+    // Partner raised: evaluate strength
+    // Minimum: 12-15, Medium: 16-17, Maximum: 18-19
+    if(partnerParsed.level>=4||(partnerParsed.level>=3&&(myOpenSuit==='♥'||myOpenSuit==='♠'))){
+      // Already at game level, pass
+      processBid(pos,'Pass');return;
+    }
+    if(hcp<=15){
+      // Minimum: pass or raise to game with 4+ support
+      if(partnerParsed.level===2&&(myOpenSuit==='♥'||myOpenSuit==='♠')&&hcp>=14){
+        bid('4'+myOpenSuit,'邀请到局，高限');return;
+      }
+      processBid(pos,'Pass');return;
+    }
+    if(hcp>=16&&hcp<=17){
+      // Medium: invite game
+      if(partnerParsed.level===2&&(myOpenSuit==='♥'||myOpenSuit==='♠')){
+        bid('3'+myOpenSuit,'邀请到局，中限');return;
+      }
+      if(partnerParsed.level===2){
+        bid('3'+myOpenSuit,'邀请到局');return;
+      }
+      processBid(pos,'Pass');return;
+    }
+    if(hcp>=18){
+      // Maximum: bid game
+      if(myOpenSuit==='♥'||myOpenSuit==='♠'){
+        bid('4'+myOpenSuit,'进局，高限');return;
+      }
+      bid('5'+myOpenSuit,'进局');return;
+    }
+    processBid(pos,'Pass');return;
+  }
+
+  // Partner responded 1NT (forcing)
+  if(partnerBid==='1NT'){
+    // Rebid: 6-card suit, new suit, 2NT, or raise
+    if(suits[myOpenSuit]>=6){
+      bid('2'+myOpenSuit,'再叫原花，6张');return;
+    }
+    // Bid a 4-card new suit (reverse if higher ranking at 2-level)
+    let newSuits=S4.filter(s=>s!==myOpenSuit&&suits[s]>=4&&s!=='NT');
+    newSuits.sort((a,b)=>{
+      // Prefer lower-ranking suits first (to avoid reverse unless strong)
+      return S4.indexOf(a)-S4.indexOf(b);
+    });
+    // Check for reverse (higher-ranking suit at 2-level)
+    for(let ns of newSuits){
+      if(S4.indexOf(ns)<S4.indexOf(myOpenSuit)){
+        // This would be a reverse - only with 16+ HCP
+        if(hcp>=16){
+          let b='2'+ns;
+          if(bidVal(b)>bidVal(G.highestBid)){
+            bid(b,'逆叫，16+HCP，4+'+SN[ns]);return;
+          }
+        }
+      }
+    }
+    // Non-reverse new suit
+    for(let ns of newSuits){
+      if(S4.indexOf(ns)>S4.indexOf(myOpenSuit)){
+        let b='2'+ns;
+        if(bidVal(b)>bidVal(G.highestBid)){
+          bid(b,'新花色，4+'+SN[ns]);return;
+        }
+      }
+    }
+    // 2NT: 18-19 balanced
+    if(hcp>=18&&hcp<=19&&balanced){
+      bid('2NT','再叫18-19HCP均型');return;
+    }
+    // 1NT rebid: shouldn't happen after opening suit
+    // Rebid suit with 6+
+    if(suits[myOpenSuit]>=5){
+      bid('2'+myOpenSuit,'再叫原花，5张');return;
+    }
+    // Last resort: raise partner's possible suit or bid NT
+    if(hcp>=15){
+      bid('1NT','再叫1NT');return;
+    }
+    processBid(pos,'Pass');return;
+  }
+
+  // Partner bid a new suit at 1-level (e.g., 1♣-1♠)
+  // This is a forcing response
+  if(partnerParsed.level===1&&pSuit!==myOpenSuit){
+    // Raise partner's suit with 3+ support
+    if(suits[pSuit]>=3){
+      if(hcp>=18&&suits[pSuit]>=4){
+        // Jump raise: 18+ HCP
+        bid('3'+pSuit,'跳加叫，18+HCP，4+'+SN[pSuit]+'支持');return;
+      }
+      if(hcp>=16&&suits[pSuit]>=3){
+        bid('2'+pSuit,'加叫，16+HCP，3+'+SN[pSuit]+'支持');return;
+      }
+      // Minimum raise
+      if(hcp>=13){
+        bid('2'+pSuit,'加叫，13+HCP，3+'+SN[pSuit]+'支持');return;
+      }
+    }
+
+    // Rebid 6-card suit
+    if(suits[myOpenSuit]>=6){
+      bid('2'+myOpenSuit,'再叫原花，6张');return;
+    }
+
+    // Bid new suit (reverse if strong)
+    let otherSuits=S4.filter(s=>s!==myOpenSuit&&s!==pSuit&&suits[s]>=4);
+    for(let ns of otherSuits){
+      // Check if reverse
+      if(S4.indexOf(ns)<S4.indexOf(myOpenSuit)&&ns!==pSuit){
+        if(hcp>=16){
+          let b='2'+ns;
+          if(bidVal(b)>bidVal(G.highestBid)){
+            bid(b,'逆叫，16+HCP，4+'+SN[ns]);return;
+          }
+        }
+      }
+    }
+    for(let ns of otherSuits){
+      let b='1'+ns; // at 1-level if possible (but may need 2-level)
+      if(bidVal(b)>bidVal(G.highestBid)){
+        bid(b,'新花色，4+'+SN[ns]);return;
+      }
+      b='2'+ns;
+      if(bidVal(b)>bidVal(G.highestBid)){
+        bid(b,'新花色，4+'+SN[ns]);return;
+      }
+    }
+
+    // 1NT: 15-17 (but we'd have opened 1NT with that range)
+    if(hcp>=15&&hcp<=17&&balanced){
+      bid('1NT','再叫1NT，15-17HCP');return;
+    }
+
+    // 2NT: 18-19
+    if(hcp>=18&&hcp<=19&&balanced){
+      bid('2NT','再叫2NT，18-19HCP');return;
+    }
+
+    // Default: rebid suit or pass
+    if(suits[myOpenSuit]>=5){
+      bid('2'+myOpenSuit,'再叫原花');return;
+    }
+    if(hcp>=15){
+      bid('1NT','再叫1NT');return;
+    }
+    processBid(pos,'Pass');return;
+  }
+
+  // Partner bid a new suit at 2-level (2/1, game forcing)
+  if(partnerParsed.level===2&&pSuit!==myOpenSuit){
+    // 2/1 response is game forcing
+    // Raise partner's suit
+    if(suits[pSuit]>=3){
+      if(hcp>=17){
+        bid('3'+pSuit,'跳加叫，17+HCP');return;
+      }
+      bid('2'+pSuit,'加叫'+SN[pSuit]+'，3+支持');return;
+    }
+
+    // Rebid own suit
+    if(suits[myOpenSuit]>=6){
+      bid('2'+myOpenSuit,'再叫原花，6张');return;
+    }
+
+    // New suit
+    let otherSuits=S4.filter(s=>s!==myOpenSuit&&s!==pSuit&&suits[s]>=4);
+    for(let ns of otherSuits){
+      let b='2'+ns;
+      if(bidVal(b)>bidVal(G.highestBid)){
+        if(S4.indexOf(ns)<S4.indexOf(myOpenSuit)&&hcp>=16){
+          bid(b,'逆叫，4+'+SN[ns]);return;
+        }
+        if(S4.indexOf(ns)>S4.indexOf(myOpenSuit)){
+          bid(b,'新花色，4+'+SN[ns]);return;
+        }
+      }
+    }
+
+    // 2NT: 18-19
+    if(hcp>=18&&hcp<=19){
+      bid('2NT','再叫2NT，18-19HCP');return;
+    }
+
+    // 3NT
+    if(hcp>=15&&balanced){
+      bid('3NT','3NT');return;
+    }
+
+    // Rebid suit
+    bid('3'+myOpenSuit,'再叫原花');return;
+  }
+
+  // Partner bid 2NT (13+ HCP balanced, no 4-card major)
+  if(partnerBid==='2NT'){
+    if(hcp>=18){bid('3NT','进局');return}
+    if(hcp<=14){bid('Pass','低限均型');processBid(pos,'Pass');return}
+    // 15-17: could invite
+    bid('3NT','进局');return;
+  }
+
+  // Partner bid 3NT
+  if(partnerBid==='3NT'){processBid(pos,'Pass');return}
+
+  // Partner raised to game
+  if(partnerParsed&&partnerParsed.level>=4){
+    processBid(pos,'Pass');return;
+  }
+
+  // Default
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// OPENER'S REBID AFTER 1NT OPENING (Stayman/Transfer responses)
+// =========================================================================
+function openerRebidAfter1NT(pos,hand,hcp,suits,longSuits,balanced,partnerBid,partnerParsed){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- Partner bid 2♣ Stayman ----
+  if(partnerBid==='2♣'){
+    if(suits['♥']>=4&&suits['♠']>=4){
+      bid('2♥','有4♥和4♠，优先叫♥');return;
+    }
+    if(suits['♥']>=4){bid('2♥','有4♥');return}
+    if(suits['♠']>=4){bid('2♠','有4♠');return}
+    bid('2♦','无4张高花');return;
+  }
+
+  // ---- Partner bid 2♦ (transfer to hearts) ----
+  if(partnerBid==='2♦'){
+    bid('2♥','完成转移到♥');return;
+  }
+
+  // ---- Partner bid 2♥ (transfer to spades) ----
+  if(partnerBid==='2♥'){
+    // Check if this is really a transfer (not a natural bid)
+    // After 1NT-2♥, it should be transfer to spades
+    bid('2♠','完成转移到♠');return;
+  }
+
+  // ---- Partner bid 2♠ (minor suit Stayman) ----
+  if(partnerBid==='2♠'){
+    if(suits['♣']>=4){bid('3♣','有4♣');return}
+    if(suits['♦']>=4){bid('3♦','有4♦');return}
+    bid('2NT','无4张低花');return;
+  }
+
+  // ---- Partner bid 2NT (invitational, 8-9 HCP) ----
+  if(partnerBid==='2NT'){
+    // 1NT opener with max (17) accepts, min (15) passes
+    if(hcp>=17){bid('3NT','接受邀请，高限');return}
+    processBid(pos,'Pass');return;
+  }
+
+  // ---- Partner bid 3NT (to play) ----
+  if(partnerBid==='3NT'){processBid(pos,'Pass');return}
+
+  // ---- Partner bid 3♣ (to play, long minor) ----
+  if(partnerBid==='3♣'){processBid(pos,'Pass');return}
+
+  // ---- Partner bid 3♥ (Texas transfer: 6+ hearts, to play at 4-level) ----
+  if(partnerBid==='3♥'){
+    if(suits['♥']>=3&&hcp>=17){
+      bid('4♥','接受德州转移，3+♥，高限');return;
+    }
+    if(suits['♥']>=3){
+      bid('4♥','接受德州转移，3+♥');return;
+    }
+    // With 2 or fewer hearts and minimum, pass at 3-level
+    processBid(pos,'Pass');return;
+  }
+
+  // ---- Partner bid 3♠ (Texas transfer: 6+ spades, to play at 4-level) ----
+  if(partnerBid==='3♠'){
+    if(suits['♠']>=3&&hcp>=17){
+      bid('4♠','接受德州转移，3+♠，高限');return;
+    }
+    if(suits['♠']>=3){
+      bid('4♠','接受德州转移，3+♠');return;
+    }
+    // With 2 or fewer spades and minimum, pass at 3-level
+    processBid(pos,'Pass');return;
+  }
+
+  // ---- After Stayman, partner showed a major ----
+  // e.g., 1NT-2♣-2♥ or 1NT-2♣-2♠
+  // Partner may now be continuing with their own plan
+
+  // ---- Partner raised to 4NT (quantitative) ----
+  if(partnerBid==='4NT'){
+    if(hcp>=17){bid('6NT','接受满贯邀叫');return}
+    processBid(pos,'Pass');return;
+  }
+
+  // ---- Default ----
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// OPENER'S REBID AFTER 2♣ OPENING
+// =========================================================================
+function openerRebidAfter2C(pos,hand,hcp,suits,longSuits,balanced,partnerBid,partnerParsed){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // Partner responded 2♦ (waiting/weak)
+  if(partnerBid==='2♦'){
+    // Show our longest suit
+    if(longSuits.length>0){
+      let s=longSuits[0].suit;
+      bid('2'+s,'自然叫，长套'+SN[s]);return;
+    }
+    if(balanced){bid('2NT','22-24HCP，均型');return}
+    bid('2♥','自然叫');return;
+  }
+
+  // Partner showed a suit
+  if(partnerParsed&&partnerParsed.suit!=='NT'){
+    let ps=partnerParsed.suit;
+    // Support partner
+    if(suits[ps]>=3){
+      if(hcp>=25){bid('4'+ps,'加叫到局');return}
+      bid('3'+ps,'加叫，3+支持');return;
+    }
+    // Show our own suit
+    if(longSuits.length>0&&longSuits[0].suit!==ps){
+      bid('2'+longSuits[0].suit,'自然叫，长套');return;
+    }
+    bid('2NT','均型');return;
+  }
+
+  // Partner bid 2NT (positive, balanced)
+  if(partnerBid==='2NT'){
+    if(longSuits.length>0){bid('3'+longSuits[0].suit,'自然叫');return}
+    bid('3NT','打3NT');return;
+  }
+
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// RESPONDER'S REBID
+// =========================================================================
+function responderRebid(pos,hand,hcp,suits,longSuits,balanced,myBids,partnerBids){
+  let myFirstBid=myBids[0].bid;
+  let myFirstParsed=parseBid(myFirstBid);
+  let partnerLastBid=partnerBids[partnerBids.length-1].bid;
+  let partnerLastParsed=parseBid(partnerLastBid);
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- After 1NT-2♣-? (Stayman response and opener showed a major) ----
+  if(myFirstBid==='2♣'&&partnerLastParsed){
+    // Opener showed 2♥ or 2♠ (has 4-card major) or 2♦ (no major)
+    if(partnerLastParsed.suit==='♦'&&partnerLastParsed.level===2){
+      // No major found: bid 2NT (invitational) or 3NT or pass
+      if(hcp>=8&&hcp<=9){bid('2NT','邀请3NT');return}
+      if(hcp>=10){bid('3NT','打3NT');return}
+      // Bid a 5-card minor at 3-level
+      if(suits['♣']>=5){bid('3♣','打3♣');return}
+      if(suits['♦']>=5){bid('3♦','打3♦');return}
+      bid('2NT','邀请3NT');return;
+    }
+    if((partnerLastParsed.suit==='♥'||partnerLastParsed.suit==='♠')&&partnerLastParsed.level===2){
+      let ms=partnerLastParsed.suit;
+      // We have 4-card support for the major they showed
+      if(suits[ms]>=4){
+        if(hcp>=10){bid('4'+ms,'进局');return}
+        if(hcp>=8){bid('3'+ms,'邀请到局');return}
+        bid('2'+ms,'定约高花');return;
+      }
+      // We don't have support: bid NT
+      if(hcp>=10){bid('3NT','打3NT');return}
+      if(hcp>=8){bid('2NT','邀请3NT');return}
+      // Other major
+      let other=ms==='♥'?'♠':'♥';
+      if(suits[other]>=4){
+        bid('2'+other,'另一高花');return;
+      }
+      bid('2NT','打2NT');return;
+    }
+  }
+
+  // ---- After Jacoby Transfer completion ----
+  // If I transferred and opener completed, I now continue
+  if(myFirstBid==='2♦'&&partnerLastBid==='2♥'){
+    // Transfer to hearts completed
+    if(hcp>=10&&suits['♥']>=6){
+      // Could bid game or invite
+      if(hcp>=13){bid('4♥','进局');return}
+      bid('3♥','邀请到局');return;
+    }
+    if(hcp>=8){bid('2NT','邀请3NT');return}
+    processBid(pos,'Pass');return;
+  }
+  if(myFirstBid==='2♥'&&partnerLastBid==='2♠'){
+    // Transfer to spades completed
+    if(hcp>=10&&suits['♠']>=6){
+      if(hcp>=13){bid('4♠','进局');return}
+      bid('3♠','邀请到局');return;
+    }
+    if(hcp>=8){bid('2NT','邀请3NT');return}
+    processBid(pos,'Pass');return;
+  }
+
+  // ---- After Texas Transfer completion ----
+  // 1NT-3♥-4♥ (Texas to hearts completed): responder passes
+  if(myFirstBid==='3♥'&&partnerLastBid==='4♥'){
+    processBid(pos,'Pass');return;
+  }
+  // 1NT-3♠-4♠ (Texas to spades completed): responder passes
+  if(myFirstBid==='3♠'&&partnerLastBid==='4♠'){
+    processBid(pos,'Pass');return;
+  }
+  // If opener didn't complete transfer (passed 3♥/3♠), responder bids game
+  if(myFirstBid==='3♥'&&partnerLastBid==='Pass'){
+    bid('4♥','打4♥');return;
+  }
+  if(myFirstBid==='3♠'&&partnerLastBid==='Pass'){
+    bid('4♠','打4♠');return;
+  }
+
+  // ---- After minor suit Stayman ----
+  if(myFirstBid==='2♠'){
+    if(partnerLastBid==='3♣'){
+      if(suits['♣']>=4){bid('3NT','打3NT');return}
+      processBid(pos,'Pass');return;
+    }
+    if(partnerLastBid==='3♦'){
+      if(suits['♦']>=4){bid('3NT','打3NT');return}
+      processBid(pos,'Pass');return;
+    }
+    if(partnerLastBid==='2NT'){
+      bid('3NT','打3NT');return;
+    }
+  }
+
+  // ---- After 1M-2x (my new suit response) opener raised ----
+  // Partner raised my new suit
+  if(partnerLastParsed&&myFirstParsed&&partnerLastParsed.suit===myFirstParsed.suit){
+    // Partner supported my suit
+    if(partnerLastParsed.level<=2){
+      // Minimum raise
+      if(hcp>=14){bid('3'+myFirstParsed.suit,'邀请到局');return}
+      if(hcp>=10){bid('2NT','自然邀请');return}
+      processBid(pos,'Pass');return;
+    }
+  }
+
+  // ---- After opener raised my major response ----
+  // e.g., 1♣-1♠-2♠ (opener raised my spade)
+  if(partnerLastParsed&&myFirstParsed&&myFirstParsed.level===1){
+    let mySuit=myFirstParsed.suit;
+    if(mySuit!=='NT'&&partnerLastParsed.suit===mySuit){
+      // Partner raised my suit
+      if(partnerLastParsed.level===2){
+        // Simple raise from opener
+        if(hcp>=10){bid('3'+mySuit,'邀请到局');return}
+        if(hcp>=6){bid('2NT','自然邀请');return}
+        processBid(pos,'Pass');return;
+      }
+      if(partnerLastParsed.level===3){
+        // Limit raise from opener
+        if(hcp>=10){bid('4'+mySuit,'接受邀请');return}
+        processBid(pos,'Pass');return;
+      }
+    }
+  }
+
+  // ---- After 1♥-1♠-? opener rebid ----
+  // e.g., 1♥-1♠-2♥ (opener rebid hearts)
+  if(partnerLastParsed&&myFirstBid==='1♠'){
+    let pSuit=partnerLastParsed.suit;
+    if(pSuit==='♥'&&partnerLastParsed.level===2){
+      // Opener rebid hearts
+      if(suits['♥']>=3&&hcp>=10){bid('4♥','加叫到局');return}
+      if(suits['♥']>=3&&hcp>=6){bid('3♥','加叫');return}
+      if(hcp>=10){bid('2♠','再叫♠，5+张');return}
+      if(hcp>=6){bid('2♠','再叫♠');return}
+      bid('2NT','自然叫');return;
+    }
+    // Opener bid 2NT
+    if(partnerBid==='2NT'){
+      if(hcp>=10){bid('3NT','进局');return}
+      if(hcp>=8){bid('3♣','新花色试探');return}
+      processBid(pos,'Pass');return;
+    }
+    // Opener bid new suit
+    if(pSuit!=='♠'&&pSuit!=='♥'&&partnerLastParsed.level<=2){
+      if(hcp>=10){bid('2♠','再叫♠');return}
+      if(hcp>=10){bid('3NT','进局');return}
+      processBid(pos,'Pass');return;
+    }
+  }
+
+  // ---- After 2/1, opener rebid ----
+  // We're in a game-forcing auction
+  if(myFirstParsed&&myFirstParsed.level===2&&myFirstParsed.suit!=='NT'){
+    let mySuit=myFirstParsed.suit;
+    // Check total HCP with partner's assumed opening (12+)
+    let combinedMin=hcp+12;
+    if(combinedMin>=26){
+      // Game forcing: bid game
+      if(balanced){bid('3NT','打3NT');return}
+      if(mySuit==='♥'||mySuit==='♠'){
+        bid('4'+mySuit,'打4'+SN[mySuit]);return;
+      }
+      // Minor: 3NT or 5 of minor
+      bid('3NT','打3NT');return;
+    }
+    // Below game: keep exploring
+    if(partnerLastParsed){
+      let ps=partnerLastParsed.suit;
+      if(ps===mySuit){
+        // Partner supported me
+        if(hcp>=14){bid('3NT','逼叫到局');return}
+        bid('3'+mySuit,'继续逼叫');return;
+      }
+      if(ps!=='NT'){
+        // Partner bid a new suit
+        if(suits[ps]>=3&&hcp>=10){
+          bid('3'+ps,'加叫同伴');return;
+        }
+        // Rebid own suit
+        if(suits[mySuit]>=6){
+          bid('3'+mySuit,'再叫原花');return;
+        }
+        bid('2NT','过渡叫');return;
+      }
+    }
+    // Default: bid NT or own suit
+    if(hcp>=13){bid('3NT','打3NT');return}
+    bid('3'+mySuit,'再叫原花');return;
+  }
+
+  // ---- After opener rebid 1NT (15-17) ----
+  if(partnerBid==='1NT'){
+    if(hcp>=12&&balanced){bid('3NT','进局');return}
+    if(hcp>=10&&balanced){bid('2NT','邀请3NT');return}
+    // New suit: 5+ cards, invitational
+    if(hcp>=10&&longSuits.length>0){
+      let ls=longSuits[0].suit;
+      // Check if we already showed this suit
+      if(!myBids.some(b=>b.bid.slice(1)===ls)){
+        let b='2'+ls;
+        if(bidVal(b)>bidVal(G.highestBid)){bid(b,'新花色，逼叫一轮');return}
+      }
+    }
+    // Raise partner's opening suit if we have support
+    let myOpenSuit=myBids.length>0?myBids[0].bid:null;
+    if(myOpenSuit&&myOpenParsed){
+      // We're actually the responder here
+    }
+    processBid(pos,'Pass');return;
+  }
+
+  // ---- After opener rebid 2NT (18-19) ----
+  if(partnerBid==='2NT'){
+    if(hcp>=6){bid('3NT','进局');return}
+    // Transfer if available
+    if(suits['♥']>=5){bid('3♦','转移♥');return}
+    if(suits['♠']>=5){bid('3♥','转移♠');return}
+    bid('3♣','斯台曼');return;
+  }
+
+  // ---- Default: pass ----
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// COMPETITIVE BIDDING (opponent opened)
+// =========================================================================
+function competitiveBid(pos,hand,hcp,suits,longSuits,balanced,lastNP){
+  if(!lastNP){processBid(pos,'Pass');return}
+
+  let oppSuit=lastNP.bid.slice(1);
+  let oppLevel=+lastNP.bid[0];
+
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  // ---- Takeout Double: 12+ HCP, shortness in opponent's suit ----
+  if(isOpponent(pos,lastNP.pos)&&lastNP.bid!=='X'&&lastNP.bid!=='XX'&&oppLevel===1){
+    if(hcp>=12&&suits[oppSuit]<=1){
+      bid('X','技术性加倍，12+HCP，'+SN[oppSuit]+'短门');return;
+    }
+    // Also takeout double with 15+ HCP even with 2 cards
+    if(hcp>=15&&suits[oppSuit]<=2){
+      bid('X','技术性加倍，15+HCP');return;
+    }
+  }
+
+  // ---- Negative Double: partner opened, RHO overcalled, I double ----
+  // Shows the unbid suits (usually both majors if opp bid a minor)
+  let majors=['♥','♠'],minors=['♣','♦'];
+  let partnerBids=G.bids.filter(b=>b.pos===getPartner(pos)&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  let iHaveBid=G.bids.some(b=>b.pos===pos&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  if(partnerBids.length>0&&!iHaveBid&&isOpponent(pos,lastNP.pos)){
+    let opener=partnerBids[0];
+    let openerParsed=parseBid(opener.bid);
+    if(openerParsed&&openerParsed.level===1){
+      // Partner opened 1-level, RHO overcalled
+      if(oppLevel<=2&&hcp>=6){
+        // Negative double: show the other suits
+        if(majors.includes(oppSuit)){
+          // Opp bid a major, show the other major + both minors
+          let otherMajor=oppSuit==='♥'?'♠':'♥';
+          if(suits[otherMajor]>=4){
+            bid('X','负加倍，'+hcp+'HCP，4+'+SN[otherMajor]);return;
+          }
+        }else{
+          // Opp bid a minor, show both majors
+          if(suits['♥']>=4||suits['♠']>=4){
+            bid('X','负加倍，'+hcp+'HCP，有4张高花');return;
+          }
+        }
+      }
+    }
+  }
+
+  // ---- 1NT overcall: 15-17 HCP, balanced, stopper in opp's suit ----
+  if(oppLevel===1&&hcp>=15&&hcp<=17&&balanced){
+    let hasStop=suits[oppSuit]>=3||
+      (suits[oppSuit]>=2&&hand.some(c=>c.suit===oppSuit&&(c.rank==='A'||c.rank==='K'||c.rank==='Q')));
+    if(hasStop){
+      let b='1NT';
+      if(bidVal(b)>bidVal(G.highestBid)){bid(b,'1NT争叫，15-17HCP，有'+SN[oppSuit]+'止');return}
+    }
+  }
+
+  // ---- Overcall at 1-level: 10+ HCP, 5-card suit ----
+  if(oppLevel===1&&hcp>=10&&longSuits.length>0){
+    let os=longSuits[0].suit;
+    if(os!==oppSuit&&longSuits[0].len>=5){
+      let b='1'+os;
+      if(bidVal(b)>bidVal(G.highestBid)){bid(b,'争叫，10+HCP，5+'+SN[os]);return}
+    }
+  }
+
+  // ---- Overcall at 2-level: 10+ HCP, good 6-card suit ----
+  if(oppLevel>=1&&hcp>=10&&longSuits.length>0){
+    let os=longSuits[0].suit;
+    if(os!==oppSuit&&longSuits[0].len>=6){
+      let b='2'+os;
+      if(bidVal(b)>bidVal(G.highestBid)){bid(b,'二阶争叫，10+HCP，6+'+SN[os]);return}
+    }
+  }
+
+  // ---- Michaels Cuebid: 5-5 in two suits (simplified: cuebid with 2 5-card suits) ----
+  // Cuebid opponent's suit showing 5-5 in the other two suits of that rank
+  if(hcp>=8){
+    let majors=['♥','♠'],minors=['♣','♦'];
+    if(majors.includes(oppSuit)){
+      // Cuebid shows 5-5 in the two minors
+      if(suits['♣']>=5&&suits['♦']>=5){
+        let cb='2'+oppSuit;
+        if(bidVal(cb)>bidVal(G.highestBid)){bid(cb,'迈克尔斯扣叫，5-5低花');return}
+      }
+    }
+    // If opponent opened minor, cuebid shows 5-5 majors
+    if(minors.includes(oppSuit)){
+      if(suits['♥']>=5&&suits['♠']>=5){
+        let cb='2'+oppSuit;
+        if(bidVal(cb)>bidVal(G.highestBid)){bid(cb,'迈克尔斯扣叫，5-5高花');return}
+      }
+    }
+  }
+
+  // ---- Weak jump overcall: 6+ cards, 5-10 HCP ----
+  if(hcp>=5&&hcp<=10&&longSuits.length>0&&longSuits[0].len>=6){
+    let os=longSuits[0].suit;
+    if(os!==oppSuit){
+      let jumpLv=oppLevel+1;
+      let b=jumpLv+os;
+      if(bidVal(b)>bidVal(G.highestBid)){
+        bid(b,'跳争叫，弱牌，6+'+SN[os]);return;
+      }
+    }
+  }
+
+  // Default: pass
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// CONTINUED BIDDING (multi-round auctions, further exploration)
+// =========================================================================
+function continueBidding(pos,hand,hcp,suits,longSuits,balanced,myBids,partnerBids){
+  function bid(b,meaning){
+    if(G.highestBid&&bidVal(b)<=bidVal(G.highestBid)){processBid(pos,'Pass');return}
+    processBid(pos,b);
+    if(G.bids.length>0)G.bids[G.bids.length-1].meaning=meaning;
+  }
+
+  let partnerLastBid=partnerBids.length>0?partnerBids[partnerBids.length-1].bid:null;
+  let myLastBid=myBids.length>0?myBids[myBids.length-1].bid:null;
+
+  // If we're already at game level, pass
+  if(G.highestBid){
+    let p=parseBid(G.highestBid);
+    if(p){
+      let isGame=(p.suit==='NT'&&p.level>=3)||
+        ((p.suit==='♥'||p.suit==='♠')&&p.level>=4)||
+        ((p.suit==='♣'||p.suit==='♦')&&p.level>=5);
+      if(isGame){processBid(pos,'Pass');return}
+    }
+  }
+
+  // If we have a fit and enough HCP, try to bid game
+  let partnerSuit=getPartnerSuit(pos);
+  if(partnerSuit&&suits[partnerSuit]>=3&&hcp>=10){
+    let gameLv=(partnerSuit==='♥'||partnerSuit==='♠')?4:5;
+    let gameBid=gameLv+partnerSuit;
+    if(!G.highestBid||bidVal(gameBid)>bidVal(G.highestBid)){
+      bid(gameBid,'进局');return;
+    }
+  }
+
+  // Strong hand: keep bidding
+  if(hcp>=16&&longSuits.length>0){
+    let ls=longSuits[0].suit;
+    let b='2'+ls;
+    if(!G.highestBid||bidVal(b)>bidVal(G.highestBid)){
+      bid(b,'自然叫，强牌');return;
+    }
+  }
+
+  // ---- Blackwood: 4NT ace-asking ----
+  // When we have agreed on a suit and someone bids 4NT
+  if(myLastBid||partnerLastBid){
+    let agreedSuit=null;
+    // Find agreed suit (last raised suit by either side)
+    for(let i=G.bids.length-1;i>=0;i--){
+      let b=G.bids[i];
+      if(b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX'){
+        let p2=parseBid(b.bid);
+        if(p2&&p2.suit!=='NT'){
+          agreedSuit=p2.suit;break;
+        }
+      }
+    }
+    // Respond to partner's 4NT Blackwood
+    if(partnerLastBid==='4NT'&&agreedSuit){
+      let aces=0;
+      hand.forEach(c=>{if(c.rank==='A')aces++});
+      // RKCB responses: 5♣=0/3 aces, 5♦=1/4 aces, 5♥=2 aces w/o Q, 5♠=2 aces w/ Q
+      if(aces===0||aces===3){bid('5♣','RKCB回答：'+aces+'个A');return}
+      if(aces===1||aces===4){bid('5♦','RKCB回答：'+aces+'个A');return}
+      if(aces===2){
+        let hasQueen=hand.some(c=>c.rank==='Q'&&c.suit===agreedSuit);
+        if(hasQueen){bid('5♠','RKCB回答：2个A+将牌Q');return}
+        else{bid('5♥','RKCB回答：2个A，无将牌Q');return}
+      }
+      bid('5♣','RKCB回答：0个A');return;
+    }
+    // Ask 4NT Blackwood when we have a fit and enough HCP
+    if(!partnerLastBid||partnerLastBid!=='4NT'){
+      let mySuitBids=myBids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+      let partnerSuitBids=partnerBids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+      // Check if we have a fit (partner raised my suit or I raised theirs)
+      let hasFit=mySuitBids.some(b=>{
+        let p3=parseBid(b.bid);
+        return p3&&p3.suit===agreedSuit;
+      })&&partnerSuitBids.some(b=>{
+        let p3=parseBid(b.bid);
+        return p3&&p3.suit===agreedSuit;
+      });
+      if(hasFit&&hcp>=15&&agreedSuit){
+        let bidVal4NT=bidVal('4NT');
+        if(!G.highestBid||bidVal4NT>bidVal(G.highestBid)){
+          let myAces=0;
+          hand.forEach(c=>{if(c.rank==='A')myAces++});
+          if(myAces>=2){
+            bid('4NT','布莱克伍德问叫，问A数');return;
+          }
+        }
+      }
+    }
+  }
+
+  // ---- Fourth Suit Forcing: bid the 4th suit to create a forcing auction ----
+  let realBids2=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  if(realBids2&&realBids2.length>=2){
+  let bidSuits2=new Set();
+  for(let b of G.bids){
+    if(b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX'){
+        let p2=parseBid(b.bid);
+        if(p2&&p2.suit!=='NT')bidSuits2.add(p2.suit);
+      }
+    }
+    if(bidSuits2.size===3){
+      let fourthSuit=S4.find(s=>!bidSuits2.has(s));
+      if(fourthSuit&&suits[fourthSuit]>=4&&hcp>=10){
+        let fsBid='1'+fourthSuit;
+        // Only if it's a legal bid (not below current)
+        if(!G.highestBid||bidVal(fsBid)>bidVal(G.highestBid)){
+          bid(fsBid,'第四花色逼叫，'+hcp+'HCP，4+'+SN[fourthSuit]);return;
+        }
+        // If 1-level is too low, try 2-level
+        fsBid='2'+fourthSuit;
+        if(!G.highestBid||bidVal(fsBid)>bidVal(G.highestBid)){
+          bid(fsBid,'第四花色逼叫，'+hcp+'HCP');return;
+        }
+      }
+    }
+  }
+
+  // Default
+  processBid(pos,'Pass');
+}
+
+// =========================================================================
+// GET BID EXPLANATION (updated for SA bidding system)
+// =========================================================================
+function getBidExplanation(bid,pos){
+  if(bid==='Pass')return '不叫';
+  if(bid==='X')return '技术性加倍\n12+HCP，对未叫花色有支持';
+  if(bid==='XX')return '再加倍\n惩罚性，对定约有信心';
+
+  // Check for stored meaning from AI bids
+  let bidEntry=G.bids.find(b=>b.pos===pos&&b.bid===bid&&b.meaning);
+  if(bidEntry&&bidEntry.meaning)return bidEntry.meaning;
+
+  let suit=bid.slice(1),lv=+bid[0];
+  let suitCN=suit==='NT'?'无将':SN[suit];
+  let partner=getPartner(pos);
+  let realBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  let partnerHasBid=realBids.some(b=>b.pos===partner);
+  let context=realBids.length===0?'开叫':partnerHasBid?'应叫':'争叫';
+  let desc;
+
+  if(suit==='NT'){
+    if(lv===1)desc='15-17HCP，均型牌';
+    else if(lv===2)desc='20-21HCP，均型牌';
+    else if(lv===3)desc='25-27HCP，均型牌';
+    else desc='均型牌';
+  }else{
+    if(context==='开叫'){
+      if(lv===1)desc='12+HCP，5+'+suitCN+'套';
+      else if(lv===2){
+        if(suit==='♣')desc='强二开叫，22+HCP';
+        else desc='弱二开叫，6张'+suitCN;
+      }
+      else desc='阻击叫，7张'+suitCN;
+    }else if(context==='应叫'){
+      desc='应叫，显示牌力和牌型';
+    }else{
+      desc='争叫，10+HCP，5+'+suitCN+'套';
+    }
+  }
+  return context+bid+'：'+desc;
 }
 
 function processBid(pos,bid){
@@ -1581,6 +3521,1181 @@ function resetPlayedCards(){playedCards=[]}
 // ============ SPEED-AWARE DELAY HELPER ============
 function spd(ms){return ms*(G?G.speed:1)}
 
+// =========================================================================
+// FEATURE 1: SMART BIDDING HINT SYSTEM
+// =========================================================================
+
+let hintVisible=true;
+let currentHintData=null;
+
+function generateHint(){
+  let hs=G.humanSeat||'S';
+  let hand=G.hands[hs];
+  if(!hand||hand.length===0)return null;
+
+  let hcp=evalHCP(hand);
+  let suits=evalSuits(hand);
+  let longSuits=evalLongSuits(suits);
+  let balanced=isBalanced(suits,hand);
+
+  // Determine what the AI would bid
+  let realBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  let noRealBids=realBids.length===0;
+  let partner=getPartner(hs);
+  let myBids=getMyBids(hs);
+  let partnerBids=getPartnerBids(hs);
+  let oppBids=getOpponentBids(hs);
+  let hasBidBefore=myBids.length>0;
+  let partnerHasBid=partnerBids.length>0;
+
+  let ourSideFirstBid=null;
+  for(let b of G.bids){
+    if((b.pos===hs||b.pos===partner)&&(b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX')){
+      ourSideFirstBid=b;break;
+    }
+  }
+  let iAmOpener=ourSideFirstBid&&ourSideFirstBid.pos===hs;
+  let partnerIsOpener=ourSideFirstBid&&ourSideFirstBid.pos===partner;
+  let partnerOpening=partnerBids.length>0?partnerBids[0]:null;
+  let partnerOpenBid=partnerOpening?partnerOpening.bid:null;
+  let partnerOpenParsed=parseBid(partnerOpenBid);
+  let lastNP=getLastNonPass();
+
+  let recommended=null,reason='',alternatives=[],tip='';
+
+  // Determine recommended bid and reasoning
+  if(noRealBids){
+    // Opening bid
+    if(hcp>=22){
+      recommended='2♣';reason='你有'+hcp+'点大牌点（22+），属于强牌，应开叫2♣（强开叫）。';
+      tip='2♣是人工叫品，表示22+HCP或9+赢墩的强牌。';
+    }else if(hcp>=20&&hcp<=21&&balanced){
+      recommended='2NT';reason='你有'+hcp+'点大牌点，均型牌，适合开叫2NT。';
+      tip='2NT开叫表示20-21HCP的均型牌。';
+    }else if(hcp>=15&&hcp<=17&&balanced){
+      recommended='1NT';reason='你有'+hcp+'点大牌点，均型牌，适合开叫1NT。';
+      alternatives=['1♣/1♦（如果不想暴露牌型）'];
+      tip='1NT开叫（15-17HCP）是最常见的均型开叫。';
+    }else if(hcp>=12){
+      if(suits['♠']>=5){
+        recommended='1♠';reason='你有'+hcp+'点，5+张黑桃套，应先叫最长的高花。';
+        if(suits['♥']>=5)alternatives=['1♥（5-5高花也可选红心，但惯例优先♠）'];
+        tip='5张高花开叫是标准美式体系的核心原则。';
+      }else if(suits['♥']>=5){
+        recommended='1♥';reason='你有'+hcp+'点，5+张红心套，应先叫最长的高花。';
+        tip='高花（♠♥）比低花（♦♣）更容易进局。';
+      }else if(suits['♦']>suits['♣']){
+        recommended='1♦';reason='你有'+hcp+'点，没有5张高花，低花中♦较长。';
+        alternatives=['1♣（如果♣更长或等长）'];
+        tip='没有5张高花时，开叫较长的低花。';
+      }else{
+        recommended='1♣';reason='你有'+hcp+'点，没有5张高花，开叫1♣。';
+        alternatives=['1♦（如果♦更长）'];
+        tip='1♣也可以是3张套（均型牌时的"准备叫"）。';
+      }
+    }else if(hcp>=5&&hcp<=10){
+      for(let s of S4){if(suits[s]>=7){recommended='3'+s;reason='你有'+hcp+'点，7张'+SN[s]+'，可以阻击叫。';break}}
+      if(!recommended){
+        for(let s of['♦','♥','♠']){if(suits[s]===6){recommended='2'+s;reason='你有'+hcp+'点，6张'+SN[s]+'，弱二开叫。';break}}
+      }
+      if(!recommended){recommended='Pass';reason='你只有'+hcp+'点，且没有长套，不够开叫。';tip='通常需要12+HCP才能开叫。'}
+    }else{
+      recommended='Pass';reason='你只有'+hcp+'点，不够开叫（通常需要12+HCP）。';
+      tip='牌力不足时，Pass是最明智的选择。耐心等待好牌！';
+    }
+  }else if(partnerIsOpener&&!hasBidBefore){
+    // Responding to partner's opening
+    if(partnerOpenParsed&&partnerOpenParsed.suit==='NT'&&partnerOpenParsed.level===1){
+      // Responding to 1NT
+      if(suits['♥']>=5){recommended='2♦';reason='你有5+张红心，用雅可比转移叫2♦让搭档叫2♥。';tip='转移叫让你成为庄家，保护了你的长套。';}
+      else if(suits['♠']>=5){recommended='2♥';reason='你有5+张黑桃，用雅可比转移叫2♥让搭档叫2♠。';}
+      else if(hcp>=8&&has4CardMajor(suits)){recommended='2♣';reason='你有'+hcp+'点和4张高花，用斯台曼问高花。';tip='斯台曼2♣用来寻找4-4高花配合。';}
+      else if(hcp>=10){recommended='3NT';reason='你有'+hcp+'点，直接叫3NT进局。';}
+      else if(hcp>=8&&hcp<=9&&balanced){recommended='2NT';reason='你有'+hcp+'点均型牌，邀请搭档选择2NT或3NT。';}
+      else{recommended='Pass';reason='你只有'+hcp+'点，牌力不足以应叫。';tip='对1NT开叫，通常需要8+HCP才能应叫。';}
+    }else if(partnerOpenParsed&&(partnerOpenParsed.suit==='♥'||partnerOpenParsed.suit==='♠')){
+      let pSuit=partnerOpenParsed.suit;
+      let support=suits[pSuit];
+      if(hcp>=13&&support>=4){recommended='2NT';reason='你有'+hcp+'点和4张'+SN[pSuit]+'支持，雅可比2NT逼叫到局。';tip='雅可比2NT表示13+HCP、4+支持、无单缺。';}
+      else if(hcp>=10&&hcp<=12&&support>=3){recommended='3'+pSuit;reason='你有'+hcp+'点和'+support+'张支持，限制性加叫。';tip='限制性加叫（10-12HCP, 3+支持）让开叫人决定是否进局。';}
+      else if(hcp>=6&&hcp<=9&&support>=3){recommended='2'+pSuit;reason='你有'+hcp+'点和'+support+'张支持，简单加叫。';tip='简单加叫是弱应叫，告诉搭档你有部分配合。';}
+      else if(pSuit==='♥'&&suits['♠']>=4&&hcp>=6){recommended='1♠';reason='你有'+hcp+'点和4+张黑桃，先应叫1♠。';tip='应叫新花色是逼叫一轮的。';}
+      else if(hcp>=6&&hcp<=10){recommended='1NT';reason='你有'+hcp+'点，没有好的加叫或新花色可叫，1NT逼叫。';}
+      else if(hcp>=12&&longSuits.length>0&&longSuits[0].suit!==pSuit){recommended='2'+longSuits[0].suit;reason='你有'+hcp+'点和5+'+SN[longSuits[0].suit]+'，二盖一逼叫到局。';tip='二盖一（2/1）响应是逼叫到局的。';}
+      else{recommended='Pass';reason='你只有'+hcp+'点，没有好的应叫选择。';}
+    }else if(partnerOpenParsed&&(partnerOpenParsed.suit==='♣'||partnerOpenParsed.suit==='♦')){
+      let pSuit=partnerOpenParsed.suit;
+      if(hcp>=6&&suits['♠']>=4){recommended='1♠';reason='你有'+hcp+'点和4+张黑桃，先叫高花。';tip='对低花开叫，优先应叫高花寻找4-4配合。';}
+      else if(hcp>=6&&suits['♥']>=4){recommended='1♥';reason='你有'+hcp+'点和4+张红心，先叫高花。';}
+      else if(hcp>=6&&hcp<=10){recommended='1NT';reason='你有'+hcp+'点，没有4张高花，1NT应叫。';}
+      else{recommended='Pass';reason='你只有'+hcp+'点，不够应叫。';}
+    }else{
+      recommended='Pass';reason='你只有'+hcp+'点，牌力不足。';
+    }
+  }else{
+    // General: use AI logic
+    let aiResult=null;
+    let origProcessBid=window._origProcessBid;
+    if(!origProcessBid){window._origProcessBid=processBid;}
+    // Temporarily capture the AI's bid decision
+    let capturedBid=null;
+    let origPB=processBid;
+    processBid=function(p,b){if(p===hs)capturedBid=b;else origPB(p,b);};
+    try{aiBid(hs)}catch(e){}
+    processBid=origPB;
+    if(capturedBid){
+      recommended=capturedBid;
+      reason='基于你的牌力('+hcp+'HCP)和当前叫牌进程，AI建议叫'+capturedBid+'。';
+      tip=getBidExplanation(capturedBid,hs)||'参考标准叫牌体系。';
+    }else{
+      recommended='Pass';reason='基于当前局势，Pass是合理的选择。';
+      tip='有时不叫也是一种策略。';
+    }
+  }
+
+  if(!recommended)recommended='Pass';
+  return{recommended,reason,alternatives,tip,hcp,suits,longSuits};
+}
+
+function renderHintPanel(){
+  let panel=document.getElementById('hint-panel');
+  let btn=document.getElementById('btn-hint-toggle');
+  if(!hintVisible){panel.classList.remove('show');btn.classList.add('hidden-hint');btn.textContent='💡 显示提示';return;}
+  btn.classList.remove('hidden-hint');btn.textContent='💡 隐藏提示';
+
+  let data=generateHint();
+  if(!data){panel.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.4)">无法生成提示</div>';panel.classList.add('show');return;}
+  currentHintData=data;
+
+  let handStr='';
+  let hs=G.humanSeat||'S';
+  let hand=G.hands[hs];
+  if(hand&&hand.length>0){
+    let grouped={};
+    S4.forEach(s=>grouped[s]=[]);
+    hand.forEach(c=>grouped[c.suit].push(c.rank));
+    S4.forEach(s=>{
+      let ranks=grouped[s];
+      if(ranks.length>0){
+        handStr+=s+ranks.join('')+' ';
+      }
+    });
+  }
+
+  let altHtml='';
+  if(data.alternatives&&data.alternatives.length>0){
+    altHtml='<div class="hint-alt"><div class="hint-alt-title">其他选择：</div>'+
+      data.alternatives.map(a=>'<span class="hint-alt-item">'+a+'</span>').join('')+'</div>';
+  }
+
+  let tipHtml=data.tip?'<div class="hint-tip">'+data.tip+'</div>':'';
+
+  panel.innerHTML=`
+    <div class="hint-title">
+      <span>💡 智能提示</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.4)">${data.hcp} HCP</span>
+    </div>
+    ${handStr?'<div style="font-size:12px;margin-bottom:8px;color:rgba(255,255,255,.6)">'+handStr+'</div>':''}
+    <div class="hint-rec">
+      <div class="bid-name">推荐：${data.recommended}</div>
+      <div class="bid-why">${data.reason}</div>
+    </div>
+    ${altHtml}
+    ${tipHtml}
+  `;
+  panel.classList.add('show');
+}
+
+function toggleHint(){
+  hintVisible=!hintVisible;
+  renderHintPanel();
+}
+
+// Override showBidUI to include hints
+let _origShowBidUI=showBidUI;
+showBidUI=function(){
+  _origShowBidUI();
+  // Render hint panel after showing bid UI
+  setTimeout(()=>renderHintPanel(),50);
+};
+
+// =========================================================================
+// FEATURE 2: INTERACTIVE TUTORIAL MODE
+// =========================================================================
+
+let tutorialLessons=[
+  {
+    id:'opening',title:'开叫基础',
+    explanation:`<p><strong>什么是开叫？</strong> 当你是第一个做出非Pass叫品的玩家时，你的叫牌称为"开叫"。开叫的目的是告诉搭档你的牌力和牌型。</p>
+<p><strong>基本规则：</strong> 通常需要<strong>12+HCP</strong>（大牌点）才能开叫。A=4点，K=3点，Q=2点，J=1点。</p>
+<p><strong>高花优先：</strong> 如果有5张或更长的高花套（♠或♥），优先叫高花。5张黑桃开叫1♠，5张红心开叫1♥。</p>
+<p><strong>无将开叫：</strong> 如果是均型牌（4333、4432、5332且5张低花）且有15-17HCP，开叫1NT。</p>
+<p><strong>低花开叫：</strong> 没有5张高花时，开叫较长的低花。等长时开叫1♣。</p>`,
+    quizzes:[
+      {hand:'♠AQ753 ♥K84 ♦K32 ♣97',answer:'1♠',options:['1♠','1NT','Pass','1♣'],explain:'有5张黑桃和13HCP，标准的1♠开叫。'},
+      {hand:'♠KQ84 ♥A975 ♦K3 ♣J98',answer:'1NT',options:['1♥','1NT','1♣','Pass'],explain:'16HCP均型牌（4432），开叫1NT。没有5张高花时，15-17均型开1NT。'},
+      {hand:'♠8 ♥AQ964 ♦KQ73 ♣A85',answer:'1♥',options:['1♥','1♦','1NT','Pass'],explain:'5张红心和14HCP，优先开叫高花1♥。'},
+      {hand:'♠974 ♥KQ853 ♦A7 ♣KJ9',answer:'1♥',options:['1♥','1NT','1♣','Pass'],explain:'5张红心和14HCP，开叫1♥。即使其他花色也不错，5张高花仍优先。'},
+      {hand:'♠KQ8 ♥J75 ♦A96 ♣K873',answer:'1♣',options:['1♣','1NT','1♦','Pass'],explain:'14HCP，无5张高花，均型但不在1NT范围（需要15-17），开叫最长低花1♣。'}
+    ]
+  },
+  {
+    id:'response',title:'应叫基础',
+    explanation:`<p><strong>什么是应叫？</strong> 当搭档开叫后，你的叫牌称为"应叫"。应叫的目的是告诉搭档你的牌力范围和牌型。</p>
+<p><strong>简单加叫：</strong> 搭档开叫高花（如1♥），你有<strong>6-9HCP</strong>和<strong>3+张支持</strong>，简单加叫到2♥。这告诉搭档你有部分配合和有限的牌力。</p>
+<p><strong>限制性加叫：</strong> 有<strong>10-12HCP</strong>和3+张支持时，跳加叫（如1♥→3♥）。这是邀请搭档在高限时进局。</p>
+<p><strong>应叫新花色：</strong> 有<strong>6+HCP</strong>时可以应叫新花色（如1♥→1♠）。1阶新花色是逼叫一轮的。二盖一（如1♥→2♣）需要12+HCP，逼叫到局。</p>
+<p><strong>1NT逼叫：</strong> 6-10HCP，没有3张支持，没有好的新花色可叫时，应叫1NT。</p>`,
+    quizzes:[
+      {hand:'搭档开叫1♥，你持♠K874 ♥973 ♦AJ65 ♣84',answer:'1♠',options:['1♠','2♥','1NT','Pass'],explain:'你有4张黑桃和8HCP，应叫1♠（逼叫一轮），先寻找4-4黑桃配合。'},
+      {hand:'搭档开叫1♠，你持♠Q974 ♥K83 ♦965 ♣J73',answer:'2♠',options:['2♠','1NT','Pass','3♠'],explain:'你有8HCP和3张黑桃支持，简单加叫到2♠。'},
+      {hand:'搭档开叫1♠，你持♠KJ74 ♥A8 ♦Q965 ♣K83',answer:'3♠',options:['2♠','3♠','1NT','2NT'],explain:'你有13HCP和3张支持，跳加叫3♠（限制性加叫，邀请进局）。'},
+      {hand:'搭档开叫1♥，你持♠874 ♥K3 ♦AQ974 ♣K85',answer:'2♦',options:['2♦','2♥','1NT','Pass'],explain:'你有12HCP和5张方块，二盖一2♦逼叫到局。'},
+      {hand:'搭档开叫1♦，你持♠K87 ♥Q964 ♦97 ♣J853',answer:'1♥',options:['1♥','1NT','2♦','Pass'],explain:'你有4张红心和7HCP，应叫1♥（逼叫一轮）。'}
+    ]
+  },
+  {
+    id:'conventions',title:'约定叫',
+    explanation:`<p><strong>斯台曼（Stayman）：</strong> 搭档开叫1NT后，你叫2♣是"斯台曼"，用来询问搭档是否有4张高花。需要8+HCP和至少一个4张高花。搭档回答：2♦=无4张高花，2♥=4张红心，2♠=4张黑桃。</p>
+<p><strong>雅可比转移叫（Jacoby Transfer）：</strong> 搭档开叫1NT后，你叫2♦表示5+张红心（搭档必须叫2♥），叫2♥表示5+张黑桃（搭档必须叫2♠）。这样你成为庄家，保护了你的长套大牌。</p>
+<p><strong>布莱克伍德（Blackwood）：</strong> 4NT是"布莱克伍德"问A。搭档回答：5♣=0或4个A，5♦=1个A，5♥=2个A，5♠=3个A。用于判断是否能打满贯。</p>
+<p><strong>使用时机：</strong> 斯台曼和转移叫在搭档开叫1NT或2NT后使用。布莱克伍德在已经确定将牌花色后、考虑满贯时使用。</p>`,
+    quizzes:[
+      {hand:'搭档开叫1NT，你持♠KQ87 ♥AJ64 ♦975 ♣83',answer:'2♣',options:['2♣','2♦','2♥','3NT'],explain:'你有4张黑桃和4张红心，8HCP，先用斯台曼2♣问高花。如果搭档答2♥或2♠，你可以加叫。'},
+      {hand:'搭档开叫1NT，你持♠AQ9765 ♥84 ♦K73 ♣95',answer:'2♥',options:['2♣','2♦','2♥','2♠'],explain:'你有6张黑桃，用雅可比转移叫2♥让搭档叫2♠，这样你成为庄家。'},
+      {hand:'搭档开叫1NT，你持♠KQ7 ♥AQ9643 ♦K5 ♣83',answer:'2♦',options:['2♣','2♦','3♦','4♥'],explain:'你有5张红心，先用转移叫2♦让搭档叫2♥。之后你可以再叫4♥进局。'},
+      {hand:'已确定♠为将牌，你持♠AQ7 ♥K8 ♦A965 ♣AQ74',answer:'4NT',options:['4NT','4♠','5♠','Pass'],explain:'你有4个A中的3个，且有满贯兴趣。叫4NT（布莱克伍德）问搭档A的数量。'},
+      {hand:'搭档开叫1NT，你持♠KQ874 ♥AJ76 ♦85 ♣93',answer:'2♣',options:['2♣','2♥','2♠','3NT'],explain:'你有两个4张高花，先用斯台曼2♣问搭档的高花。'}
+    ]
+  },
+  {
+    id:'competitive',title:'竞叫',
+    explanation:`<p><strong>争叫（Overcall）：</strong> 对手开叫后，你可以用5+张套和10+HCP进行争叫。例如对手开叫1♣，你持5张红心和11HCP，可以争叫1♥。争叫可以帮助搭档找到首攻。</p>
+<p><strong>技术性加倍（Takeout Double）：</strong> 对手开叫后，加倍是"技术性"的，表示12+HCP且对未叫花色有支持。要求搭档选一个未叫花色。通常对开叫花色是短套（0-2张）。</p>
+<p><strong>负加倍（Negative Double）：</strong> 搭档开叫、对手争叫后，你的加倍是"负加倍"，表示有未叫高花的4张套和一定牌力。</p>
+<p><strong>竞叫原则：</strong> 不要为了竞叫而竞叫。确保你的叫牌有建设性意义，要么描述你的牌，要么帮助搭档做决定。</p>`,
+    quizzes:[
+      {hand:'对手开叫1♣，你持♠AQ975 ♥K84 ♦973 ♣J5',answer:'1♠',options:['1♠','X','Pass','1NT'],explain:'你有5张黑桃和11HCP，标准的1阶争叫。'},
+      {hand:'对手开叫1♦，你持♠AQ84 ♥KJ75 ♦83 ♣AQ7',answer:'X',options:['X','1♥','1♠','1NT'],explain:'你有14HCP且对未叫花色都有支持，方块短（2张），技术性加倍最合适。'},
+      {hand:'对手开叫1♥，你持♠97 ♥863 ♦AQ874 ♣KJ5',answer:'Pass',options:['Pass','1♦','X','1NT'],explain:'你只有10HCP和5张方块，但方块质量不够好（缺少K），且没有好的争叫选择。Pass是明智的。'},
+      {hand:'对手开叫1♥，你持♠AQ975 ♥K ♦K874 ♣Q95',answer:'1♠',options:['1♠','X','1NT','Pass'],explain:'你有5张好黑桃和13HCP，1阶争叫1♠是合适的。'},
+      {hand:'搭档开叫1♣，对手争叫1♥，你持♠AQ97 ♥85 ♦K964 ♣J73',answer:'X',options:['X','1♠','1NT','Pass'],explain:'这是负加倍的情况：你有4张黑桃和10HCP，加倍表示有未叫高花（♠）的4张套。'}
+    ]
+  }
+];
+
+let tutorialState={currentLesson:0,scores:[0,0,0,0],answered:[[],[],[],[]],completed:[]};
+
+function loadTutorialProgress(){
+  try{
+    let saved=localStorage.getItem('bridge-tutorial');
+    if(saved){
+      let data=JSON.parse(saved);
+      if(data.completed)tutorialState.completed=data.completed;
+    }
+  }catch(e){}
+}
+
+function saveTutorialProgress(){
+  try{
+    localStorage.setItem('bridge-tutorial',JSON.stringify({completed:tutorialState.completed}));
+  }catch(e){}
+}
+
+function openTutorial(){
+  loadTutorialProgress();
+  renderTutorialTabs();
+  showTutorialLesson(tutorialState.currentLesson);
+  document.getElementById('tutorial-overlay').classList.add('show');
+  document.getElementById('tutorial-panel').classList.add('open');
+}
+
+function closeTutorial(){
+  document.getElementById('tutorial-overlay').classList.remove('show');
+  document.getElementById('tutorial-panel').classList.remove('open');
+}
+
+function renderTutorialTabs(){
+  let tabs=document.getElementById('tut-tabs');
+  tabs.innerHTML='';
+  tutorialLessons.forEach((lesson,i)=>{
+    let tab=document.createElement('div');
+    tab.className='tut-tab'+(i===tutorialState.currentLesson?' active':'');
+    let done=tutorialState.completed.includes(lesson.id);
+    tab.textContent=(done?'✓ ':'')+lesson.title;
+    tab.onclick=()=>{tutorialState.currentLesson=i;showTutorialLesson(i);renderTutorialTabs()};
+    tabs.appendChild(tab);
+  });
+}
+
+function showTutorialLesson(idx){
+  let lesson=tutorialLessons[idx];
+  tutorialState.currentLesson=idx;
+  let body=document.getElementById('tut-body');
+
+  // Reset state for this lesson
+  if(!tutorialState.scores[idx])tutorialState.scores[idx]=0;
+  if(!tutorialState.answered[idx])tutorialState.answered[idx]=[];
+
+  let quizHtml='';
+  lesson.quizzes.forEach((q,qi)=>{
+    let alreadyAnswered=tutorialState.answered[idx].find(a=>a.qi===qi);
+    quizHtml+=`<div class="tut-example">
+      <div class="tut-example-title">例题 ${qi+1}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.7);margin-bottom:6px;font-style:italic">${q.hand}</div>
+      <div class="tut-quiz-btns" id="quiz-btns-${idx}-${qi}">`;
+    q.options.forEach(opt=>{
+      let btnClass='tut-quiz-btn';
+      let disabled='';
+      if(alreadyAnswered){
+        if(opt===q.answer)btnClass+=' correct';
+        else if(opt===alreadyAnswered.chosen&&opt!==q.answer)btnClass+=' wrong';
+        disabled='disabled';
+      }
+      quizHtml+=`<button class="${btnClass}" ${disabled} onclick="answerQuiz(${idx},${qi},'${opt}','${q.answer}')">${opt}</button>`;
+    });
+    quizHtml+=`</div>
+      <div class="tut-feedback ${alreadyAnswered?(alreadyAnswered.correct?'correct-fb show':'wrong-fb show'):''}" id="quiz-fb-${idx}-${qi}">`;
+    if(alreadyAnswered){
+      quizHtml+=(alreadyAnswered.correct?'✓ 正确！':'✗ 正确答案：'+q.answer)+'<br>'+q.explain;
+    }
+    quizHtml+=`</div></div>`;
+  });
+
+  // Score
+  let total=lesson.quizzes.length;
+  let correct=tutorialState.answered[idx].filter(a=>a.correct).length;
+  let scoreHtml='';
+  if(tutorialState.answered[idx].length===total){
+    scoreHtml=`<div class="tut-score">
+      <div class="score-label">本课得分</div>
+      <div class="score-num">${correct}/${total}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">${correct===total?'🎉 完美！':'继续努力！'}</div>
+    </div>`;
+    if(!tutorialState.completed.includes(lesson.id)){
+      tutorialState.completed.push(lesson.id);
+      saveTutorialProgress();
+      renderTutorialTabs();
+    }
+  }
+
+  // Next lesson button
+  let nextHtml='';
+  if(idx<tutorialLessons.length-1){
+    nextHtml=`<button class="tut-next-btn" onclick="showTutorialLesson(${idx+1});renderTutorialTabs()">下一课 →</button>`;
+  }
+
+  // Progress dots
+  let dotsHtml='<div class="tut-progress">';
+  tutorialLessons.forEach((_,i)=>{
+    dotsHtml+=`<div class="tut-progress-dot${tutorialState.completed.includes(tutorialLessons[i].id)?' done':''}${i===idx?' current':''}"></div>`;
+  });
+  dotsHtml+='</div>';
+
+  body.innerHTML=`
+    <div class="tut-section active">
+      <div class="tut-lesson-title">${lesson.title}</div>
+      <div class="tut-text">${lesson.explanation}</div>
+      <h4 style="font-size:14px;font-weight:700;color:#ffd54f;margin:16px 0 10px">🎯 互动练习</h4>
+      ${quizHtml}
+      ${scoreHtml}
+      ${nextHtml}
+      ${dotsHtml}
+    </div>
+  `;
+  body.scrollTop=0;
+}
+
+function answerQuiz(lessonIdx,quizIdx,chosen,correct){
+  let lesson=tutorialLessons[lessonIdx];
+  let q=lesson.quizzes[quizIdx];
+  let isCorrect=chosen===correct;
+
+  // Record answer
+  let existing=tutorialState.answered[lessonIdx].find(a=>a.qi===quizIdx);
+  if(existing)return; // already answered
+
+  tutorialState.answered[lessonIdx].push({qi:quizIdx,chosen,correct:isCorrect});
+
+  // Update buttons
+  let btnsContainer=document.getElementById('quiz-btns-'+lessonIdx+'-'+quizIdx);
+  let btns=btnsContainer.querySelectorAll('.tut-quiz-btn');
+  btns.forEach(btn=>{
+    btn.disabled=true;
+    if(btn.textContent===correct)btn.classList.add('correct');
+    else if(btn.textContent===chosen&&!isCorrect)btn.classList.add('wrong');
+  });
+
+  // Show feedback
+  let fb=document.getElementById('quiz-fb-'+lessonIdx+'-'+quizIdx);
+  fb.className='tut-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.innerHTML=(isCorrect?'✓ 正确！':'✗ 正确答案：'+correct)+'<br>'+q.explain;
+
+  // Check if all quizzes answered
+  if(tutorialState.answered[lessonIdx].length===lesson.quizzes.length){
+    // Re-render to show score
+    setTimeout(()=>showTutorialLesson(lessonIdx),300);
+  }
+}
+
+// =========================================================================
+// FEATURE 3: BIDDING CHEAT SHEET
+// =========================================================================
+
+function openCheatSheet(){
+  renderCheatSheet();
+  document.getElementById('cheat-overlay').classList.add('show');
+  document.getElementById('cheat-panel').classList.add('show');
+}
+
+function closeCheatSheet(){
+  document.getElementById('cheat-overlay').classList.remove('show');
+  document.getElementById('cheat-panel').classList.remove('show');
+}
+
+function renderCheatSheet(){
+  let body=document.getElementById('cheat-body');
+  body.innerHTML=`
+    <div class="cheat-section">
+      <h4>🎯 开叫一览</h4>
+      <table>
+        <tr><th>叫品</th><th>含义</th><th>牌力</th></tr>
+        <tr><td><strong>1♣ / 1♦</strong></td><td>低花开叫</td><td>12+HCP，3+张（无5张高花时）</td></tr>
+        <tr><td><strong>1♥ / 1♠</strong></td><td>高花开叫</td><td>12+HCP，5+张</td></tr>
+        <tr><td><strong>1NT</strong></td><td>无将开叫</td><td>15-17HCP，均型牌</td></tr>
+        <tr><td><strong>2♣</strong></td><td>强开叫（人工叫品）</td><td>22+HCP 或 9+赢墩</td></tr>
+        <tr><td><strong>2♦/2♥/2♠</strong></td><td>弱二开叫</td><td>5-11HCP，6张套</td></tr>
+        <tr><td><strong>2NT</strong></td><td>无将开叫</td><td>20-21HCP，均型牌</td></tr>
+        <tr><td><strong>3♣-3♠</strong></td><td>阻击叫</td><td>5-10HCP，7张套</td></tr>
+      </table>
+    </div>
+
+    <div class="cheat-section">
+      <h4>🤝 应叫结构</h4>
+      <table>
+        <tr><th>情况</th><th>叫品</th><th>含义</th></tr>
+        <tr><td>搭档1♥/1♠</td><td><strong>简单加叫</strong>（如2♥）</td><td>6-9HCP，3+张支持</td></tr>
+        <tr><td>搭档1♥/1♠</td><td><strong>跳加叫</strong>（如3♥）</td><td>10-12HCP，3+张支持（邀请）</td></tr>
+        <tr><td>搭档1♥/1♠</td><td><strong>雅可比2NT</strong></td><td>13+HCP，4+张支持，逼叫到局</td></tr>
+        <tr><td>搭档1♥</td><td><strong>1♠</strong></td><td>6+HCP，4+张♠（逼叫一轮）</td></tr>
+        <tr><td>搭档1♥/1♠</td><td><strong>二盖一</strong>（如1♥→2♣）</td><td>12+HCP，5+张，逼叫到局</td></tr>
+        <tr><td>搭档1♥/1♠</td><td><strong>1NT</strong></td><td>6-10HCP，无3+支持（逼叫一轮）</td></tr>
+        <tr><td>搭档1NT</td><td><strong>2♣</strong>（斯台曼）</td><td>8+HCP，问4张高花</td></tr>
+        <tr><td>搭档1NT</td><td><strong>2♦</strong>（转移）</td><td>5+张♥，要求搭档叫2♥</td></tr>
+        <tr><td>搭档1NT</td><td><strong>2♥</strong>（转移）</td><td>5+张♠，要求搭档叫2♠</td></tr>
+        <tr><td>搭档1NT</td><td><strong>2NT</strong></td><td>8-9HCP，邀请3NT</td></tr>
+        <tr><td>搭档1NT</td><td><strong>3NT</strong></td><td>10+HCP，直接进局</td></tr>
+      </table>
+      <p class="cheat-note">斯台曼回答：2♦=无4张高花，2♥=4张♥，2♠=4张♠</p>
+    </div>
+
+    <div class="cheat-section">
+      <h4>⚔️ 竞叫</h4>
+      <table>
+        <tr><th>叫品</th><th>含义</th><th>条件</th></tr>
+        <tr><td><strong>争叫</strong></td><td>对手开叫后叫新花色</td><td>10+HCP，5+张好套</td></tr>
+        <tr><td><strong>技术性加倍</strong></td><td>对手开叫后加倍</td><td>12+HCP，对未叫花色有支持</td></tr>
+        <tr><td><strong>负加倍</strong></td><td>搭档开叫后对手争叫，你加倍</td><td>有未叫高花4张套</td></tr>
+        <tr><td><strong>惩罚加倍</strong></td><td>对敌方定约加倍</td><td>认为敌方会宕</td></tr>
+      </table>
+    </div>
+
+    <div class="cheat-section">
+      <h4>📝 约定叫速查</h4>
+      <table>
+        <tr><th>约定叫</th><th>何时使用</th><th>含义</th></tr>
+        <tr><td><strong>斯台曼 2♣</strong></td><td>搭档1NT后</td><td>问4张高花</td></tr>
+        <tr><td><strong>雅可比转移</strong></td><td>搭档1NT后</td><td>2♦=♥，2♥=♠</td></tr>
+        <tr><td><strong>布莱克伍德 4NT</strong></td><td>已定将牌后</td><td>问A数量</td></tr>
+        <tr><td><strong>斯泼林特</strong></td><td>搭档开叫高花后</td><td>跳叫新花=单缺，4+支持，13+HCP</td></tr>
+      </table>
+      <p class="cheat-note">布莱克伍德回答：5♣=0/4A，5♦=1A，5♥=2A，5♠=3A</p>
+    </div>
+
+    <div class="cheat-section">
+      <h4>📊 大牌点参考</h4>
+      <table>
+        <tr><th>牌力</th><th>A</th><th>K</th><th>Q</th><th>J</th></tr>
+        <tr><td><strong>点数</strong></td><td>4</td><td>3</td><td>2</td><td>1</td></tr>
+      </table>
+      <table>
+        <tr><th>总点力</th><th>典型行动</th></tr>
+        <tr><td>0-5 HCP</td><td>通常Pass</td></tr>
+        <tr><td>6-9 HCP</td><td>简单应叫</td></tr>
+        <tr><td>10-12 HCP</td><td>限制性加叫/争叫</td></tr>
+        <tr><td>12-14 HCP</td><td>开叫/二盖一</td></tr>
+        <tr><td>15-17 HCP</td><td>1NT开叫</td></tr>
+        <tr><td>18-19 HCP</td><td>强开叫/跳叫</td></tr>
+        <tr><td>20-21 HCP</td><td>2NT开叫</td></tr>
+        <tr><td>22+ HCP</td><td>2♣强开叫</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+// =========================================================================
+// FEATURE: PRACTICE BIDDING MODE, ERROR ANALYSIS, DAILY CHALLENGE
+// =========================================================================
+
+// ---- Seeded RNG ----
+function seededRNG(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;
+  return function(){s=s*16807%2147483647;return(s-1)/2147483646}}
+function getDateSeed(){let d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+function shuffleWith(a,rng){for(let i=a.length-1;i>0;i--){let j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+// ---- Generate hand matching constraints ----
+function genPracticeHand(c,rng){
+  rng=rng||Math.random;
+  for(let t=0;t<1000;t++){
+    let dk=mkDeck();shuffleWith(dk,rng);
+    let h=sortH(dk.slice(0,13));
+    let hcp=evalHCP(h),suits=evalSuits(h);
+    if(c.minHCP!=null&&hcp<c.minHCP)continue;
+    if(c.maxHCP!=null&&hcp>c.maxHCP)continue;
+    if(c.balanced&&!isBalanced(suits,h))continue;
+    if(c.spade5&&suits['♠']<5)continue;
+    if(c.heart5&&suits['♥']<5)continue;
+    if(c.major5&&!(suits['♠']>=5||suits['♥']>=5))continue;
+    if(c.major4&&!has4CardMajor(suits))continue;
+    if(c.noMajor4&&has4CardMajor(suits))continue;
+    if(c.spade3&&suits['♠']<3)continue;
+    if(c.heart3&&suits['♥']<3)continue;
+    if(c.spade4&&suits['♠']<4)continue;
+    if(c.suit6&&!S4.some(s=>suits[s]>=6))continue;
+    if(c.suit7&&!S4.some(s=>suits[s]>=7))continue;
+    if(c.shortDiamond&&suits['♦']>2)continue;
+    if(c.controls&&countControls(h)<c.controls)continue;
+    if(c.fn&&!c.fn(h,suits,hcp))continue;
+    return h;
+  }
+  let dk=mkDeck();shuffleWith(dk,rng);return sortH(dk.slice(0,13));
+}
+
+// ---- Get correct bid via AI ----
+function getCorrectBid(scenario,hand){
+  let svBids=G.bids,svHigh=G.highestBid,svHB=G.highestBidder,svPass=G.passCount,svDbl=G.doubled,svHands=G.hands,svSeat=G.humanSeat;
+  G.bids=scenario.ctx?JSON.parse(JSON.stringify(scenario.ctx)):[];G.highestBid=scenario.highBid||null;G.highestBidder=scenario.highBidder||null;G.passCount=scenario.passes||0;G.doubled=0;G.humanSeat='S';
+  let used=new Set(hand.map(cid)),rem=mkDeck().filter(c=>!used.has(cid(c)));
+  shuffleWith(rem,Math.random);
+  G.hands={S:hand,N:sortH(rem.slice(0,13)),E:sortH(rem.slice(13,26)),W:sortH(rem.slice(26,39))};
+  let captured=null,origPB=processBid;
+  processBid=function(p,b){if(p==='S')captured=b};
+  try{aiBid('S')}catch(e){captured='Pass'}
+  processBid=origPB;
+  G.bids=svBids;G.highestBid=svHigh;G.highestBidder=svHB;G.passCount=svPass;G.doubled=svDbl;G.hands=svHands;G.humanSeat=svSeat;
+  return captured||'Pass';
+}
+
+// ---- Scenario definitions (15+) ----
+const PRACTICE_DEFS=[
+  // OPENING (4)
+  {id:'open_1s',cat:'opening',title:'开叫决策',desc:'第一家开叫，你持这手牌：',
+    hand:{minHCP:12,maxHCP:19,spade5:true},ctx:[],highBid:null,passes:0,
+    explain:(h,c)=>{let hcp=evalHCP(h),s=evalSuits(h);
+      if(c==='1♠')return'有'+hcp+'HCP和'+s['♠']+'张黑桃，标准1♠开叫。5张高花优先开叫。';return c+'是最佳叫品。'}},
+  {id:'open_1h',cat:'opening',title:'开叫决策',desc:'第一家开叫：',
+    hand:{minHCP:12,maxHCP:19,heart5:true},ctx:[],highBid:null,passes:0,
+    explain:(h,c)=>{let hcp=evalHCP(h),s=evalSuits(h);
+      if(c==='1♥')return'有'+hcp+'HCP和'+s['♥']+'张红心，标准1♥开叫。';return c+'是最佳叫品。'}},
+  {id:'open_1nt',cat:'opening',title:'开叫决策 - 均型牌',desc:'第一家开叫：',
+    hand:{minHCP:15,maxHCP:17,balanced:true},ctx:[],highBid:null,passes:0,
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='1NT')return'有'+hcp+'HCP的均型牌，标准1NT开叫（15-17HCP）。';return c+'是最佳叫品。'}},
+  {id:'open_minor',cat:'opening',title:'开叫决策 - 低花',desc:'第一家开叫，没有5张高花：',
+    hand:{minHCP:12,maxHCP:14,fn:(h,s)=>s['♠']<5&&s['♥']<5},ctx:[],highBid:null,passes:0,
+    explain:(h,c)=>{let hcp=evalHCP(h),s=evalSuits(h);
+      return'有'+hcp+'HCP，无5张高花。'+s['♦']+'张♦，'+s['♣']+'张♣，开叫较长低花'+c+'。'}},
+  // RESPONSE TO 1NT (3)
+  {id:'r1nt_stay',cat:'response',title:'应叫1NT - 斯台曼',desc:'搭档开叫1NT（15-17HCP）：',
+    hand:{minHCP:8,maxHCP:14,major4:true,fn:(h,s)=>s['♠']<5&&s['♥']<5},
+    ctx:[{pos:'N',bid:'1NT'}],highBid:'1NT',
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='2♣')return'有'+hcp+'HCP和4张高花，用斯台曼2♣问搭档高花。';
+      if(c==='3NT')return'有'+hcp+'HCP，直接叫3NT进局。';return c+'是最佳应叫。'}},
+  {id:'r1nt_tran',cat:'response',title:'应叫1NT - 转移叫',desc:'搭档开叫1NT，你有5+张高花：',
+    hand:{minHCP:5,maxHCP:18,major5:true},
+    ctx:[{pos:'N',bid:'1NT'}],highBid:'1NT',
+    explain:(h,c)=>{let s=evalSuits(h);
+      if(c==='2♦')return'有'+s['♥']+'张红心，用雅可比转移2♦让搭档叫2♥，你成为庄家。';
+      if(c==='2♥')return'有'+s['♠']+'张黑桃，用雅可比转移2♥让搭档叫2♠。';return c+'是最佳应叫。'}},
+  {id:'r1nt_pass',cat:'response',title:'应叫1NT - 弱牌',desc:'搭档开叫1NT，你持弱牌：',
+    hand:{minHCP:0,maxHCP:7,fn:(h,s)=>s['♠']<5&&s['♥']<5&&!S4.some(x=>s[x]>=6)},
+    ctx:[{pos:'N',bid:'1NT'}],highBid:'1NT',
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='Pass')return'只有'+hcp+'HCP，无5张高花或6张低花，应Pass。';return c+'是最佳应叫。'}},
+  // RESPONSE TO MAJOR (3)
+  {id:'rmaj_simp',cat:'response',title:'应叫高花 - 简单加叫',desc:'搭档开叫1♠：',
+    hand:{minHCP:6,maxHCP:9,spade3:true},
+    ctx:[{pos:'N',bid:'1♠'}],highBid:'1♠',highBidder:'N',
+    explain:(h,c)=>{let hcp=evalHCP(h),s=evalSuits(h);
+      if(c==='2♠')return'有'+hcp+'HCP和'+s['♠']+'张支持，简单加叫2♠。';return c+'是最佳应叫。'}},
+  {id:'rmaj_limit',cat:'response',title:'应叫高花 - 限制性加叫',desc:'搭档开叫1♥：',
+    hand:{minHCP:10,maxHCP:12,heart3:true},
+    ctx:[{pos:'N',bid:'1♥'}],highBid:'1♥',highBidder:'N',
+    explain:(h,c)=>{let hcp=evalHCP(h),s=evalSuits(h);
+      if(c==='3♥')return'有'+hcp+'HCP和'+s['♥']+'张支持，限制性加叫3♥邀请进局。';return c+'是最佳应叫。'}},
+  {id:'rmaj_new',cat:'response',title:'应叫高花 - 新花色',desc:'搭档开叫1♥，你有4+张♠：',
+    hand:{minHCP:6,maxHCP:11,spade4:true,fn:(h,s)=>s['♥']<3},
+    ctx:[{pos:'N',bid:'1♥'}],highBid:'1♥',highBidder:'N',
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='1♠')return'有'+hcp+'HCP和4+张黑桃，应叫1♠逼叫一轮，寻找4-4配合。';return c+'是最佳应叫。'}},
+  // COMPETITIVE (3)
+  {id:'comp_over',cat:'competitive',title:'竞叫 - 争叫',desc:'对手开叫1♣：',
+    hand:{minHCP:10,maxHCP:18,major5:true},
+    ctx:[{pos:'W',bid:'1♣'}],highBid:'1♣',highBidder:'W',passes:1,
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='Pass')return'牌力或牌型不够争叫，Pass是明智的。';
+      if(c==='X')return'有'+hcp+'HCP且对未叫花色有支持，技术性加倍。';
+      return'有'+hcp+'HCP和好套，'+c+'争叫合适。'}},
+  {id:'comp_dbl',cat:'competitive',title:'竞叫 - 技术性加倍',desc:'对手开叫1♦：',
+    hand:{minHCP:12,maxHCP:19,shortDiamond:true,fn:(h,s)=>s['♠']>=3&&s['♥']>=3},
+    ctx:[{pos:'W',bid:'1♦'}],highBid:'1♦',highBidder:'W',passes:1,
+    explain:(h,c)=>{let hcp=evalHCP(h),s=evalSuits(h);
+      if(c==='X')return'有'+hcp+'HCP，♦短('+s['♦']+'张)，其他花色有支持，技术性加倍。';return c+'是最佳选择。'}},
+  {id:'comp_pass',cat:'competitive',title:'竞叫 - 何时不叫',desc:'对手开叫1♠，你持弱牌：',
+    hand:{minHCP:6,maxHCP:10,fn:(h,s)=>s['♠']<5},
+    ctx:[{pos:'W',bid:'1♠'}],highBid:'1♠',highBidder:'W',passes:1,
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='Pass')return'只有'+hcp+'HCP，牌力不足以竞叫，Pass等待好牌。';return c+'是最佳选择。'}},
+  // SLAM (2)
+  {id:'slam_bwood',cat:'slam',title:'满贯叫牌 - 问A',desc:'已确定♠为将牌，你持强牌：',
+    hand:{minHCP:17,maxHCP:22,spade4:true,controls:5},
+    ctx:[{pos:'S',bid:'1♠'},{pos:'W',bid:'Pass'},{pos:'N',bid:'3♠'},{pos:'E',bid:'Pass'},{pos:'S',bid:'4♠'},{pos:'W',bid:'Pass'},{pos:'N',bid:'Pass'}],
+    highBid:'4♠',highBidder:'S',
+    explain:(h,c)=>{
+      if(c==='4NT')return'有满贯兴趣，用布莱克伍德4NT问搭档A的数量。';
+      if(c==='Pass')return'虽然牌力不错但不够试探满贯。';return c+'是最佳选择。'}},
+  {id:'slam_sign',cat:'slam',title:'满贯叫牌 - 量性邀叫',desc:'搭档开叫1NT，你持强均型牌：',
+    hand:{minHCP:15,maxHCP:17,balanced:true},
+    ctx:[{pos:'N',bid:'1NT'}],highBid:'1NT',highBidder:'N',
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='4NT')return'有'+hcp+'HCP均型牌，量性满贯邀叫4NT。搭档高限可叫6NT。';
+      if(c==='3NT')return'有'+hcp+'HCP，直接叫3NT进局，不够满贯兴趣。';return c+'是最佳选择。'}},
+  // RESPONSE TO MINOR (1)
+  {id:'rmin_maj',cat:'response',title:'应叫低花 - 高花优先',desc:'搭档开叫1♦，你有4张高花：',
+    hand:{minHCP:6,maxHCP:11,major4:true},
+    ctx:[{pos:'N',bid:'1♦'}],highBid:'1♦',highBidder:'N',
+    explain:(h,c)=>{let hcp=evalHCP(h);
+      if(c==='1♠')return'有'+hcp+'HCP和4+张黑桃，优先应叫高花。';
+      if(c==='1♥')return'有'+hcp+'HCP和4+张红心，优先应叫高花。';return c+'是最佳应叫。'}}
+];
+
+// ---- Practice State ----
+let practiceState={active:false,scenarios:[],idx:0,score:0,answers:[],mode:'practice'};
+
+function openPractice(){
+  practiceState={active:true,scenarios:pickRandom(PRACTICE_DEFS,10),idx:0,score:0,answers:[],mode:'practice'};
+  document.getElementById('practice-overlay').classList.add('show');
+  renderPracticeScenario();
+}
+function closePractice(){
+  practiceState.active=false;
+  document.getElementById('practice-overlay').classList.remove('show');
+}
+function pickRandom(arr,n){let a=[...arr],r=[];for(let i=0;i<n&&a.length;i++){let j=Math.random()*a.length|0;r.push(a.splice(j,1)[0])}return r}
+
+function renderPracticeScenario(){
+  let modal=document.getElementById('practice-modal');
+  let sc=practiceState.scenarios[practiceState.idx];
+  if(!sc){renderPracticeScore();return}
+  let hand=genPracticeHand(sc.hand);
+  let correct=getCorrectBid(sc,hand);
+  sc._hand=hand;sc._correct=correct;
+  let hcp=evalHCP(hand),suits=evalSuits(hand);
+  let dist=S4.map(s=>suits[s]).join('-');
+
+  // Build options
+  let opts=buildOptions(correct,sc);
+  // Context bids
+  let ctxHtml='';
+  if(sc.ctx&&sc.ctx.length){
+    ctxHtml='<div class="pr-context">'+sc.ctx.map(b=>'<span class="pr-bid-chip">'+PN[b.pos]+': '+b.bid+'</span>').join('')+'</div>';
+  }
+
+  // Progress dots
+  let dotsHtml='<div class="pr-progress">';
+  for(let i=0;i<practiceState.scenarios.length;i++){
+    let cls='pr-dot';
+    if(i<practiceState.idx)cls+=practiceState.answers[i]&&practiceState.answers[i].correct?' done':' wrong-dot';
+    if(i===practiceState.idx)cls+=' current';
+    dotsHtml+='<div class="'+cls+'"></div>';
+  }
+  dotsHtml+='</div>';
+
+  let catNames={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯'};
+  modal.innerHTML=`
+    <button class="pr-close" onclick="closePractice()">✕</button>
+    <h2>🎯 练习模式</h2>
+    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px">第 ${practiceState.idx+1}/${practiceState.scenarios.length} 题 · 得分 ${practiceState.score}</div>
+    ${dotsHtml}
+    <div class="pr-hand" id="pr-hand"></div>
+    <div class="pr-info">
+      <span class="pr-tag">HCP: ${hcp}</span>
+      <span class="pr-tag">牌型: ${dist}</span>
+      <span class="pr-tag">分类: ${catNames[sc.cat]||sc.cat}</span>
+    </div>
+    <div class="pr-scenario">
+      <div class="ps-title">${sc.title}</div>
+      <div class="ps-desc">${sc.desc}</div>
+    </div>
+    ${ctxHtml}
+    <div class="pr-options" id="pr-opts"></div>
+    <div class="pr-feedback" id="pr-fb"></div>
+    <div class="pr-btns" id="pr-action" style="display:none"></div>
+  `;
+
+  // Render hand cards
+  let handEl=document.getElementById('pr-hand');
+  hand.forEach(c=>{
+    let el=document.createElement('div');
+    el.className='pr-card '+SC[c.suit];
+    el.innerHTML='<span class="r">'+c.rank+'</span><span class="s">'+c.suit+'</span>';
+    handEl.appendChild(el);
+  });
+
+  // Render options
+  let optsEl=document.getElementById('pr-opts');
+  opts.forEach(opt=>{
+    let btn=document.createElement('button');
+    btn.className='pr-opt';
+    btn.textContent=opt;
+    btn.onclick=()=>answerPractice(opt,correct,sc);
+    optsEl.appendChild(btn);
+  });
+}
+
+function buildOptions(correct,sc){
+  let opts=new Set([correct]);
+  // Add common bids
+  let common=['Pass','1♣','1♦','1♥','1♠','1NT','2♣','2♦','2♥','2♠','2NT','3♣','3♦','3♥','3♠','3NT','4♣','4♦','4♥','4♠','4NT','5♣','5♦','5♥','5♠','6NT','6♠','6♥','6♦','6♣','7NT'];
+  // Context-sensitive options
+  let maxLevel=7;
+  if(sc.highBid){let pv=bidVal(sc.highBid);maxLevel=+sc.highBid[0]+2}
+  for(let b of common){if(!opts.has(b)&&opts.size<6){
+    let bv=bidVal(b);
+    if(b==='Pass'||!sc.highBid||bv>bidVal(sc.highBid))opts.add(b);
+  }}
+  // Ensure we have enough options
+  for(let lv=1;lv<=maxLevel;lv++){
+    for(let tp of['♣','♦','♥','♠','NT']){
+      let b=lv+tp;if(opts.size>=6)break;
+      if(!opts.has(b)&&(!sc.highBid||bidVal(b)>bidVal(sc.highBid)))opts.add(b);
+    }
+    if(opts.size>=6)break;
+  }
+  // Sort by bid value
+  let arr=[...opts];
+  arr.sort((a,b)=>{
+    if(a==='Pass')return-1;if(b==='Pass')return 1;
+    return bidVal(a)-bidVal(b);
+  });
+  return arr.slice(0,7);
+}
+
+function answerPractice(chosen,correct,sc){
+  let isCorrect=(chosen===correct);
+  if(isCorrect)practiceState.score++;
+  practiceState.answers.push({chosen,correct:isCorrect,scenario:sc});
+
+  // Disable all options, highlight
+  let optsEl=document.getElementById('pr-opts');
+  let btns=optsEl.querySelectorAll('.pr-opt');
+  btns.forEach(btn=>{
+    btn.classList.add('disabled');
+    if(btn.textContent===correct)btn.classList.add(isCorrect?'correct':'show-correct');
+    else if(btn.textContent===chosen&&!isCorrect)btn.classList.add('wrong');
+  });
+
+  // Feedback
+  let fb=document.getElementById('pr-fb');
+  let explain=sc.explain?sc.explain(sc._hand,correct):correct+'是最佳叫品。';
+  fb.className='pr-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.innerHTML=(isCorrect?'✓ 正确！':'✗ 不正确。正确答案：<strong>'+correct+'</strong><br>')+explain;
+
+  // Track error if wrong
+  if(!isCorrect){
+    trackPracticeError(sc.cat,chosen,correct);
+  }
+
+  // Next button
+  let action=document.getElementById('pr-action');
+  action.style.display='flex';
+  let isLast=practiceState.idx>=practiceState.scenarios.length-1;
+  action.innerHTML=isLast
+    ?'<button class="pr-btn primary" onclick="renderPracticeScore()">查看成绩</button>'
+    :'<button class="pr-btn primary" onclick="nextPractice()">下一题 →</button>';
+}
+
+function nextPractice(){
+  practiceState.idx++;
+  renderPracticeScenario();
+}
+
+function renderPracticeScore(){
+  let modal=document.getElementById('practice-modal');
+  let total=practiceState.scenarios.length;
+  let score=practiceState.score;
+  let pct=Math.round(score/total*100);
+  let medal=pct>=90?'🏆':pct>=70?'🥈':pct>=50?'🥉':'💪';
+
+  // Save practice history
+  savePracticeResult(score,total);
+
+  modal.innerHTML=`
+    <button class="pr-close" onclick="closePractice()">✕</button>
+    <h2>🎯 练习成绩</h2>
+    <div class="pr-score">
+      <div class="ps-label">得分</div>
+      <div class="ps-num">${medal} ${score}/${total}</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.6);margin-top:4px">正确率 ${pct}%</div>
+    </div>
+    <div class="pr-progress" style="margin:16px 0">
+      ${practiceState.answers.map((a,i)=>'<div class="pr-dot '+(a.correct?'done':'wrong-dot')+'"></div>').join('')}
+    </div>
+    <div style="font-size:13px;color:rgba(255,255,255,.7);text-align:center;margin:10px 0">
+      ${pct>=90?'🎉 太棒了！你已经掌握了叫牌基础！':pct>=70?'👍 不错！继续练习可以进一步提高。':pct>=50?'📚 还需要更多练习，加油！':'💡 建议先回顾学习模式的基础课程。'}
+    </div>
+    <div class="pr-btns">
+      <button class="pr-btn primary" onclick="openPractice()">再来一轮</button>
+      <button class="pr-btn secondary" onclick="closePractice()">关闭</button>
+    </div>
+  `;
+}
+
+// ---- Error Analysis System ----
+function getErrorData(){
+  try{let d=localStorage.getItem('bridge-errors');return d?JSON.parse(d):{total:0,match:0,errors:[],sessions:[]}}catch(e){return{total:0,match:0,errors:[],sessions:[]}}
+}
+function saveErrorData(d){try{localStorage.setItem('bridge-errors',JSON.stringify(d))}catch(e){}}
+
+function categorizeBid(bidData){
+  if(!bidData)return'unknown';
+  let rB=bidData.recommended||'';
+  if(G.bids.length<=4&&(G.bids.filter(b=>b.bid!=='Pass').length===0))return'opening';
+  let ctx=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  if(ctx.length===1)return'response';
+  let oppB=G.bids.filter(b=>{let p=b.pos,hs=G.humanSeat||'S';return(p==='N'||p==='S')?(hs==='E'||hs==='W'):(hs==='N'||hs==='S')?false:true});
+  // Simple heuristic
+  if(G.bids.length>6)return'slam';
+  if(G.bids.some(b=>b.bid==='X'||b.bid==='XX'))return'competitive';
+  if(ctx.length>=2)return'response';
+  return'opening';
+}
+
+function trackBidMade(bid,hintData){
+  let d=getErrorData();
+  d.total++;
+  if(hintData&&bid===hintData.recommended)d.match++;
+  // Save session trend
+  let today=new Date().toISOString().slice(0,10);
+  let lastSession=d.sessions.length>0?d.sessions[d.sessions.length-1]:null;
+  if(!lastSession||lastSession.date!==today){d.sessions.push({date:today,total:1,match:(hintData&&bid===hintData.recommended)?1:0})}
+  else{lastSession.total++;if(hintData&&bid===hintData.recommended)lastSession.match++}
+  if(d.sessions.length>30)d.sessions=d.sessions.slice(-30);
+  saveErrorData(d);
+}
+
+function trackBidError(chosen,rec,hintData){
+  let d=getErrorData();
+  let cat=categorizeBid(hintData);
+  d.errors.push({chosen,rec,cat,date:Date.now()});
+  if(d.errors.length>100)d.errors=d.errors.slice(-100);
+  saveErrorData(d);
+}
+
+function trackPracticeError(cat,chosen,correct){
+  let d=getErrorData();
+  d.errors.push({chosen,rec:correct,cat:'practice_'+cat,date:Date.now()});
+  if(d.errors.length>100)d.errors=d.errors.slice(-100);
+  saveErrorData(d);
+}
+
+let errorNotifyTimer=null;
+function showErrorNotification(chosen,rec,hintData){
+  let el=document.getElementById('error-notify');
+  let cat=categorizeBid(hintData);
+  let catNames={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯'};
+  el.querySelector('.en-body').innerHTML=
+    '你的叫牌 <strong>'+chosen+'</strong> 与推荐不同<br>'+
+    '💡 建议: <strong>'+rec+'</strong> - '+(hintData.reason||'参考标准叫牌')+'<br>'+
+    '<span style="font-size:11px;color:rgba(255,255,255,.4)">分类: '+(catNames[cat]||cat)+'</span>';
+  el.classList.add('show');
+  clearTimeout(errorNotifyTimer);
+  errorNotifyTimer=setTimeout(()=>el.classList.remove('show'),6000);
+}
+function dismissErrorNotify(){
+  document.getElementById('error-notify').classList.remove('show');
+  clearTimeout(errorNotifyTimer);
+}
+
+// ---- Stats Panel ----
+function openStats(){
+  renderStats();
+  document.getElementById('stats-overlay').classList.add('show');
+}
+function closeStats(){
+  document.getElementById('stats-overlay').classList.remove('show');
+}
+
+function renderStats(){
+  let body=document.getElementById('stats-body');
+  let d=getErrorData();
+  let accuracy=d.total>0?Math.round(d.match/d.total*100):0;
+
+  // Category breakdown
+  let cats={opening:{t:0,m:0},response:{t:0,m:0},competitive:{t:0,m:0},slam:{t:0,m:0}};
+  d.errors.forEach(e=>{
+    let c=e.cat||'unknown';
+    if(c.startsWith('practice_'))c=c.replace('practice_','');
+    if(!cats[c])cats[c]={t:0,m:0};
+  });
+  // Count from sessions for more accurate data
+  // Use errors as proxy
+  let errByCat={};
+  d.errors.forEach(e=>{
+    let c=e.cat||'unknown';if(c.startsWith('practice_'))c=c.replace('practice_','');
+    if(!errByCat[c])errByCat[c]=0;errByCat[c]++;
+  });
+
+  let catNames={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯'};
+  let maxErr=Math.max(1,...Object.values(errByCat));
+
+  // Bar chart
+  let barsHtml='';
+  for(let c of['opening','response','competitive','slam']){
+    let count=errByCat[c]||0;
+    let pct=Math.round(count/maxErr*100);
+    barsHtml+=`<div class="st-bar-row">
+      <div class="st-bar-label">${catNames[c]}</div>
+      <div class="st-bar-track"><div class="st-bar-fill" style="width:${pct}%"></div></div>
+      <div class="st-bar-value">${count}次</div>
+    </div>`;
+  }
+
+  // Recent mistakes
+  let recentMistakes=d.errors.slice(-8).reverse();
+  let mistakesHtml=recentMistakes.length
+    ?recentMistakes.map(e=>'<div class="st-mistake">你叫 <strong>'+e.chosen+'</strong>，推荐 <strong>'+e.rec+'</strong> <span style="color:rgba(255,255,255,.3)">('+(catNames[e.cat]||e.cat)+')</span></div>').join('')
+    :'<div style="color:rgba(255,255,255,.4);text-align:center;padding:16px">暂无记录</div>';
+
+  // Trend chart (last 10 sessions)
+  let trendHtml='';
+  let sessions=d.sessions.slice(-10);
+  if(sessions.length>1){
+    let maxT=Math.max(1,...sessions.map(s=>s.total));
+    trendHtml='<div class="st-trend">';
+    sessions.forEach(s=>{
+      let pct=s.total>0?s.match/s.total:0;
+      let h=Math.max(4,Math.round(pct*56));
+      trendHtml+='<div class="st-trend-bar" style="height:'+h+'px" title="'+s.date+' '+Math.round(pct*100)+'%"></div>';
+    });
+    trendHtml+='</div><div style="text-align:center;font-size:11px;color:rgba(255,255,255,.3)">最近'+sessions.length+'次游戏正确率趋势</div>';
+  }
+
+  // Recommendation
+  let worstCat='',worstCount=0;
+  for(let c in errByCat){if(errByCat[c]>worstCount){worstCount=errByCat[c];worstCat=c}}
+  let recHtml=worstCat
+    ?'<div class="st-recommend"><div class="sr-title">🎯 最需要练习的领域</div><div>'+(catNames[worstCat]||worstCat)+'（'+worstCount+'次偏差）— 建议使用练习模式重点练习此分类。</div></div>'
+    :'<div class="st-recommend"><div class="sr-title">🎯 开始学习</div><div>多玩几局游戏或使用练习模式，系统会自动分析你的叫牌并提供建议。</div></div>';
+
+  body.innerHTML=`
+    <div class="st-accuracy">
+      <div class="sa-label">叫牌准确率</div>
+      <div class="sa-num">${accuracy}%</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4)">${d.match}/${d.total} 次与推荐一致</div>
+    </div>
+    <div class="st-section">
+      <h4>📊 错误分布</h4>
+      <div class="st-bars">${barsHtml}</div>
+    </div>
+    ${trendHtml?`<div class="st-section"><h4>📈 进步趋势</h4>${trendHtml}</div>`:''}
+    <div class="st-section">
+      <h4>📝 最近偏差</h4>
+      ${mistakesHtml}
+    </div>
+    ${recHtml}
+    <div class="pr-btns" style="margin-top:16px">
+      <button class="pr-btn primary" onclick="closeStats();openPractice()">去练习</button>
+      <button class="pr-btn secondary" onclick="closeStats()">关闭</button>
+    </div>
+  `;
+}
+
+function savePracticeResult(score,total){
+  let d=getErrorData();
+  let today=new Date().toISOString().slice(0,10);
+  if(!d.practiceHistory)d.practiceHistory=[];
+  d.practiceHistory.push({date:today,score,total,time:Date.now()});
+  if(d.practiceHistory.length>50)d.practiceHistory=d.practiceHistory.slice(-50);
+  saveErrorData(d);
+}
+
+// ---- Daily Challenge ----
+let dailyState={active:false,scenarios:[],idx:0,score:0,answers:[]};
+
+function openDailyChallenge(){
+  let seed=getDateSeed();
+  let rng=seededRNG(seed);
+  let picked=pickRandomSeeded(PRACTICE_DEFS,5,rng);
+  dailyState={active:true,scenarios:picked,idx:0,score:0,answers:[]};
+  document.getElementById('daily-overlay').classList.add('show');
+  renderDailyScenario();
+}
+function closeDailyChallenge(){
+  dailyState.active=false;
+  document.getElementById('daily-overlay').classList.remove('show');
+}
+function pickRandomSeeded(arr,n,rng){
+  let a=[...arr],r=[];for(let i=0;i<n&&a.length;i++){let j=Math.floor(rng()*a.length);r.push(a.splice(j,1)[0])}return r
+}
+
+function getDailyBest(){
+  try{let d=localStorage.getItem('bridge-daily-best');return d?JSON.parse(d):{}}catch(e){return{}}
+}
+function saveDailyBest(date,score){
+  try{let d=getDailyBest();if(!d[date]||score>d[date])d[date]=score;
+    // Keep only last 30 days
+    let keys=Object.keys(d).sort();while(keys.length>30){delete d[keys.shift()]}
+    localStorage.setItem('bridge-daily-best',JSON.stringify(d))}catch(e){}
+}
+
+function getMedal(score,total){
+  let pct=score/total;
+  if(pct>=1)return'🥇';if(pct>=0.8)return'🥈';if(pct>=0.6)return'🥉';return'💪';
+}
+
+function renderDailyScenario(){
+  let modal=document.getElementById('daily-modal');
+  let sc=dailyState.scenarios[dailyState.idx];
+  if(!sc){renderDailyScore();return}
+  let seed=getDateSeed();
+  let rng=seededRNG(seed+dailyState.idx*1000);
+  let hand=genPracticeHand(sc.hand,rng);
+  let correct=getCorrectBid(sc,hand);
+  sc._hand=hand;sc._correct=correct;
+  let hcp=evalHCP(hand),suits=evalSuits(hand),dist=S4.map(s=>suits[s]).join('-');
+
+  let opts=buildOptions(correct,sc);
+  let ctxHtml='';
+  if(sc.ctx&&sc.ctx.length){
+    ctxHtml='<div class="pr-context">'+sc.ctx.map(b=>'<span class="pr-bid-chip">'+PN[b.pos]+': '+b.bid+'</span>').join('')+'</div>';
+  }
+
+  let today=new Date().toISOString().slice(0,10);
+  let best=getDailyBest();
+  let bestStr=best[today]!=null?'今日最佳: '+best[today]+'/5':'暂无记录';
+
+  let dotsHtml='<div class="pr-progress">';
+  for(let i=0;i<5;i++){
+    let cls='pr-dot';
+    if(i<dailyState.idx)cls+=dailyState.answers[i]&&dailyState.answers[i].correct?' done':' wrong-dot';
+    if(i===dailyState.idx)cls+=' current';
+    dotsHtml+='<div class="'+cls+'"></div>';
+  }
+  dotsHtml+='</div>';
+
+  let catNames={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯'};
+  modal.innerHTML=`
+    <button class="pr-close" onclick="closeDailyChallenge()">✕</button>
+    <h2>🏆 每日挑战</h2>
+    <div class="dy-date">${today}</div>
+    <div class="dy-best">${bestStr}</div>
+    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px">第 ${dailyState.idx+1}/5 题 · 得分 ${dailyState.score}</div>
+    ${dotsHtml}
+    <div class="pr-hand" id="dy-hand"></div>
+    <div class="pr-info">
+      <span class="pr-tag">HCP: ${hcp}</span>
+      <span class="pr-tag">牌型: ${dist}</span>
+      <span class="pr-tag">分类: ${catNames[sc.cat]||sc.cat}</span>
+    </div>
+    <div class="pr-scenario">
+      <div class="ps-title">${sc.title}</div>
+      <div class="ps-desc">${sc.desc}</div>
+    </div>
+    ${ctxHtml}
+    <div class="pr-options" id="dy-opts"></div>
+    <div class="pr-feedback" id="dy-fb"></div>
+    <div class="pr-btns" id="dy-action" style="display:none"></div>
+  `;
+
+  let handEl=document.getElementById('dy-hand');
+  hand.forEach(c=>{
+    let el=document.createElement('div');
+    el.className='pr-card '+SC[c.suit];
+    el.innerHTML='<span class="r">'+c.rank+'</span><span class="s">'+c.suit+'</span>';
+    handEl.appendChild(el);
+  });
+
+  let optsEl=document.getElementById('dy-opts');
+  opts.forEach(opt=>{
+    let btn=document.createElement('button');
+    btn.className='pr-opt';
+    btn.textContent=opt;
+    btn.onclick=()=>answerDaily(opt,correct,sc);
+    optsEl.appendChild(btn);
+  });
+}
+
+function answerDaily(chosen,correct,sc){
+  let isCorrect=(chosen===correct);
+  if(isCorrect)dailyState.score++;
+  dailyState.answers.push({chosen,correct:isCorrect});
+
+  let optsEl=document.getElementById('dy-opts');
+  optsEl.querySelectorAll('.pr-opt').forEach(btn=>{
+    btn.classList.add('disabled');
+    if(btn.textContent===correct)btn.classList.add(isCorrect?'correct':'show-correct');
+    else if(btn.textContent===chosen&&!isCorrect)btn.classList.add('wrong');
+  });
+
+  let fb=document.getElementById('dy-fb');
+  let explain=sc.explain?sc.explain(sc._hand,correct):correct+'是最佳叫品。';
+  fb.className='pr-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.innerHTML=(isCorrect?'✓ 正确！':'✗ 不正确。正确答案：<strong>'+correct+'</strong><br>')+explain;
+
+  if(!isCorrect)trackPracticeError(sc.cat,chosen,correct);
+
+  let action=document.getElementById('dy-action');
+  action.style.display='flex';
+  let isLast=dailyState.idx>=4;
+  action.innerHTML=isLast
+    ?'<button class="pr-btn primary" onclick="renderDailyScore()">查看成绩</button>'
+    :'<button class="pr-btn primary" onclick="nextDaily()">下一题 →</button>';
+}
+function nextDaily(){dailyState.idx++;renderDailyScenario()}
+
+function renderDailyScore(){
+  let modal=document.getElementById('daily-modal');
+  let score=dailyState.score;
+  let today=new Date().toISOString().slice(0,10);
+  saveDailyBest(today,score);
+  let best=getDailyBest();
+  let medal=score===5?'🥇':score>=4?'🥈':score>=3?'🥉':'💪';
+  let bestEver=best[today]||0;
+
+  modal.innerHTML=`
+    <button class="pr-close" onclick="closeDailyChallenge()">✕</button>
+    <h2>🏆 每日挑战成绩</h2>
+    <div class="dy-date">${today}</div>
+    <div class="dy-complete">
+      <div class="dc-score" style="color:${score>=4?'#ffd54f':score>=3?'#81c784':'rgba(255,255,255,.8)'}">${medal}</div>
+      <div class="dc-score">${score}/5</div>
+      <div class="dc-label">今日最佳: ${bestEver}/5</div>
+    </div>
+    <div class="pr-progress" style="margin:16px 0">
+      ${dailyState.answers.map(a=>'<div class="pr-dot '+(a.correct?'done':'wrong-dot')+'"></div>').join('')}
+    </div>
+    <div style="font-size:13px;color:rgba(255,255,255,.7);text-align:center;margin:10px 0">
+      ${score===5?'🎉 完美！今天的挑战你全部答对！':score>=4?'👏 非常出色！继续保持！':score>=3?'👍 不错，还有提升空间。':'📚 继续练习，明天再来挑战！'}
+    </div>
+    <div class="pr-btns">
+      <button class="pr-btn primary" onclick="closeDailyChallenge()">关闭</button>
+    </div>
+  `;
+}
+
+// ============ INIT ============
 init();
 </script>
 </body>
