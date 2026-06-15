@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桥牌小游戏</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#1a5c2a;color:#fff;height:100vh;overflow:hidden;user-select:none}
+#game{width:100vw;height:100vh;display:flex;flex-direction:column}
+
+/* Top info bar */
+#info-bar{text-align:center;padding:6px 10px;background:rgba(0,0,0,.35);font-size:13px;display:flex;justify-content:center;gap:16px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.tag{background:rgba(255,255,255,.15);padding:2px 12px;border-radius:10px;white-space:nowrap}
+
+/* Table */
+#table{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* Player labels */
+.plabel{position:absolute;font-size:12px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,.6);z-index:5;pointer-events:none}
+.plabel.active{color:#ffeb3b;text-shadow:0 0 10px #ffeb3b,#0 0 20px rgba(255,235,59,.4)}
+#lbl-N{top:10px;left:50%;transform:translateX(-50%)}
+#lbl-S{bottom:10px;left:50%;transform:translateX(-50%)}
+#lbl-E{right:14px;top:50%;transform:translateY(-50%)}
+#lbl-W{left:14px;top:50%;transform:translateY(-50%)}
+
+/* Hands */
+.hand{position:absolute;display:flex;justify-content:center;z-index:2}
+#hand-N{top:30px;left:50%;transform:translateX(-50%);gap:2px}
+#hand-S{bottom:30px;left:50%;transform:translateX(-50%);gap:3px}
+#hand-E{right:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px}
+#hand-W{left:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px}
+
+/* Dummy hand */
+#dummy-wrap{position:absolute;display:none;z-index:3}
+#dummy-wrap.visible{display:block}
+#dummy-label{font-size:10px;color:#ffeb3b;text-align:center;margin-bottom:2px}
+#dummy-N{top:30px;left:50%;transform:translateX(-50%)}
+#dummy-S{bottom:30px;left:50%;transform:translateX(-50%)}
+#dummy-E{right:10px;top:50%;transform:translateY(-50%)}
+#dummy-W{left:10px;top:50%;transform:translateY(-50%)}
+#dummy-cards{display:flex;justify-content:center;gap:2px}
+#dummy-cards.vert{flex-direction:column;align-items:center}
+
+/* Card */
+.card{width:44px;height:64px;border-radius:5px;font-size:12px;cursor:default;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #aaa;background:#fff;color:#333;transition:transform .12s,box-shadow .12s;flex-shrink:0;position:relative}
+.card .r{font-size:15px;font-weight:700;line-height:1}
+.card .s{font-size:15px;line-height:1}
+.card.red{color:#d32f2f}
+.card.black{color:#222}
+.card.sm{width:28px;height:40px}
+.card.sm .r{font-size:10px}
+.card.sm .s{font-size:11px}
+.card.fd{background:repeating-linear-gradient(135deg,#1a237e 0 4px,#283593 4px 8px);border-color:#0d1453;color:transparent}
+.card.fd .r,.card.fd .s{display:none}
+.card.fd::after{content:'🂠';position:absolute;font-size:22px;color:#7986cb}
+
+/* Playable */
+.card.ok{cursor:pointer}
+.card.ok:hover{transform:translateY(-10px);box-shadow:0 6px 16px rgba(255,235,59,.7);z-index:20}
+
+/* Trick slots */
+#trick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;z-index:4;pointer-events:none}
+.ts{position:absolute;display:flex;align-items:center;justify-content:center}
+#ts-N{top:0;left:50%;transform:translateX(-50%)}
+#ts-E{right:0;top:50%;transform:translateY(-50%)}
+#ts-S{bottom:0;left:50%;transform:translateX(-50%)}
+#ts-W{left:0;top:50%;transform:translateY(-50%)}
+
+/* Bidding */
+#bid-panel{display:none;position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border-radius:12px;padding:14px 16px;z-index:100;min-width:360px;max-width:90vw}
+#bid-panel.show{display:block}
+#bid-panel h3{text-align:center;margin-bottom:8px;font-size:15px}
+#bid-hist{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;min-height:24px;justify-content:center}
+.bc{padding:3px 8px;border-radius:8px;font-size:11px;background:rgba(255,255,255,.15)}
+.bc.pass{opacity:.45}
+.bc.bid-S{background:rgba(33,150,243,.35);color:#64b5f6;border:1px solid rgba(33,150,243,.5)}
+.bc.bid-N{background:rgba(76,175,80,.35);color:#81c784;border:1px solid rgba(76,175,80,.5)}
+.bc.bid-E{background:rgba(244,67,54,.35);color:#ef9a9a;border:1px solid rgba(244,67,54,.5)}
+.bc.bid-W{background:rgba(255,235,59,.35);color:#fff176;border:1px solid rgba(255,235,59,.5)}
+#bid-btns{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+#bid-btns button{padding:5px 10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;background:#43a047;color:#fff}
+#bid-btns button:hover{background:#66bb6a}
+#bid-btns button.bp{background:#616161}
+#bid-btns button.bp:hover{background:#9e9e9e}
+
+/* Status */
+#status{text-align:center;padding:8px;background:rgba(0,0,0,.4);font-size:13px;min-height:36px;display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0}
+#status button{padding:5px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;background:#1976d2;color:#fff}
+#status button:hover{background:#42a5f5}
+
+/* Score popup */
+#score-popup{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.92);border-radius:14px;padding:22px 28px;z-index:200;min-width:320px;text-align:center}
+#score-popup.show{display:block}
+#score-popup h3{margin-bottom:10px}
+#score-popup hr{border-color:rgba(255,255,255,.15);margin:8px 0}
+#score-popup button{margin-top:12px;padding:8px 28px;border:none;border-radius:6px;cursor:pointer;font-size:14px;background:#43a047;color:#fff}
+#score-popup button:hover{background:#66bb6a}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
+#overlay.show{display:block}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="info-bar">
+    <span class="tag" id="i-round">第 1 副</span>
+    <span class="tag" id="i-contract">定约：--</span>
+    <span class="tag" id="i-tricks">南北: 0 | 东西: 0</span>
+    <span class="tag" id="i-trump">将牌：无</span>
+  </div>
+  <div id="table">
+    <div id="hand-N" class="hand"></div>
+    <div id="hand-E" class="hand"></div>
+    <div id="hand-S" class="hand"></div>
+    <div id="hand-W" class="hand"></div>
+    <div id="dummy-wrap"><div id="dummy-label">明手</div><div id="dummy-cards"></div></div>
+    <div id="trick">
+      <div class="ts" id="ts-N"></div>
+      <div class="ts" id="ts-E"></div>
+      <div class="ts" id="ts-S"></div>
+      <div class="ts" id="ts-W"></div>
+    </div>
+    <div class="plabel" id="lbl-N">北 (AI)</div>
+    <div class="plabel" id="lbl-S">南 (你)</div>
+    <div class="plabel" id="lbl-E">东 (AI)</div>
+    <div class="plabel" id="lbl-W">西 (AI)</div>
+    <div id="bid-panel">
+      <h3>叫牌</h3>
+      <div id="bid-hist"></div>
+      <div id="bid-btns"></div>
+    </div>
+    <div id="score-popup">
+      <h3>本副计分</h3>
+      <div id="score-body"></div>
+      <button onclick="nextDeal()">下一副</button>
+    </div>
+    <div id="overlay"></div>
+  </div>
+  <div id="status">
+    <span id="stxt"></span>
+    <button id="btn-go" onclick="startGame()">开始游戏</button>
+  </div>
+</div>
+
+<script>
+const S4=['♠','♥','♦','♣'],SN={'♠':'黑桃','♥':'红心','♦':'方块','♣':'草花'};
+const SC={'♠':'black','♥':'red','♦':'red','♣':'black'};
+const RK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const RV={2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,J:11,Q:12,K:13,A:14};
+const POS=['S','W','N','E'],PN={'S':'南','W':'西','N':'北','E':'东'};
+
+let G; // game state
+
+function mkDeck(){let d=[];for(let s of S4)for(let r of RK)d.push({suit:s,rank:r});return d}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.random()*i+1|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function sortH(h){const so={'♠':0,'♥':1,'♦':2,'♣':3};return h.sort((a,b)=>so[a.suit]-so[b.suit]||RV[a.rank]-RV[b.rank])}
+function cid(c){return c.suit+c.rank}
+
+function mkCard(c,extra=''){
+  let el=document.createElement('div');
+  el.className='card '+SC[c.suit]+' '+extra;
+  el.innerHTML=`<span class="r">${c.rank}</span><span class="s">${c.suit}</span>`;
+  return el;
+}
+function mkSm(c){
+  let el=document.createElement('div');
+  el.className='card sm '+SC[c.suit];
+  el.innerHTML=`<span class="r">${c.rank}</span><span class="s">${c.suit}</span>`;
+  return el;
+}
+
+function setS(t){document.getElementById('stxt').textContent=t}
+function showEl(id,v){document.getElementById(id).classList.toggle('show',v)}
+function showClass(el,v){el.classList.toggle('visible',v)}
+function showById(id,v){document.getElementById(id).classList.toggle('visible',v)}
+
+// -- Rendering --
+function renderHands(){
+  // N/E/W: always face-down
+  for(let p of['N','E','W']){
+    let h=document.getElementById('hand-'+p);
+    h.innerHTML='';
+    G.hands[p].forEach(()=>{let d=document.createElement('div');d.className='card sm fd';h.appendChild(d)});
+  }
+  renderS();
+}
+
+function renderS(){
+  let h=document.getElementById('hand-S');
+  h.innerHTML='';
+  let canPlay=(G.phase==='play'||G.phase==='dummy-play');
+  let myTurn=canPlay && G.current==='S';
+  let humanIsDeclarer=(G.declarer==='S');
+
+  G.hands.S.forEach(c=>{
+    let el=mkCard(c,'');
+    if(myTurn && humanIsDeclarer && canPlayCard(c,'S')){
+      el.classList.add('ok');
+      el.onclick=()=>playCard('S',c);
+    }
+    h.appendChild(el);
+  });
+}
+
+function canPlayCard(card,pos){
+  if(G.trick.length===0) return true;
+  let lead=G.trick[0].card.suit;
+  let hand=G.hands[pos];
+  let has=hand.some(c=>c.suit===lead);
+  return has?card.suit===lead:true;
+}
+
+function renderDummy(){
+  let wrap=document.getElementById('dummy-wrap');
+  if(!G.dummy){wrap.classList.remove('visible');return}
+  wrap.classList.add('visible');
+
+  // Position dummy area near the dummy player's hand position
+  wrap.id='dummy-wrap';
+  wrap.className='visible';
+
+  let dp=G.dummy;
+  let lbl=document.getElementById('dummy-label');
+  lbl.textContent='明手 ('+PN[dp]+')';
+
+  let isVert=(dp==='E'||dp==='W');
+
+  // Position: overlap with the player's hand area
+  let el=document.getElementById('dummy-wrap');
+  el.style.cssText='';
+  if(dp==='N'){el.style.top='30px';el.style.left='50%';el.style.transform='translateX(-50%)'}
+  else if(dp==='S'){el.style.bottom='30px';el.style.left='50%';el.style.transform='translateX(-50%)'}
+  else if(dp==='E'){el.style.right='10px';el.style.top='50%';el.style.transform='translateY(-50%)'}
+  else{el.style.left='10px';el.style.top='50%';el.style.transform='translateY(-50%)'}
+
+  let cards=document.getElementById('dummy-cards');
+  cards.innerHTML='';
+  cards.className=isVert?'vert':'';
+
+  let canPlay=(G.phase==='play'||G.phase==='dummy-play');
+  let isDummyTurn=canPlay && G.current===dp;
+  let humanIsDeclarer=(G.declarer==='S');
+
+  G.hands[dp].forEach(c=>{
+    let el2=mkSm(c);
+    if(isDummyTurn && humanIsDeclarer && canPlayCard(c,dp)){
+      el2.classList.add('ok');
+      el2.onclick=()=>playCard(dp,c);
+    }
+    cards.appendChild(el2);
+  });
+
+  // Hide the face-down hand of dummy, show dummy cards instead
+  document.getElementById('hand-'+dp).style.display='none';
+}
+
+function hideDummy(){
+  document.getElementById('dummy-wrap').classList.remove('visible');
+  if(G&&G.dummy){
+    let el=document.getElementById('hand-'+G.dummy);
+    if(el) el.style.display='';
+  }
+}
+
+function clearTrick(){
+  ['N','E','S','W'].forEach(p=>document.getElementById('ts-'+p).innerHTML='');
+}
+
+function renderTrickCard(pos,card){
+  let el=mkSm(card);
+  document.getElementById('ts-'+pos).innerHTML='';
+  document.getElementById('ts-'+pos).appendChild(el);
+}
+
+function updateLabels(){
+  for(let p of POS){
+    let el=document.getElementById('lbl-'+p);
+    let active=(G.phase==='bidding'&&G.currentBidder===p)||(G.phase==='play'&&G.current===p)||(G.phase==='dummy-play'&&G.current===p);
+    el.classList.toggle('active',active);
+  }
+}
+
+// -- Game Logic --
+function init(){
+  G={
+    hands:{S:[],W:[],N:[],E:[]},
+    phase:'idle',
+    dealer:'S',
+    currentBidder:'S',
+    bids:[],
+    highestBid:null,
+    highestBidder:null,
+    passCount:0,
+    contract:null,
+    declarer:null,
+    dummy:null,
+    trump:null,
+    trumpSuit:null,
+    trick:[],
+    current:null,
+    nsTricks:0,ewTricks:0,
+    trickNum:0,
+    round:1,
+    totalNS:0,totalEW:0
+  };
+  document.getElementById('btn-go').style.display='';
+  setS('点击"开始游戏"开始');
+  clearTrick();
+  hideDummy();
+  renderHands();
+  document.getElementById('i-contract').textContent='定约：--';
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-trump').textContent='将牌：无';
+  document.getElementById('i-round').textContent='第 1 副';
+}
+
+function deal(){
+  let deck=shuffle(mkDeck());
+  for(let i=0;i<52;i++) G.hands[POS[i%4]].push(deck[i]);
+  for(let p of POS) sortH(G.hands[p]);
+}
+
+function startGame(){
+  document.getElementById('btn-go').style.display='none';
+  deal();
+  renderHands();
+  G.phase='bidding';
+  G.currentBidder=G.dealer;
+  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;
+  setS('叫牌阶段');
+  updateLabels();
+  nextBid();
+}
+
+// ---- Bidding ----
+function nextBid(){
+  updateLabels();
+  if(G.currentBidder==='S') showBidUI();
+  else setTimeout(()=>aiBid(G.currentBidder),500);
+}
+
+function bidVal(b){
+  if(b==='Pass')return-1;
+  let lv=+b[0],tp=b.slice(1);
+  let to={'♣':0,'♦':1,'♥':2,'♠':3,'NT':4};
+  return lv*5+to[tp];
+}
+
+function showBidUI(){
+  let p=document.getElementById('bid-panel');p.classList.add('show');
+  let hist=document.getElementById('bid-hist');hist.innerHTML='';
+  G.bids.forEach(b=>{let c=document.createElement('span');c.className='bc bid-'+b.pos+(b.bid==='Pass'?' pass':'');c.textContent=PN[b.pos]+': '+(b.bid==='Pass'?'Pass':b.bid);hist.appendChild(c)});
+
+  let btns=document.getElementById('bid-btns');btns.innerHTML='';
+  let pb=document.createElement('button');pb.textContent='Pass';pb.className='bp';pb.onclick=()=>submitBid('S','Pass');btns.appendChild(pb);
+
+  for(let lv=1;lv<=7;lv++){
+    for(let tp of['♣','♦','♥','♠','NT']){
+      let bs=lv+tp;
+      if(G.highestBid&&bidVal(bs)<=bidVal(G.highestBid))continue;
+      let b=document.createElement('button');b.textContent=bs;b.onclick=()=>submitBid('S',bs);btns.appendChild(b);
+    }
+  }
+}
+
+function submitBid(pos,bid){
+  document.getElementById('bid-panel').classList.remove('show');
+  processBid(pos,bid);
+}
+
+function aiBid(pos){
+  let h=G.hands[pos];
+  let hcp=0,suits={};S4.forEach(s=>suits[s]=0);
+  h.forEach(c=>{suits[c.suit]++;if(c.rank==='A')hcp+=4;else if(c.rank==='K')hcp+=3;else if(c.rank==='Q')hcp+=2;else if(c.rank==='J')hcp+=1});
+
+  let longSuits=[];
+  S4.forEach(s=>{if(suits[s]>=5)longSuits.push({suit:s,len:suits[s]})});
+  longSuits.sort((a,b)=>b.len-a.len);
+
+  let isBalanced=longSuits.filter(s=>s.len>=5).length===0;
+
+  function bestSuit(){return longSuits.length?longSuits[0].suit:'♣'}
+
+  let partner={'S':'N','N':'S','E':'W','W':'E'};
+  let myPartner=partner[pos];
+
+  let hasBidBefore=G.bids.some(b=>b.pos===pos&&b.bid!=='Pass');
+  let partnerHasBid=G.bids.some(b=>b.pos===myPartner&&b.bid!=='Pass');
+  let opponentHasBid=false;
+  ['S','N','E','W'].forEach(p=>{if(p!==pos&&p!==myPartner){if(G.bids.some(b=>b.pos===p&&b.bid!=='Pass'))opponentHasBid=true}});
+
+  let isOpener=!G.highestBid;
+  let isResponder=partnerHasBid&&!isOpener;
+  let isOvercaller=opponentHasBid&&!partnerHasBid&&!isOpener;
+
+  function mkBid(lv,suit){return lv+suit}
+
+  if(isOpener){
+    if(hcp<10){processBid(pos,'Pass');return}
+    if(hcp>=10&&hcp<=11){
+      if(longSuits.length&&longSuits[0].len>=6){processBid(pos,mkBid(1,longSuits[0].suit));return}
+      processBid(pos,'Pass');return;
+    }
+    if(hcp>=12&&longSuits.length&&longSuits[0].len>=5){processBid(pos,mkBid(1,longSuits[0].suit));return}
+    if(hcp>=12&&isBalanced){processBid(pos,'1NT');return}
+    if(hcp>=14&&longSuits.length&&longSuits[0].len>=5){processBid(pos,mkBid(1,longSuits[0].suit));return}
+    if(hcp>=14&&isBalanced){processBid(pos,'1NT');return}
+    processBid(pos,'Pass');return;
+  }
+
+  if(isResponder){
+    let partnerSuit=null;
+    G.bids.forEach(b=>{if(b.pos===myPartner&&b.bid!=='Pass'){let s=b.bid.slice(1);if(s!=='NT')partnerSuit=s}});
+    if(partnerSuit&&suits[partnerSuit]>=3){
+      if(hcp>=13){let gLv=4;processBid(pos,mkBid(gLv,partnerSuit));return}
+      if(hcp>=10){
+        let minLv=Math.floor(bidVal(G.highestBid)/5)+1;
+        let raiseLv=Math.max(minLv,2);
+        if(raiseLv<=7){processBid(pos,mkBid(raiseLv,partnerSuit));return}
+      }
+      if(hcp>=6){
+        let minLv=Math.floor(bidVal(G.highestBid)/5)+1;
+        if(minLv<=7){processBid(pos,mkBid(minLv,partnerSuit));return}
+      }
+      processBid(pos,'Pass');return;
+    }
+    if(hcp>=6&&longSuits.length&&longSuits[0].len>=5){
+      let ownSuit=longSuits[0].suit;
+      if(G.highestBid){
+        let ownVal=bidVal(mkBid(1,ownSuit));
+        if(ownVal>bidVal(G.highestBid)){processBid(pos,mkBid(1,ownSuit));return}
+      }else{processBid(pos,mkBid(1,ownSuit));return}
+    }
+    processBid(pos,'Pass');return;
+  }
+
+  if(isOvercaller){
+    if(hcp>=16&&(!G.highestBid||bidVal('1NT')>bidVal(G.highestBid))){
+      let hasStop=S4.some(s=>suits[s]>=2&&(suits[s]>=3||h.some(c=>c.suit===s&&(c.rank==='A'||c.rank==='K'||c.rank==='Q'))));
+      if(hasStop){processBid(pos,'1NT');return}
+    }
+    if(hcp>=12&&longSuits.length&&longSuits[0].len>=5){
+      let nv=bidVal(mkBid(1,longSuits[0].suit));
+      if(nv>bidVal(G.highestBid)){processBid(pos,mkBid(1,longSuits[0].suit));return}
+    }
+    processBid(pos,'Pass');return;
+  }
+
+  if(hcp>=14){
+    let curLv=+G.highestBid[0];
+    if(longSuits.length&&longSuits[0].len>=5){
+      let ownSuit=longSuits[0].suit;
+      let ownVal=bidVal(mkBid(1,ownSuit));
+      if(ownVal>bidVal(G.highestBid)){processBid(pos,mkBid(1,ownSuit));return}
+    }
+    if(isBalanced&&curLv<7){
+      if(bidVal('1NT')>bidVal(G.highestBid)){processBid(pos,'1NT');return}
+    }
+  }
+  processBid(pos,'Pass');
+}
+
+function processBid(pos,bid){
+  if(bid!=='Pass'&&G.highestBid&&bidVal(bid)<=bidVal(G.highestBid)){bid='Pass'}
+  G.bids.push({pos,bid});
+  if(bid!=='Pass'){G.highestBid=bid;G.highestBidder=pos;G.passCount=0}
+  else G.passCount++;
+
+  if(G.passCount>=3&&G.highestBid){finishBidding();return}
+  if(G.passCount>=4){finishBidding();return}
+
+  let i=POS.indexOf(G.currentBidder);G.currentBidder=POS[(i+1)%4];
+  nextBid();
+}
+
+function finishBidding(){
+  document.getElementById('bid-panel').classList.remove('show');
+
+  if(!G.highestBid){
+    setS('全部Pass，重新发牌');
+    setTimeout(()=>{let svNS=G.totalNS,svEW=G.totalEW;G.round++;init();G.totalNS=svNS;G.totalEW=svEW;deal();G.phase='bidding';G.currentBidder=G.dealer;G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;setS('叫牌阶段');updateLabels();nextBid()},1200);
+    return;
+  }
+
+  G.contract=G.highestBid;
+  G.declarer=G.highestBidder;
+  G.trumpSuit=G.contract.slice(1);
+  G.trump=G.trumpSuit==='NT'?null:G.trumpSuit;
+
+  let di=POS.indexOf(G.declarer);G.dummy=POS[(di+2)%4];
+
+  document.getElementById('i-contract').textContent='定约：'+G.contract+' ('+PN[G.declarer]+'主打)';
+  document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+
+  let team=(G.declarer==='N'||G.declarer==='S')?'南北':'东西';
+  setS(PN[G.declarer]+'主打 '+G.contract+' ('+team+')');
+
+  G.trickNum=0;G.nsTricks=0;G.ewTricks=0;
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+
+  setTimeout(startPlay,1000);
+}
+
+// ---- Play ----
+function startPlay(){
+  G.phase='play';
+  G.trick=[];
+  G.current=G.declarer;
+  clearTrick();
+  renderHands();
+  updateDummyDisplay();
+  updateLabels();
+  autoPlayIfNeeded();
+}
+
+function updateDummyDisplay(){
+  // Show/hide dummy
+  if(!G.dummy)return;
+  if(G.hands[G.dummy]&&G.hands[G.dummy].length===0){hideDummy();return}
+  // Check if dummy has cards
+  if(G.hands[G.dummy].length===0){hideDummy();return}
+  renderDummy();
+}
+
+function autoPlayIfNeeded(){
+  if(G.phase!=='play'&&G.phase!=='dummy-play')return;
+  let humanIsDeclarer=(G.declarer==='S');
+  if(!humanIsDeclarer){
+    // AI plays everything (declarer and dummy)
+    setTimeout(()=>aiPlay(G.current),400);
+  } else {
+    // Human is declarer, plays both S and dummy cards
+    if(G.current==='S'){
+      renderS();
+      setS('请出牌');
+    } else if(G.current===G.dummy){
+      // Human plays dummy's cards
+      renderDummy();
+      setS('请为明手出牌');
+    } else {
+      setTimeout(()=>aiPlay(G.current),400);
+    }
+  }
+}
+
+function playCard(pos,card){
+  if(G.phase!=='play'&&G.phase!=='dummy-play')return;
+  if(G.current!==pos)return;
+
+  let i=G.hands[pos].findIndex(c=>cid(c)===cid(card));
+  if(i===-1)return;
+  G.hands[pos].splice(i,1);
+  G.trick.push({pos,card});
+  renderTrickCard(pos,card);
+
+  // Update displays
+  renderHands();
+  updateDummyDisplay();
+
+  if(G.trick.length===4){
+    setTimeout(resolveTrick,700);
+  } else {
+    let i2=POS.indexOf(G.current);G.current=POS[(i2+1)%4];
+    updateLabels();
+    autoPlayIfNeeded();
+  }
+}
+
+function aiPlay(pos){
+  if(G.phase!=='play'&&G.phase!=='dummy-play')return;
+  let hand=G.hands[pos];
+  if(!hand||hand.length===0)return;
+
+  let playable=hand.filter(c=>canPlayCard(c,pos));
+  if(!playable.length)playable=hand;
+
+  let lead=G.trick.length>0?G.trick[0].card.suit:null;
+  let card;
+
+  if(G.trump&&playable.some(c=>c.suit===G.trump)){
+    let tc=playable.filter(c=>c.suit===G.trump);
+    card=tc.reduce((a,b)=>RV[a.rank]>RV[b.rank]?a:b);
+  } else if(lead&&playable.some(c=>c.suit===lead)){
+    let lc=playable.filter(c=>c.suit===lead);
+    card=lc.reduce((a,b)=>RV[a.rank]>RV[b.rank]?a:b);
+  } else {
+    card=playable.reduce((a,b)=>RV[a.rank]<RV[b.rank]?a:b);
+  }
+
+  playCard(pos,card);
+}
+
+function resolveTrick(){
+  let trick=G.trick;
+  let lead=trick[0].card.suit;
+  let win;
+
+  if(G.trump){
+    let tc=trick.filter(t=>t.card.suit===G.trump);
+    if(tc.length>0) win=tc.reduce((a,b)=>RV[a.card.rank]>RV[b.card.rank]?a:b);
+    else {let lc=trick.filter(t=>t.card.suit===lead);win=lc.reduce((a,b)=>RV[a.card.rank]>RV[b.card.rank]?a:b)}
+  } else {
+    let lc=trick.filter(t=>t.card.suit===lead);
+    win=lc.reduce((a,b)=>RV[a.card.rank]>RV[b.card.rank]?a:b);
+  }
+
+  let wt=(win.pos==='N'||win.pos==='S')?'NS':'EW';
+  if(wt==='NS')G.nsTricks++;else G.ewTricks++;
+  G.trickNum++;
+
+  document.getElementById('i-tricks').textContent='南北: '+G.nsTricks+' | 东西: '+G.ewTricks;
+  setS(PN[win.pos]+'赢得此墩 ('+G.trickNum+'/13)');
+
+  setTimeout(()=>{
+    G.trick=[];
+    clearTrick();
+
+    if(G.hands.S.length===0&&G.hands.W.length===0&&G.hands.N.length===0&&G.hands.E.length===0){
+      finishPlay();return;
+    }
+
+    G.current=win.pos;
+    updateLabels();
+    autoPlayIfNeeded();
+  },800);
+}
+
+function finishPlay(){
+  G.phase='done';
+  hideDummy();
+  renderHands();
+
+  let need=+G.contract[0]+6;
+  let dt=(G.declarer==='N'||G.declarer==='S')?G.nsTricks:G.ewTricks;
+  let made=dt>=need;
+
+  let base=0,bonus=0;
+  let sv={'♣':20,'♦':20,'♥':30,'♠':30,'NT':40};
+  if(G.trumpSuit==='NT') base=40+(+G.contract[0]-1)*30;
+  else base=(+G.contract[0])*sv[G.trumpSuit];
+
+  if(made){
+    bonus=base;
+    if(base>=100) bonus+=300; // game bonus
+    else bonus+=50; // part score
+    let over=dt-need;
+    bonus+=over*(G.trump?30:20); // overtrick
+  } else {
+    bonus=-(need-dt)*50; // penalty
+  }
+
+  let team=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+  if(team==='NS')G.totalNS+=bonus;else G.totalEW+=bonus;
+
+  let resultText=made?`完成！超额 ${dt-need} 墩`:`宕了 ${need-dt} 墩`;
+  let color=made?'#4caf50':'#ef5350';
+
+  document.getElementById('score-body').innerHTML=`
+    <p>定约: ${G.contract} (${PN[G.declarer]}主打)</p>
+    <p>目标: ${need} 墩 | 实际: ${dt} 墩</p>
+    <p style="color:${color};font-weight:bold;margin:6px 0">${resultText}</p>
+    <p>本副得分: ${bonus>=0?'+':''}${bonus}</p>
+    <hr>
+    <p>累计 — 南北: ${G.totalNS} | 东西: ${G.totalEW}</p>
+  `;
+  document.getElementById('score-popup').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function nextDeal(){
+  document.getElementById('score-popup').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+
+  G.round++;
+  let di=POS.indexOf(G.dealer);G.dealer=POS[(di+1)%4];
+  document.getElementById('i-round').textContent='第 '+G.round+' 副';
+  document.getElementById('i-contract').textContent='定约：--';
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-trump').textContent='将牌：无';
+  clearTrick();
+  deal();
+  renderHands();
+  hideDummy();
+  G.phase='bidding';
+  G.currentBidder=G.dealer;
+  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;
+  G.contract=null;G.declarer=null;G.dummy=null;G.trump=null;G.trumpSuit=null;
+  G.nsTricks=0;G.ewTricks=0;G.trickNum=0;
+  setS('叫牌阶段');
+  updateLabels();
+  nextBid();
+}
+
+init();
+</script>
+</body>
+</html>
