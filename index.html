@@ -5,99 +5,346 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>桥牌小游戏</title>
 <style>
+/* ============================================
+   Bridge Card Game - Professional Theme
+   ============================================ */
+
+/* Reset & Base */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#1a5c2a;color:#fff;height:100vh;overflow:hidden;user-select:none}
+body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#fff;height:100vh;overflow:hidden;user-select:none;background:#0a0a0a}
+
+/* Game Container */
 #game{width:100vw;height:100vh;display:flex;flex-direction:column}
 
-/* Top info bar */
-#info-bar{text-align:center;padding:6px 10px;background:rgba(0,0,0,.35);font-size:13px;display:flex;justify-content:center;gap:16px;align-items:center;flex-wrap:wrap;flex-shrink:0}
-.tag{background:rgba(255,255,255,.15);padding:2px 12px;border-radius:10px;white-space:nowrap}
+/* ============ INFO BAR (Glass-morphism) ============ */
+#info-bar{text-align:center;padding:10px 16px;
+  background:rgba(15,25,15,.75);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:13px;display:flex;justify-content:center;gap:16px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.tag{background:rgba(255,255,255,.1);padding:4px 14px;border-radius:12px;white-space:nowrap;
+  border:1px solid rgba(255,255,255,.06);font-weight:500;letter-spacing:.3px}
 
-/* Table */
-#table{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+/* ============ TABLE (Felt texture + radial gradient) ============ */
+#table{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 55%,#1a7a35 0%,#15662b 30%,#115824 55%,#0d4a1e 75%,#093d18 100%);
+  box-shadow:inset 0 0 120px rgba(0,0,0,.45)}
+#table::before{content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.5}
+#table::after{content:'';position:absolute;inset:12px;border:2px solid rgba(218,165,32,.2);border-radius:18px;pointer-events:none;z-index:1;
+  box-shadow:inset 0 0 30px rgba(0,0,0,.2)}
 
-/* Player labels */
-.plabel{position:absolute;font-size:12px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,.6);z-index:5;pointer-events:none}
-.plabel.active{color:#ffeb3b;text-shadow:0 0 10px #ffeb3b,#0 0 20px rgba(255,235,59,.4)}
-#lbl-N{top:10px;left:50%;transform:translateX(-50%)}
-#lbl-S{bottom:10px;left:50%;transform:translateX(-50%)}
-#lbl-E{right:14px;top:50%;transform:translateY(-50%)}
-#lbl-W{left:14px;top:50%;transform:translateY(-50%)}
+/* ============ PLAYER LABELS ============ */
+.plabel{position:absolute;font-size:13px;font-weight:700;letter-spacing:.5px;z-index:5;pointer-events:none;
+  padding:4px 12px;border-radius:8px;
+  background:rgba(0,0,0,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  text-shadow:0 1px 3px rgba(0,0,0,.8);transition:all .3s ease}
+#lbl-N{top:8px;left:50%;transform:translateX(-50%);color:#64b5f6}
+#lbl-S{bottom:8px;left:50%;transform:translateX(-50%);color:#81c784}
+#lbl-E{right:10px;top:50%;transform:translateY(-50%);color:#ef5350}
+#lbl-W{left:10px;top:50%;transform:translateY(-50%);color:#ffb74d}
+.plabel.active{color:#ffeb3b!important;
+  text-shadow:0 0 8px #ffeb3b,0 0 16px rgba(255,235,59,.4);background:rgba(255,235,59,.12);
+  border:1px solid rgba(255,235,59,.2);
+  animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
 
-/* Hands */
+/* ============ HANDS ============ */
 .hand{position:absolute;display:flex;justify-content:center;z-index:2}
-#hand-N{top:30px;left:50%;transform:translateX(-50%);gap:2px}
-#hand-S{bottom:30px;left:50%;transform:translateX(-50%);gap:3px}
-#hand-E{right:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px}
-#hand-W{left:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px}
+#hand-N{top:32px;left:50%;transform:translateX(-50%);gap:-2px}
+#hand-S{bottom:32px;left:50%;transform:translateX(-50%);gap:3px}
+#hand-E{right:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:-2px}
+#hand-W{left:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:-2px}
 
-/* Dummy hand */
+/* ============ DUMMY HAND ============ */
 #dummy-wrap{position:absolute;display:none;z-index:3}
 #dummy-wrap.visible{display:block}
-#dummy-label{font-size:10px;color:#ffeb3b;text-align:center;margin-bottom:2px}
-#dummy-N{top:30px;left:50%;transform:translateX(-50%)}
-#dummy-S{bottom:30px;left:50%;transform:translateX(-50%)}
+#dummy-label{font-size:11px;color:#ffeb3b;text-align:center;margin-bottom:4px;font-weight:600;letter-spacing:1px;
+  text-shadow:0 0 6px rgba(255,235,59,.5)}
+#dummy-N{top:32px;left:50%;transform:translateX(-50%)}
+#dummy-S{bottom:32px;left:50%;transform:translateX(-50%)}
 #dummy-E{right:10px;top:50%;transform:translateY(-50%)}
 #dummy-W{left:10px;top:50%;transform:translateY(-50%)}
 #dummy-cards{display:flex;justify-content:center;gap:2px}
 #dummy-cards.vert{flex-direction:column;align-items:center}
 
-/* Card */
-.card{width:44px;height:64px;border-radius:5px;font-size:12px;cursor:default;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #aaa;background:#fff;color:#333;transition:transform .12s,box-shadow .12s;flex-shrink:0;position:relative}
-.card .r{font-size:15px;font-weight:700;line-height:1}
-.card .s{font-size:15px;line-height:1}
-.card.red{color:#d32f2f}
-.card.black{color:#222}
-.card.sm{width:28px;height:40px}
+/* ============ CARDS ============ */
+.card{width:46px;height:66px;border-radius:7px;font-size:12px;cursor:default;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:1px solid rgba(0,0,0,.1);background:linear-gradient(135deg,#ffffff 0%,#f5f5f5 100%);
+  color:#333;transition:all .18s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;position:relative;
+  box-shadow:0 2px 6px rgba(0,0,0,.2),0 1px 2px rgba(0,0,0,.15);
+  font-weight:600}
+.card .r{font-size:16px;font-weight:800;line-height:1}
+.card .s{font-size:14px;line-height:1}
+.card.red{color:#c62828}
+.card.black{color:#1a1a1a}
+
+/* Small cards (N/E/W hands, dummy) */
+.card.sm{width:30px;height:42px;border-radius:5px}
 .card.sm .r{font-size:10px}
 .card.sm .s{font-size:11px}
-.card.fd{background:repeating-linear-gradient(135deg,#1a237e 0 4px,#283593 4px 8px);border-color:#0d1453;color:transparent}
+
+/* Face-down cards */
+.card.fd{background:linear-gradient(135deg,#1a237e 0%,#283593 50%,#1a237e 100%);
+  border-color:rgba(0,0,0,.3);color:transparent;
+  box-shadow:0 2px 6px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
 .card.fd .r,.card.fd .s{display:none}
-.card.fd::after{content:'🂠';position:absolute;font-size:22px;color:#7986cb}
+.card.fd::after{content:'🂠';position:absolute;font-size:24px;color:rgba(121,134,203,.6);
+  text-shadow:0 1px 2px rgba(0,0,0,.3)}
 
-/* Playable */
-.card.ok{cursor:pointer}
-.card.ok:hover{transform:translateY(-10px);box-shadow:0 6px 16px rgba(255,235,59,.7);z-index:20}
+/* Playable cards */
+.card.ok{cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1)}
+.card.ok:hover{transform:translateY(-12px);
+  box-shadow:0 8px 20px rgba(255,215,0,.5),0 4px 10px rgba(0,0,0,.2);
+  border-color:rgba(255,215,0,.4);z-index:20}
 
-/* Trick slots */
+/* ============ TRICK SLOTS ============ */
 #trick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;z-index:4;pointer-events:none}
-.ts{position:absolute;display:flex;align-items:center;justify-content:center}
+#trick::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:100px;height:100px;border-radius:50%;
+  border:1.5px dashed rgba(255,255,255,.08);pointer-events:none}
+.ts{position:absolute;display:flex;align-items:center;justify-content:center;
+  transition:transform .25s ease}
 #ts-N{top:0;left:50%;transform:translateX(-50%)}
 #ts-E{right:0;top:50%;transform:translateY(-50%)}
 #ts-S{bottom:0;left:50%;transform:translateX(-50%)}
 #ts-W{left:0;top:50%;transform:translateY(-50%)}
 
-/* Bidding */
-#bid-panel{display:none;position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border-radius:12px;padding:14px 16px;z-index:100;min-width:360px;max-width:90vw}
+/* ============ BIDDING PANEL ============ */
+#bid-panel{display:none;position:absolute;bottom:90px;left:50%;transform:translateX(-50%);
+  background:rgba(10,20,10,.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:18px 22px;z-index:100;min-width:380px;max-width:92vw;
+  box-shadow:0 12px 40px rgba(0,0,0,.5)}
 #bid-panel.show{display:block}
-#bid-panel h3{text-align:center;margin-bottom:8px;font-size:15px}
-#bid-hist{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;min-height:24px;justify-content:center}
-.bc{padding:3px 8px;border-radius:8px;font-size:11px;background:rgba(255,255,255,.15)}
+#bid-panel h3{text-align:center;margin-bottom:10px;font-size:15px;font-weight:600;letter-spacing:.5px;color:rgba(255,255,255,.9)}
+#bid-hist{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;min-height:26px;justify-content:center}
+.bc{padding:4px 10px;border-radius:10px;font-size:12px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.06);font-weight:500}
 .bc.pass{opacity:.45}
-.bc.bid-S{background:rgba(33,150,243,.35);color:#64b5f6;border:1px solid rgba(33,150,243,.5)}
-.bc.bid-N{background:rgba(76,175,80,.35);color:#81c784;border:1px solid rgba(76,175,80,.5)}
-.bc.bid-E{background:rgba(244,67,54,.35);color:#ef9a9a;border:1px solid rgba(244,67,54,.5)}
-.bc.bid-W{background:rgba(255,235,59,.35);color:#fff176;border:1px solid rgba(255,235,59,.5)}
-#bid-btns{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
-#bid-btns button{padding:5px 10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;background:#43a047;color:#fff}
-#bid-btns button:hover{background:#66bb6a}
-#bid-btns button.bp{background:#616161}
-#bid-btns button.bp:hover{background:#9e9e9e}
+.bc.bid-S{background:rgba(33,150,243,.3);color:#64b5f6;border:1px solid rgba(33,150,243,.4)}
+.bc.bid-N{background:rgba(76,175,80,.3);color:#81c784;border:1px solid rgba(76,175,80,.4)}
+.bc.bid-E{background:rgba(244,67,54,.3);color:#ef9a9a;border:1px solid rgba(244,67,54,.4)}
+.bc.bid-W{background:rgba(255,235,59,.3);color:#fff176;border:1px solid rgba(255,235,59,.4)}
+#bid-btns{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+#bid-btns button{padding:6px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;
+  background:linear-gradient(135deg,#43a047,#388e3c);color:#fff;font-weight:600;letter-spacing:.3px;
+  transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#bid-btns button:hover{background:linear-gradient(135deg,#66bb6a,#4caf50);
+  box-shadow:0 4px 12px rgba(67,160,71,.4);transform:translateY(-1px)}
+#bid-btns button.bp{background:linear-gradient(135deg,#616161,#424242)}
+#bid-btns button.bp:hover{background:linear-gradient(135deg,#9e9e9e,#757575)}
 
-/* Status */
-#status{text-align:center;padding:8px;background:rgba(0,0,0,.4);font-size:13px;min-height:36px;display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0}
-#status button{padding:5px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;background:#1976d2;color:#fff}
-#status button:hover{background:#42a5f5}
+/* ============ STATUS BAR ============ */
+#status{text-align:center;padding:10px 16px;
+  background:rgba(10,20,10,.8);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-top:1px solid rgba(255,255,255,.06);
+  font-size:13px;min-height:40px;display:flex;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
+#status button{padding:7px 22px;border:none;border-radius:8px;cursor:pointer;font-size:13px;
+  background:linear-gradient(135deg,#1976d2,#1565c0);color:#fff;font-weight:600;letter-spacing:.3px;
+  transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#status button:hover{background:linear-gradient(135deg,#42a5f5,#1e88e5);
+  box-shadow:0 4px 14px rgba(25,118,210,.4);transform:translateY(-1px)}
 
-/* Score popup */
-#score-popup{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.92);border-radius:14px;padding:22px 28px;z-index:200;min-width:320px;text-align:center}
+/* ============ SCORE POPUP ============ */
+#score-popup{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(10,20,10,.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;padding:28px 34px;z-index:200;min-width:340px;text-align:center;
+  box-shadow:0 16px 48px rgba(0,0,0,.6)}
 #score-popup.show{display:block}
-#score-popup h3{margin-bottom:10px}
-#score-popup hr{border-color:rgba(255,255,255,.15);margin:8px 0}
-#score-popup button{margin-top:12px;padding:8px 28px;border:none;border-radius:6px;cursor:pointer;font-size:14px;background:#43a047;color:#fff}
-#score-popup button:hover{background:#66bb6a}
-#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150}
+#score-popup h3{margin-bottom:12px;font-size:18px;font-weight:700;letter-spacing:.5px}
+#score-popup hr{border-color:rgba(255,255,255,.08);margin:10px 0}
+#score-popup button{margin-top:14px;padding:10px 32px;border:none;border-radius:10px;cursor:pointer;
+  font-size:14px;background:linear-gradient(135deg,#43a047,#388e3c);color:#fff;font-weight:700;
+  transition:all .2s ease;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+#score-popup button:hover{background:linear-gradient(135deg,#66bb6a,#4caf50);
+  box-shadow:0 6px 18px rgba(67,160,71,.4);transform:translateY(-2px)}
+
+/* ============ OVERLAY ============ */
+#overlay{display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:150}
 #overlay.show{display:block}
+
+/* ============ ANIMATIONS ============ */
+@keyframes cardPlay{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-50%) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+#score-popup.show{animation:fadeIn .3s ease-out}
+#bid-panel.show{animation:fadeIn .2s ease-out}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:768px){
+  #info-bar{font-size:11px;padding:6px 8px;gap:8px}
+  .tag{padding:2px 8px;font-size:10px}
+  .card{width:38px;height:56px;border-radius:6px}
+  .card .r{font-size:13px}
+  .card .s{font-size:12px}
+  .card.sm{width:26px;height:38px}
+  .card.sm .r{font-size:9px}
+  .card.sm .s{font-size:10px}
+  .plabel{font-size:11px;padding:3px 8px}
+  #bid-panel{min-width:auto;width:92vw;padding:12px 14px}
+  #bid-btns button{padding:5px 10px;font-size:11px}
+  #status{font-size:11px;padding:6px 8px}
+  #status button{padding:5px 16px;font-size:12px}
+  #score-popup{min-width:auto;width:88vw;padding:20px 24px}
+}
+
+/* ============ SCROLLBAR (hidden for clean look) ============ */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px}
+
+/* ============ DOUBLE / REDOUBLE BUTTONS ============ */
+#bid-btns button.bdbl{background:linear-gradient(135deg,#ef6c00,#e65100)}
+#bid-btns button.bdbl:hover{background:linear-gradient(135deg,#ff9800,#ef6c00);box-shadow:0 4px 12px rgba(239,108,0,.4)}
+#bid-btns button.rdbl{background:linear-gradient(135deg,#c62828,#b71c1c)}
+#bid-btns button.rdbl:hover{background:linear-gradient(135deg,#ef5350,#c62828);box-shadow:0 4px 12px rgba(198,40,40,.4)}
+
+/* Bid history - Double / Redouble */
+.bc.dbl{background:rgba(255,152,0,.3);color:#ffb74d;border:1px solid rgba(255,152,0,.4)}
+.bc.rdbl{background:rgba(244,67,54,.3);color:#ef9a9a;border:1px solid rgba(244,67,54,.4)}
+
+/* ============ SCORE HISTORY PANEL ============ */
+#score-history-panel{position:fixed;top:0;right:0;width:380px;height:100vh;
+  background:rgba(10,20,10,.94);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-left:1px solid rgba(255,255,255,.1);
+  z-index:250;transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  box-shadow:-8px 0 32px rgba(0,0,0,.5)}
+#score-history-panel.open{transform:translateX(0)}
+#score-history-panel .sh-header{display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);
+  flex-shrink:0}
+#score-history-panel .sh-header h3{font-size:16px;font-weight:700;letter-spacing:.5px;color:rgba(255,255,255,.9)}
+#score-history-panel .sh-header button{background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+#score-history-panel .sh-header button:hover{background:rgba(255,255,255,.1);color:#fff}
+#score-history-panel .sh-totals{display:flex;justify-content:center;gap:24px;padding:14px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sh-total-box{text-align:center}
+.sh-total-box .label{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.sh-total-box .value{font-size:24px;font-weight:800;letter-spacing:1px}
+.sh-total-box .value.ns-c{color:#81c784}
+.sh-total-box .value.ew-c{color:#ef9a9a}
+#score-history-panel .sh-body{flex:1;overflow-y:auto;padding:10px 16px}
+#score-history-panel table{width:100%;border-collapse:collapse;font-size:12px}
+#score-history-panel th{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.8px;
+  text-transform:uppercase;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.08);
+  text-align:center;font-weight:600}
+#score-history-panel td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.03);
+  text-align:center;color:rgba(255,255,255,.85)}
+#score-history-panel tr:hover td{background:rgba(255,255,255,.03)}
+.td-ns{color:#81c784;font-weight:600}
+.td-ew{color:#ef9a9a;font-weight:600}
+.td-made{color:#4caf50}
+.td-down{color:#ef5350}
+.sh-vul{font-size:10px;padding:2px 6px;border-radius:8px;display:inline-block}
+.sh-vul.none{background:rgba(255,255,255,.05);color:rgba(255,255,255,.4)}
+.sh-vul.ns-v{background:rgba(76,175,80,.15);color:#81c784}
+.sh-vul.ew-v{background:rgba(244,67,54,.15);color:#ef9a9a}
+.sh-vul.both-v{background:rgba(255,193,7,.15);color:#ffd54f}
+.sh-empty{text-align:center;padding:40px 20px;color:rgba(255,255,255,.35);font-size:13px}
+#btn-score-toggle{cursor:pointer;transition:all .2s}
+#btn-score-toggle:hover{background:rgba(255,255,255,.15)!important}
+
+@media(max-width:768px){
+  #score-history-panel{width:100vw}
+  #score-history-panel .sh-totals{gap:16px;padding:10px 16px}
+  .sh-total-box .value{font-size:20px}
+}
+
+/* ============ BID TOOLTIP ============ */
+#bid-tooltip{position:fixed;background:rgba(0,0,0,.92);color:rgba(255,255,255,.95);
+  padding:8px 14px;border-radius:10px;font-size:11px;line-height:1.5;
+  max-width:240px;pointer-events:none;z-index:300;display:none;
+  box-shadow:0 6px 20px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);white-space:pre-line}
+
+/* ============ HAND ANALYSIS POPUP ============ */
+.plabel{cursor:pointer;pointer-events:auto!important}
+#analysis-popup{display:none;position:absolute;z-index:120;
+  background:rgba(10,15,10,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;
+  min-width:220px;max-width:280px;font-size:12px;line-height:1.6;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);color:rgba(255,255,255,.9)}
+#analysis-popup .ap-title{font-weight:700;font-size:13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+#analysis-popup .ap-close{cursor:pointer;font-size:16px;color:rgba(255,255,255,.5);padding:0 4px;border-radius:4px;transition:all .2s}
+#analysis-popup .ap-close:hover{color:#fff;background:rgba(255,255,255,.15)}
+#analysis-popup .ap-row{margin:3px 0}
+#analysis-popup .ap-label{color:rgba(255,255,255,.5);font-size:11px}
+#analysis-popup .ap-suit{margin:2px 0}
+#analysis-popup .ap-honors{font-size:10px;color:#ffd54f;margin-left:4px}
+#analysis-popup .ap-cards{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.08);font-size:11px}
+
+/* ============ CARD ANIMATIONS ============ */
+@keyframes cardPlayFromS{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardPlayFromN{from{opacity:0;transform:translateY(-60px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardPlayFromE{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes cardPlayFromW{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+@keyframes cardWin{0%{box-shadow:0 2px 6px rgba(0,0,0,.2)}50%{box-shadow:0 0 16px 4px rgba(255,215,0,.7),0 0 30px rgba(255,215,0,.3)}100%{box-shadow:0 2px 6px rgba(0,0,0,.2)}}
+@keyframes cardDeal{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.card-play-S{animation:cardPlayFromS .3s ease-out}
+.card-play-N{animation:cardPlayFromN .3s ease-out}
+.card-play-E{animation:cardPlayFromE .3s ease-out}
+.card-play-W{animation:cardPlayFromW .3s ease-out}
+.card-win{animation:cardWin .6s ease-in-out}
+.card-deal{animation:cardDeal .25s ease-out both}
+
+/* ============ SETTINGS & SOUND BUTTONS ============ */
+.ctrl-btn{cursor:pointer;transition:all .2s;font-size:15px;padding:2px 8px;border-radius:8px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.06);user-select:none}
+.ctrl-btn:hover{background:rgba(255,255,255,.18);transform:scale(1.05)}
+.ctrl-btn.active{background:rgba(76,175,80,.25);border-color:rgba(76,175,80,.3)}
+
+/* ============ SETTINGS MODAL ============ */
+#settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:260}
+#settings-overlay.show{display:block}
+#settings-modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(10,20,10,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px 30px;z-index:270;
+  min-width:340px;max-width:92vw;box-shadow:0 16px 48px rgba(0,0,0,.6);
+  color:rgba(255,255,255,.9);font-size:13px}
+#settings-modal.show{display:block}
+#settings-modal h3{text-align:center;margin-bottom:16px;font-size:17px;font-weight:700;letter-spacing:.5px}
+.setting-group{margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.setting-group:last-child{border-bottom:none;margin-bottom:8px;padding-bottom:0}
+.setting-label{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.setting-options{display:flex;gap:6px;flex-wrap:wrap}
+.setting-opt{padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);
+  transition:all .2s ease;user-select:none}
+.setting-opt:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.15)}
+.setting-opt.selected{background:rgba(76,175,80,.3);border-color:rgba(76,175,80,.5);color:#81c784;
+  box-shadow:0 0 8px rgba(76,175,80,.2)}
+.setting-note{font-size:11px;color:rgba(255,255,255,.35);margin-top:6px;font-style:italic}
+#settings-close{position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,.5);
+  font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+#settings-close:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ============ CARD SIZE CLASSES ============ */
+body.card-sm .card{width:36px;height:52px;border-radius:5px}
+body.card-sm .card .r{font-size:11px}
+body.card-sm .card .s{font-size:10px}
+body.card-sm .card.sm{width:24px;height:34px;border-radius:4px}
+body.card-sm .card.sm .r{font-size:8px}
+body.card-sm .card.sm .s{font-size:9px}
+body.card-lg .card{width:56px;height:80px;border-radius:9px}
+body.card-lg .card .r{font-size:20px}
+body.card-lg .card .s{font-size:18px}
+body.card-lg .card.sm{width:38px;height:54px;border-radius:6px}
+body.card-lg .card.sm .r{font-size:13px}
+body.card-lg .card.sm .s{font-size:14px}
 </style>
 </head>
 <body>
@@ -107,6 +354,10 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;backgroun
     <span class="tag" id="i-contract">定约：--</span>
     <span class="tag" id="i-tricks">南北: 0 | 东西: 0</span>
     <span class="tag" id="i-trump">将牌：无</span>
+    <span class="tag" id="i-vuln">无局</span>
+    <span class="tag" id="btn-score-toggle" onclick="toggleScoreHistory()">📊 记分板</span>
+    <span class="ctrl-btn" id="btn-sound" onclick="toggleSound()" title="音效开关">🔊 音效</span>
+    <span class="ctrl-btn" id="btn-settings" onclick="openSettings()" title="设置">⚙️</span>
   </div>
   <div id="table">
     <div id="hand-N" class="hand"></div>
@@ -135,6 +386,62 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;backgroun
       <button onclick="nextDeal()">下一副</button>
     </div>
     <div id="overlay"></div>
+    <div id="bid-tooltip"></div>
+    <div id="analysis-popup"></div>
+  </div>
+  <div id="settings-overlay" onclick="closeSettings()"></div>
+  <div id="settings-modal">
+    <button id="settings-close" onclick="closeSettings()">✕</button>
+    <h3>⚙️ 游戏设置</h3>
+    <div class="setting-group">
+      <div class="setting-label">座位选择</div>
+      <div class="setting-options" id="opt-seat">
+        <div class="setting-opt selected" data-val="S" onclick="setSeat('S')">南 (默认)</div>
+        <div class="setting-opt" data-val="N" onclick="setSeat('N')">北</div>
+      </div>
+      <div class="setting-note">选择不同方位后需重新开始游戏</div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">AI 难度</div>
+      <div class="setting-options" id="opt-diff">
+        <div class="setting-opt" data-val="easy" onclick="setDifficulty('easy')">简单</div>
+        <div class="setting-opt selected" data-val="normal" onclick="setDifficulty('normal')">普通</div>
+        <div class="setting-opt" data-val="hard" onclick="setDifficulty('hard')">困难</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">动画速度</div>
+      <div class="setting-options" id="opt-speed">
+        <div class="setting-opt" data-val="slow" onclick="setSpeed('slow')">慢</div>
+        <div class="setting-opt selected" data-val="normal" onclick="setSpeed('normal')">正常</div>
+        <div class="setting-opt" data-val="fast" onclick="setSpeed('fast')">快</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">牌面大小</div>
+      <div class="setting-options" id="opt-cardsize">
+        <div class="setting-opt" data-val="sm" onclick="setCardSize('sm')">小</div>
+        <div class="setting-opt selected" data-val="md" onclick="setCardSize('md')">中</div>
+        <div class="setting-opt" data-val="lg" onclick="setCardSize('lg')">大</div>
+      </div>
+    </div>
+  </div>
+  <div id="score-history-panel">
+    <div class="sh-header">
+      <h3>📊 记分板</h3>
+      <button onclick="toggleScoreHistory()">✕</button>
+    </div>
+    <div class="sh-totals">
+      <div class="sh-total-box">
+        <div class="label">南北 (NS)</div>
+        <div class="value ns-c" id="sh-ns-total">0</div>
+      </div>
+      <div class="sh-total-box">
+        <div class="label">东西 (EW)</div>
+        <div class="value ew-c" id="sh-ew-total">0</div>
+      </div>
+    </div>
+    <div class="sh-body" id="sh-body"></div>
   </div>
   <div id="status">
     <span id="stxt"></span>
@@ -176,31 +483,35 @@ function showById(id,v){document.getElementById(id).classList.toggle('visible',v
 
 // -- Rendering --
 function renderHands(){
-  // N/E/W: always face-down
-  for(let p of['N','E','W']){
+  // All non-human positions: face-down
+  for(let p of POS){
+    if(p===G.humanSeat)continue; // human's hand rendered separately
     let h=document.getElementById('hand-'+p);
     h.innerHTML='';
-    G.hands[p].forEach(()=>{let d=document.createElement('div');d.className='card sm fd';h.appendChild(d)});
+    G.hands[p].forEach((_,i)=>{let d=document.createElement('div');d.className='card sm fd card-deal';d.style.animationDelay=(i*30)+'ms';h.appendChild(d)});
   }
-  renderS();
+  renderHumanHand();
 }
 
-function renderS(){
-  let h=document.getElementById('hand-S');
+function renderHumanHand(){
+  let hs=G.humanSeat||'S';
+  let h=document.getElementById('hand-'+hs);
   h.innerHTML='';
   let canPlay=(G.phase==='play'||G.phase==='dummy-play');
-  let myTurn=canPlay && G.current==='S';
-  let humanIsDeclarer=(G.declarer==='S');
+  let myTurn=canPlay && G.current===hs;
+  let humanIsDeclarer=(G.declarer===hs);
 
-  G.hands.S.forEach(c=>{
-    let el=mkCard(c,'');
-    if(myTurn && humanIsDeclarer && canPlayCard(c,'S')){
+  G.hands[hs].forEach((c,i)=>{
+    let el=mkCard(c,'card-deal');
+    el.style.animationDelay=(i*30)+'ms';
+    if(myTurn && humanIsDeclarer && canPlayCard(c,hs)){
       el.classList.add('ok');
-      el.onclick=()=>playCard('S',c);
+      el.onclick=()=>playCard(hs,c);
     }
     h.appendChild(el);
   });
 }
+function renderS(){renderHumanHand()}
 
 function canPlayCard(card,pos){
   if(G.trick.length===0) return true;
@@ -239,7 +550,7 @@ function renderDummy(){
 
   let canPlay=(G.phase==='play'||G.phase==='dummy-play');
   let isDummyTurn=canPlay && G.current===dp;
-  let humanIsDeclarer=(G.declarer==='S');
+  let humanIsDeclarer=(G.declarer===(G.humanSeat||'S'));
 
   G.hands[dp].forEach(c=>{
     let el2=mkSm(c);
@@ -268,15 +579,20 @@ function clearTrick(){
 
 function renderTrickCard(pos,card){
   let el=mkSm(card);
+  el.classList.add('card-play-'+pos);
   document.getElementById('ts-'+pos).innerHTML='';
   document.getElementById('ts-'+pos).appendChild(el);
 }
 
 function updateLabels(){
+  let hs=G.humanSeat||'S';
   for(let p of POS){
     let el=document.getElementById('lbl-'+p);
     let active=(G.phase==='bidding'&&G.currentBidder===p)||(G.phase==='play'&&G.current===p)||(G.phase==='dummy-play'&&G.current===p);
     el.classList.toggle('active',active);
+    // Update label text based on seat
+    let isHuman=(p===hs);
+    el.textContent=PN[p]+(isHuman?' (你)':' (AI)');
   }
 }
 
@@ -301,8 +617,15 @@ function init(){
     nsTricks:0,ewTricks:0,
     trickNum:0,
     round:1,
-    totalNS:0,totalEW:0
+    totalNS:0,totalEW:0,
+    doubled:0,
+    vulnNS:false,vulnEW:false,
+    scoreHistory:[],
+    humanSeat:'S',aiDifficulty:'normal',speed:1,speedName:'normal',
+    cardSize:'md',soundEnabled:true
   };
+  loadSettings();
+  resetPlayedCards();
   document.getElementById('btn-go').style.display='';
   setS('点击"开始游戏"开始');
   clearTrick();
@@ -312,6 +635,57 @@ function init(){
   document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
   document.getElementById('i-trump').textContent='将牌：无';
   document.getElementById('i-round').textContent='第 1 副';
+  updateVuln();
+  renderScoreHistory();
+}
+
+// ---- Vulnerability & Score History ----
+function updateVuln(){
+  // Round 1-2: None, 3-4: NS, 5-6: EW, 7-8: Both, then repeat
+  let phase=(G.round-1)%8;
+  G.vulnNS=(phase>=2&&phase<4)||(phase>=6);
+  G.vulnEW=(phase>=4);
+  let txt;
+  if(G.vulnNS&&G.vulnEW) txt='双有局';
+  else if(G.vulnNS) txt='南北有局';
+  else if(G.vulnEW) txt='东西有局';
+  else txt='无局';
+  document.getElementById('i-vuln').textContent=txt;
+}
+
+function toggleScoreHistory(){
+  document.getElementById('score-history-panel').classList.toggle('open');
+}
+
+function renderScoreHistory(){
+  let body=document.getElementById('sh-body');
+  document.getElementById('sh-ns-total').textContent=G.totalNS;
+  document.getElementById('sh-ew-total').textContent=G.totalEW;
+  if(!G.scoreHistory||G.scoreHistory.length===0){
+    body.innerHTML='<div class="sh-empty">暂无记分记录</div>';
+    return;
+  }
+  let html='<table><thead><tr><th>副</th><th>局况</th><th>定约</th><th>庄家</th><th>结果</th><th>得分</th></tr></thead><tbody>';
+  G.scoreHistory.forEach(r=>{
+    let vulLabel,vulClass;
+    if(r.vulnNS&&r.vulnEW){vulLabel='双有';vulClass='both-v'}
+    else if(r.vulnNS){vulLabel='NS';vulClass='ns-v'}
+    else if(r.vulnEW){vulLabel='EW';vulClass='ew-v'}
+    else{vulLabel='无';vulClass='none'}
+    let teamClass=r.scoreTeam==='NS'?'td-ns':'td-ew';
+    let resultClass=r.made?'td-made':'td-down';
+    html+=`<tr>
+      <td>${r.round}</td>
+      <td><span class="sh-vul ${vulClass}">${vulLabel}</span></td>
+      <td>${r.contract}${r.dblStr}</td>
+      <td>${PN[r.declarer]}</td>
+      <td class="${resultClass}">${r.resultText}</td>
+      <td class="${teamClass}">${r.score>0?'+':''}${r.score}</td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  body.innerHTML=html;
+  body.scrollTop=body.scrollHeight;
 }
 
 function deal(){
@@ -322,11 +696,12 @@ function deal(){
 
 function startGame(){
   document.getElementById('btn-go').style.display='none';
+  resetPlayedCards();
   deal();
   renderHands();
   G.phase='bidding';
   G.currentBidder=G.dealer;
-  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;
+  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;G.doubled=0;
   setS('叫牌阶段');
   updateLabels();
   nextBid();
@@ -335,8 +710,9 @@ function startGame(){
 // ---- Bidding ----
 function nextBid(){
   updateLabels();
-  if(G.currentBidder==='S') showBidUI();
-  else setTimeout(()=>aiBid(G.currentBidder),500);
+  let hs=G.humanSeat||'S';
+  if(G.currentBidder===hs) showBidUI();
+  else setTimeout(()=>aiBid(G.currentBidder),spd(500));
 }
 
 function bidVal(b){
@@ -346,25 +722,117 @@ function bidVal(b){
   return lv*5+to[tp];
 }
 
+// ---- Double/Redouble helpers ----
+function isOpponent(p1,p2){
+  return (p1==='N'||p1==='S')?(p2==='E'||p2==='W'):(p2==='N'||p2==='S');
+}
+function getLastNonPass(){
+  for(let i=G.bids.length-1;i>=0;i--){
+    if(G.bids[i].bid!=='Pass')return G.bids[i];
+  }
+  return null;
+}
+function getBidExplanation(bid,pos){
+  if(bid==='Pass')return '不叫';
+  if(bid==='X')return '技术性加倍\n12+HCP，对未叫花色有支持';
+  if(bid==='XX')return '再加倍\n惩罚性，对定约有信心';
+  let suit=bid.slice(1),lv=+bid[0];
+  let suitCN=suit==='NT'?'无将':SN[suit];
+  let partner={'S':'N','N':'S','E':'W','W':'E'}[pos];
+  let realBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+  let partnerHasBid=realBids.some(b=>b.pos===partner);
+  let context=realBids.length===0?'开叫':partnerHasBid?'应叫':'争叫';
+  let desc;
+  if(suit==='NT'){
+    if(lv===1)desc='15-17HCP，均型牌';
+    else if(lv===2)desc='20-21HCP，均型牌';
+    else if(lv===3)desc='25-27HCP，均型牌';
+    else desc='均型牌';
+  }else{
+    if(context==='开叫'){
+      if(lv===1)desc='12+HCP，5+'+suitCN+'套';
+      else if(lv===2)desc='强二开叫，8+赢墩';
+      else desc='阻击叫';
+    }else if(context==='应叫'){
+      desc='加叫，10+HCP，3+支持';
+    }else{
+      desc='争叫，10+HCP，5+'+suitCN+'套';
+    }
+  }
+  return context+bid+'：'+desc;
+}
+function showTooltip(btn,bid,pos){
+  let tip=document.getElementById('bid-tooltip');
+  tip.textContent=getBidExplanation(bid,pos);
+  tip.style.display='block';
+  let r=btn.getBoundingClientRect();
+  let tw=tip.offsetWidth,th=tip.offsetHeight;
+  let left=r.left+r.width/2-tw/2;
+  let top=r.top-th-8;
+  if(left<4)left=4;if(left+tw>window.innerWidth-4)left=window.innerWidth-tw-4;
+  if(top<4)top=r.bottom+8;
+  tip.style.left=left+'px';tip.style.top=top+'px';
+}
+function hideTooltip(){document.getElementById('bid-tooltip').style.display='none'}
+
 function showBidUI(){
+  let hs=G.humanSeat||'S';
   let p=document.getElementById('bid-panel');p.classList.add('show');
   let hist=document.getElementById('bid-hist');hist.innerHTML='';
-  G.bids.forEach(b=>{let c=document.createElement('span');c.className='bc bid-'+b.pos+(b.bid==='Pass'?' pass':'');c.textContent=PN[b.pos]+': '+(b.bid==='Pass'?'Pass':b.bid);hist.appendChild(c)});
+  G.bids.forEach(b=>{
+    let c=document.createElement('span');
+    let extra=b.bid==='X'?' dbl':b.bid==='XX'?' rdbl':b.bid==='Pass'?' pass':'';
+    c.className='bc bid-'+b.pos+extra;
+    c.textContent=PN[b.pos]+': '+(b.bid==='Pass'?'Pass':b.bid);
+    hist.appendChild(c);
+  });
 
   let btns=document.getElementById('bid-btns');btns.innerHTML='';
-  let pb=document.createElement('button');pb.textContent='Pass';pb.className='bp';pb.onclick=()=>submitBid('S','Pass');btns.appendChild(pb);
+  let pb=document.createElement('button');pb.textContent='Pass';pb.className='bp';
+  pb.onclick=()=>submitBid(hs,'Pass');
+  pb.onmouseenter=function(){showTooltip(this,'Pass',hs)};
+  pb.onmouseleave=hideTooltip;
+  btns.appendChild(pb);
+
+  // Double / Redouble buttons
+  let lastNP=getLastNonPass();
+  if(lastNP&&isOpponent(hs,lastNP.pos)){
+    if(lastNP.bid==='X'){
+      // Opponent doubled our bid -> can Redouble
+      let rd=document.createElement('button');
+      rd.textContent='再加倍 (XX)';rd.className='rdbl';
+      rd.onclick=()=>submitBid(hs,'XX');
+      rd.onmouseenter=function(){showTooltip(this,'XX',hs)};
+      rd.onmouseleave=hideTooltip;
+      btns.appendChild(rd);
+    }else if(lastNP.bid!=='XX'){
+      // Opponent's regular bid -> can Double
+      let db=document.createElement('button');
+      db.textContent='加倍 (X)';db.className='bdbl';
+      db.onclick=()=>submitBid(hs,'X');
+      db.onmouseenter=function(){showTooltip(this,'X',hs)};
+      db.onmouseleave=hideTooltip;
+      btns.appendChild(db);
+    }
+  }
 
   for(let lv=1;lv<=7;lv++){
     for(let tp of['♣','♦','♥','♠','NT']){
       let bs=lv+tp;
       if(G.highestBid&&bidVal(bs)<=bidVal(G.highestBid))continue;
-      let b=document.createElement('button');b.textContent=bs;b.onclick=()=>submitBid('S',bs);btns.appendChild(b);
+      let b=document.createElement('button');b.textContent=bs;
+      b.onclick=()=>submitBid(hs,bs);
+      b.onmouseenter=function(){showTooltip(this,bs,hs)};
+      b.onmouseleave=hideTooltip;
+      btns.appendChild(b);
     }
   }
 }
 
 function submitBid(pos,bid){
+  hideTooltip();
   document.getElementById('bid-panel').classList.remove('show');
+  playSound('bid');
   processBid(pos,bid);
 }
 
@@ -385,13 +853,29 @@ function aiBid(pos){
   let myPartner=partner[pos];
 
   let hasBidBefore=G.bids.some(b=>b.pos===pos&&b.bid!=='Pass');
-  let partnerHasBid=G.bids.some(b=>b.pos===myPartner&&b.bid!=='Pass');
+  let partnerHasBid=G.bids.some(b=>b.pos===myPartner&&b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
   let opponentHasBid=false;
   ['S','N','E','W'].forEach(p=>{if(p!==pos&&p!==myPartner){if(G.bids.some(b=>b.pos===p&&b.bid!=='Pass'))opponentHasBid=true}});
 
   let isOpener=!G.highestBid;
   let isResponder=partnerHasBid&&!isOpener;
   let isOvercaller=opponentHasBid&&!partnerHasBid&&!isOpener;
+
+  let lastNP=getLastNonPass();
+
+  // If partner doubled, consider passing for penalty or bidding
+  if(lastNP&&lastNP.pos===myPartner&&(lastNP.bid==='X'||lastNP.bid==='XX')){
+    if(hcp<8){processBid(pos,'Pass');return}
+    // With strong hand, bid instead of passing
+    if(hcp<12){processBid(pos,'Pass');return}
+  }
+
+  // Consider takeout Double of opponent's bid
+  if(lastNP&&isOpponent(pos,lastNP.pos)&&lastNP.bid!=='X'&&lastNP.bid!=='XX'){
+    if(hcp>=12&&(!longSuits.length||longSuits[0].len<5||hcp>=16)){
+      processBid(pos,'X');return;
+    }
+  }
 
   function mkBid(lv,suit){return lv+suit}
 
@@ -461,10 +945,21 @@ function aiBid(pos){
 }
 
 function processBid(pos,bid){
-  if(bid!=='Pass'&&G.highestBid&&bidVal(bid)<=bidVal(G.highestBid)){bid='Pass'}
-  G.bids.push({pos,bid});
-  if(bid!=='Pass'){G.highestBid=bid;G.highestBidder=pos;G.passCount=0}
-  else G.passCount++;
+  if(pos!==(G.humanSeat||'S'))playSound('bid');
+  if(bid==='X'||bid==='XX'){
+    // Validate Double/Redouble legality
+    let lastNP=getLastNonPass();
+    if(!lastNP||!isOpponent(pos,lastNP.pos)){bid='Pass'}
+    else if(bid==='X'&&(lastNP.bid==='X'||lastNP.bid==='XX')){bid='Pass'}
+    else if(bid==='XX'&&lastNP.bid!=='X'){bid='Pass'}
+    if(bid==='Pass'){G.bids.push({pos,bid:'Pass'});G.passCount++;}
+    else{G.bids.push({pos,bid});G.doubled=bid==='X'?1:2;G.passCount=0;}
+  }else{
+    if(bid!=='Pass'&&G.highestBid&&bidVal(bid)<=bidVal(G.highestBid)){bid='Pass'}
+    G.bids.push({pos,bid});
+    if(bid!=='Pass'){G.highestBid=bid;G.highestBidder=pos;G.doubled=0;G.passCount=0}
+    else G.passCount++;
+  }
 
   if(G.passCount>=3&&G.highestBid){finishBidding();return}
   if(G.passCount>=4){finishBidding();return}
@@ -478,7 +973,14 @@ function finishBidding(){
 
   if(!G.highestBid){
     setS('全部Pass，重新发牌');
-    setTimeout(()=>{let svNS=G.totalNS,svEW=G.totalEW;G.round++;init();G.totalNS=svNS;G.totalEW=svEW;deal();G.phase='bidding';G.currentBidder=G.dealer;G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;setS('叫牌阶段');updateLabels();nextBid()},1200);
+    setTimeout(()=>{
+      let svNS=G.totalNS,svEW=G.totalEW,svHist=G.scoreHistory,svRound=G.round+1;
+      init();
+      G.totalNS=svNS;G.totalEW=svEW;G.scoreHistory=svHist;G.round=svRound;
+      document.getElementById('i-round').textContent='第 '+G.round+' 副';
+      updateVuln();renderScoreHistory();
+      deal();G.phase='bidding';G.currentBidder=G.dealer;G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;G.doubled=0;setS('叫牌阶段');updateLabels();nextBid()
+    },spd(1200));
     return;
   }
 
@@ -489,7 +991,7 @@ function finishBidding(){
 
   let di=POS.indexOf(G.declarer);G.dummy=POS[(di+2)%4];
 
-  document.getElementById('i-contract').textContent='定约：'+G.contract+' ('+PN[G.declarer]+'主打)';
+  document.getElementById('i-contract').textContent='定约：'+G.contract+(G.doubled===1?' (X)':G.doubled===2?' (XX)':'')+' ('+PN[G.declarer]+'主打)';
   document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
 
   let team=(G.declarer==='N'||G.declarer==='S')?'南北':'东西';
@@ -498,7 +1000,7 @@ function finishBidding(){
   G.trickNum=0;G.nsTricks=0;G.ewTricks=0;
   document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
 
-  setTimeout(startPlay,1000);
+  setTimeout(startPlay,spd(1000));
 }
 
 // ---- Play ----
@@ -524,21 +1026,22 @@ function updateDummyDisplay(){
 
 function autoPlayIfNeeded(){
   if(G.phase!=='play'&&G.phase!=='dummy-play')return;
-  let humanIsDeclarer=(G.declarer==='S');
+  let hs=G.humanSeat||'S';
+  let humanIsDeclarer=(G.declarer===hs);
   if(!humanIsDeclarer){
     // AI plays everything (declarer and dummy)
-    setTimeout(()=>aiPlay(G.current),400);
+    setTimeout(()=>aiPlay(G.current),spd(400));
   } else {
-    // Human is declarer, plays both S and dummy cards
-    if(G.current==='S'){
-      renderS();
+    // Human is declarer, plays both human and dummy cards
+    if(G.current===hs){
+      renderHumanHand();
       setS('请出牌');
     } else if(G.current===G.dummy){
       // Human plays dummy's cards
       renderDummy();
       setS('请为明手出牌');
     } else {
-      setTimeout(()=>aiPlay(G.current),400);
+      setTimeout(()=>aiPlay(G.current),spd(400));
     }
   }
 }
@@ -552,19 +1055,86 @@ function playCard(pos,card){
   G.hands[pos].splice(i,1);
   G.trick.push({pos,card});
   renderTrickCard(pos,card);
+  playSound('card');
+  trackPlayedCard(card);
 
   // Update displays
   renderHands();
   updateDummyDisplay();
 
   if(G.trick.length===4){
-    setTimeout(resolveTrick,700);
+    setTimeout(resolveTrick,spd(700));
   } else {
     let i2=POS.indexOf(G.current);G.current=POS[(i2+1)%4];
     updateLabels();
     autoPlayIfNeeded();
   }
 }
+
+function countHCP(hand){
+  let h=0;hand.forEach(c=>{if(c.rank==='A')h+=4;else if(c.rank==='K')h+=3;else if(c.rank==='Q')h+=2;else if(c.rank==='J')h+=1});return h;
+}
+
+// ---- Hand Analysis ----
+function getSuitHonors(hand,suit){
+  let ranks=hand.filter(c=>c.suit===suit).map(c=>c.rank);
+  let honors=[];
+  if(ranks.includes('A'))honors.push('A');
+  if(ranks.includes('K'))honors.push('K');
+  if(ranks.includes('Q'))honors.push('Q');
+  if(ranks.includes('J'))honors.push('J');
+  return honors;
+}
+
+function showAnalysis(pos){
+  let popup=document.getElementById('analysis-popup');
+  if(popup.style.display==='block'&&popup.dataset.pos===pos){popup.style.display='none';return}
+  let hand=G.hands[pos];
+  if(!hand||hand.length===0)return;
+  let hcp=countHCP(hand);
+  let suitCounts={};
+  S4.forEach(s=>{suitCounts[s]=hand.filter(c=>c.suit===s).length});
+  let dist=S4.map(s=>suitCounts[s]).join('-');
+  let html=`<div class="ap-title"><span>${PN[pos]} (${pos}) 手牌分析</span><span class="ap-close" onclick="document.getElementById('analysis-popup').style.display='none'">✕</span></div>`;
+  html+=`<div class="ap-row"><span class="ap-label">HCP:</span> <b>${hcp}</b></div>`;
+  html+=`<div class="ap-row"><span class="ap-label">牌型:</span> <b>${dist}</b></div>`;
+  S4.forEach(s=>{
+    let honors=getSuitHonors(hand,s);
+    let honorStr=honors.length?'<span class="ap-honors">'+honors.join('')+'</span>':'';
+    html+=`<div class="ap-suit">${s} ×${suitCounts[s]} ${honorStr}</div>`;
+  });
+  if(pos===(G.humanSeat||'S')){
+    html+=`<div class="ap-cards"><span class="ap-label">持牌:</span> `;
+    html+=hand.map(c=>`<span style="color:${SC[c.suit]==='red'?'#ef9a9a':'#bbb'}">${c.suit}${c.rank}</span>`).join(' ');
+    html+=`</div>`;
+  }
+  popup.innerHTML=html;
+  // Position near the label
+  let lbl=document.getElementById('lbl-'+pos);
+  let r=lbl.getBoundingClientRect();
+  let tableR=document.getElementById('table').getBoundingClientRect();
+  popup.style.display='block';
+  popup.dataset.pos=pos;
+  let pw=popup.offsetWidth,ph=popup.offsetHeight;
+  let left,top;
+  if(pos==='N'){left=r.left+r.width/2-pw/2;top=r.bottom+4}
+  else if(pos==='S'){left=r.left+r.width/2-pw/2;top=r.top-ph-4}
+  else if(pos==='E'){left=r.left-pw-4;top=r.top+r.height/2-ph/2}
+  else{left=r.right+4;top=r.top+r.height/2-ph/2}
+  // Convert viewport coords to table-relative
+  left-=tableR.left;top-=tableR.top;
+  left=Math.max(4,Math.min(left,tableR.width-pw-4));
+  top=Math.max(4,Math.min(top,tableR.height-ph-4));
+  popup.style.left=left+'px';
+  popup.style.top=top+'px';
+}
+document.addEventListener('click',e=>{
+  let popup=document.getElementById('analysis-popup');
+  if(!popup.contains(e.target)&&!e.target.classList.contains('plabel'))popup.style.display='none';
+});
+['N','S','E','W'].forEach(p=>{
+  document.getElementById('lbl-'+p).addEventListener('click',e=>{e.stopPropagation();showAnalysis(p)});
+});
 
 function aiPlay(pos){
   if(G.phase!=='play'&&G.phase!=='dummy-play')return;
@@ -574,17 +1144,104 @@ function aiPlay(pos){
   let playable=hand.filter(c=>canPlayCard(c,pos));
   if(!playable.length)playable=hand;
 
-  let lead=G.trick.length>0?G.trick[0].card.suit:null;
-  let card;
+  let diff=G.aiDifficulty||'normal';
 
-  if(G.trump&&playable.some(c=>c.suit===G.trump)){
-    let tc=playable.filter(c=>c.suit===G.trump);
-    card=tc.reduce((a,b)=>RV[a.rank]>RV[b.rank]?a:b);
-  } else if(lead&&playable.some(c=>c.suit===lead)){
-    let lc=playable.filter(c=>c.suit===lead);
-    card=lc.reduce((a,b)=>RV[a.rank]>RV[b.rank]?a:b);
+  // EASY: random from legal cards
+  if(diff==='easy'){
+    let card=playable[Math.random()*playable.length|0];
+    playCard(pos,card);
+    return;
+  }
+
+  let lead=G.trick.length>0?G.trick[0].card.suit:null;
+  let trump=G.trump, card;
+
+  let lo=cards=>cards.reduce((a,b)=>RV[a.rank]<RV[b.rank]?a:b);
+  let hi=cards=>cards.reduce((a,b)=>RV[a.rank]>RV[b.rank]?a:b);
+
+  // Current trick winner value (trump=100+rank, led suit=rank, else 0)
+  function wv(){
+    let b=0;for(let t of G.trick){
+      let v=(trump&&t.card.suit===trump)?100+RV[t.card.rank]:(t.card.suit===lead)?RV[t.card.rank]:0;
+      if(v>b)b=v;}return b;
+  }
+
+  if(G.trick.length===0){
+    // 1) OPENING LEAD: top of connected honors (AK/KQ), else 4th best from longest
+    let suits={};S4.forEach(s=>suits[s]=hand.filter(c=>c.suit===s).sort((a,b)=>RV[b.rank]-RV[a.rank]));
+    card=null;
+
+    // HARD: prefer suits where partner might be void
+    if(diff==='hard'){
+      // Check if partner has shown void in any suit
+      let partner={'S':'N','N':'S','E':'W','W':'E'}[pos];
+      for(let s of S4){
+        let cs=suits[s];
+        if(cs.length>=2&&((cs[0].rank==='A'&&cs[1].rank==='K')||(cs[0].rank==='K'&&cs[1].rank==='Q'))){card=cs[0];break}
+      }
+      if(!card){
+        // Prefer longest suit with honors for hard AI
+        let bestSuit=S4.reduce((a,b)=>{
+          let aLen=suits[a].length,bLen=suits[b].length;
+          let aHon=suits[a].some(c=>c.rank==='A'||c.rank==='K')?1:0;
+          let bHon=suits[b].some(c=>c.rank==='A'||c.rank==='K')?1:0;
+          return(aLen+aHon*0.5)>=(bLen+bHon*0.5)?a:b;
+        });
+        let sorted=suits[bestSuit];
+        card=sorted[Math.min(3,sorted.length-1)];
+      }
+    } else {
+      // NORMAL opening lead
+      for(let s of S4){
+        let cs=suits[s];
+        if(cs.length>=2&&((cs[0].rank==='A'&&cs[1].rank==='K')||(cs[0].rank==='K'&&cs[1].rank==='Q'))){card=cs[0];break}
+      }
+      if(!card){let best=S4.reduce((a,b)=>suits[a].length>=suits[b].length?a:b);let sorted=suits[best];card=sorted[Math.min(3,sorted.length-1)]}
+    }
+
+  } else if(playable.some(c=>c.suit===lead)){
+    // FOLLOWING SUIT
+    let inSuit=playable.filter(c=>c.suit===lead);
+
+    if(G.trick.length===1){
+      // 2) 2nd hand: play lowest
+      card=lo(inSuit);
+    } else if(G.trick.length===2){
+      // 3) 3rd hand: highest that could win, else lowest
+      let curWv=wv();
+      let winners=inSuit.filter(c=>RV[c.rank]>curWv);
+      if(diff==='hard'&&winners.length){
+        // HARD: play the cheapest winner to conserve high cards
+        card=winners.sort((a,b)=>RV[a.rank]-RV[b.rank])[0];
+      } else {
+        card=winners.length?hi(winners):lo(inSuit);
+      }
+    } else {
+      // 4) 4th hand: just above winner (cheapest win), else lowest
+      let curWv=wv();
+      let above=inSuit.filter(c=>RV[c.rank]>curWv).sort((a,b)=>RV[a.rank]-RV[b.rank]);
+      card=above.length?above[0]:lo(inSuit);
+    }
+
   } else {
-    card=playable.reduce((a,b)=>RV[a.rank]<RV[b.rank]?a:b);
+    // VOID IN LED SUIT
+    let trumps=trump?playable.filter(c=>c.suit===trump):[];
+    if(trumps.length){
+      // 6) Ruff with lowest trump (hard: ruff with higher if partner winning)
+      if(diff==='hard'){
+        let partner={'S':'N','N':'S','E':'W','W':'E'}[pos];
+        let partnerWinning=G.trick.some(t=>t.pos===partner&&RV[t.card.rank]===wv());
+        if(partnerWinning){card=lo(playable.filter(c=>c.suit!==trump).length?playable.filter(c=>c.suit!==trump):trumps)}
+        else{card=lo(trumps)}
+      } else {
+        card=lo(trumps);
+      }
+    } else {
+      // 5) Discard: lowest from shortest suit
+      let suits={};S4.forEach(s=>suits[s]=playable.filter(c=>c.suit===s));
+      let shortest=S4.filter(s=>suits[s].length>0).reduce((a,b)=>suits[a].length<=suits[b].length?a:b);
+      card=lo(suits[shortest]);
+    }
   }
 
   playCard(pos,card);
@@ -610,6 +1267,11 @@ function resolveTrick(){
 
   document.getElementById('i-tricks').textContent='南北: '+G.nsTricks+' | 东西: '+G.ewTricks;
   setS(PN[win.pos]+'赢得此墩 ('+G.trickNum+'/13)');
+  playSound('trick');
+
+  // Highlight winning card
+  let winEl=document.getElementById('ts-'+win.pos).querySelector('.card');
+  if(winEl)winEl.classList.add('card-win');
 
   setTimeout(()=>{
     G.trick=[];
@@ -622,7 +1284,7 @@ function resolveTrick(){
     G.current=win.pos;
     updateLabels();
     autoPlayIfNeeded();
-  },800);
+  },spd(800));
 }
 
 function finishPlay(){
@@ -633,38 +1295,141 @@ function finishPlay(){
   let need=+G.contract[0]+6;
   let dt=(G.declarer==='N'||G.declarer==='S')?G.nsTricks:G.ewTricks;
   let made=dt>=need;
+  let team=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+  let declVuln=(team==='NS')?G.vulnNS:G.vulnEW;
 
-  let base=0,bonus=0;
-  let sv={'♣':20,'♦':20,'♥':30,'♠':30,'NT':40};
-  if(G.trumpSuit==='NT') base=40+(+G.contract[0]-1)*30;
-  else base=(+G.contract[0])*sv[G.trumpSuit];
+  // Trick value per trick (above book/6)
+  let trickVal;
+  if(G.trumpSuit==='NT') trickVal=40+(+G.contract[0]-1)*30;
+  else trickVal=(+G.contract[0])*({'♣':20,'♦':20,'♥':30,'♠':30}[G.trumpSuit]);
+
+  // Per-trick value for overtricks
+  let perTrick={'♣':20,'♦':20,'♥':30,'♠':30,'NT':30}[G.trumpSuit];
+  let dblMult=G.doubled===1?2:G.doubled===2?4:1;
+
+  let bonus=0;
+  let breakdown=[];
+  let isGame=false,isSmallSlam=false,isGrandSlam=false;
 
   if(made){
-    bonus=base;
-    if(base>=100) bonus+=300; // game bonus
-    else bonus+=50; // part score
+    // 1. Contract trick score (× doubled factor for doubled/redoubled)
+    let contractScore=trickVal*dblMult;
+    bonus+=contractScore;
+    breakdown.push('墩分: '+contractScore);
+
+    // 2. Game / Part score bonus
+    if(trickVal>=100){
+      isGame=true;
+      let gameBonus=declVuln?500:300;
+      bonus+=gameBonus;
+      breakdown.push('成局奖: +'+gameBonus);
+    }else{
+      bonus+=50;
+      breakdown.push('未成局奖: +50');
+    }
+
+    // 3. Slam bonuses
+    if(dt>=13){
+      isGrandSlam=true;
+      let gs=declVuln?1500:1000;
+      bonus+=gs;
+      breakdown.push('大满贯奖: +'+gs);
+    }else if(dt>=12){
+      isSmallSlam=true;
+      let ss=declVuln?750:500;
+      bonus+=ss;
+      breakdown.push('小满贯奖: +'+ss);
+    }
+
+    // 4. Overtricks
     let over=dt-need;
-    bonus+=over*(G.trump?30:20); // overtrick
+    if(over>0){
+      let otScore=over*perTrick*dblMult;
+      bonus+=otScore;
+      breakdown.push('超额墩: +'+otScore);
+    }
+
+    // 5. Doubled/redoubled making bonus
+    if(G.doubled===1){bonus+=50;breakdown.push('加倍完成: +50')}
+    if(G.doubled===2){bonus+=100;breakdown.push('再加倍完成: +100')}
+
   } else {
-    bonus=-(need-dt)*50; // penalty
+    // FAILED CONTRACT - penalty scoring
+    let under=need-dt;
+    let penalty=0;
+    if(G.doubled===0){
+      // Undoubled: -50 per undertrick
+      penalty=under*50;
+    }else{
+      // Doubled/redoubled
+      let dblBase;
+      if(G.doubled===1){
+        // Doubled
+        if(declVuln){
+          // Vulnerable: -200 per undertrick
+          dblBase=under*200;
+        }else{
+          // Not vulnerable: -100 first, -200 each additional
+          dblBase=100+Math.max(0,under-1)*200;
+        }
+      }else{
+        // Redoubled: double the doubled penalties
+        if(declVuln){
+          dblBase=under*400;
+        }else{
+          dblBase=200+Math.max(0,under-1)*400;
+        }
+      }
+      penalty=dblBase;
+    }
+    bonus=-penalty;
+    breakdown.push('罚分: -'+penalty);
   }
 
-  let team=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+  // Apply score to the correct team
   if(team==='NS')G.totalNS+=bonus;else G.totalEW+=bonus;
 
-  let resultText=made?`完成！超额 ${dt-need} 墩`:`宕了 ${need-dt} 墩`;
+  let dblStr=G.doubled===1?' (X)':G.doubled===2?' (XX)':'';
+  let resultText;
+  if(made){
+    let tag=isGame?'成局':'';
+    let over=dt-need;
+    resultText=(tag?'🏆 '+tag+' ':'')+'完成'+(over>0?' 超额 '+over+' 墩':'');
+  }else{
+    resultText='宕了 '+(need-dt)+' 墩';
+  }
   let color=made?'#4caf50':'#ef5350';
 
+  // Score popup with breakdown
+  let breakdownHtml=breakdown.map(b=>'• '+b).join('<br>');
   document.getElementById('score-body').innerHTML=`
-    <p>定约: ${G.contract} (${PN[G.declarer]}主打)</p>
+    <p>定约: ${G.contract}${dblStr} (${PN[G.declarer]}主打)</p>
+    <p>局况: ${G.vulnNS&&G.vulnEW?'双有':G.vulnNS?'南北有局':G.vulnEW?'东西有局':'无局'}</p>
     <p>目标: ${need} 墩 | 实际: ${dt} 墩</p>
     <p style="color:${color};font-weight:bold;margin:6px 0">${resultText}</p>
-    <p>本副得分: ${bonus>=0?'+':''}${bonus}</p>
+    <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">${breakdownHtml}</p>
+    <p style="font-size:16px;font-weight:700;margin:8px 0">本副得分: ${bonus>=0?'+':''}${bonus}</p>
     <hr>
     <p>累计 — 南北: ${G.totalNS} | 东西: ${G.totalEW}</p>
   `;
   document.getElementById('score-popup').classList.add('show');
   document.getElementById('overlay').classList.add('show');
+  playSound('game');
+
+  // Record to history
+  G.scoreHistory.push({
+    round:G.round,
+    contract:G.contract,
+    dblStr:dblStr,
+    declarer:G.declarer,
+    made:made,
+    resultText:resultText,
+    score:bonus,
+    scoreTeam:team,
+    vulnNS:G.vulnNS,
+    vulnEW:G.vulnEW
+  });
+  renderScoreHistory();
 }
 
 function nextDeal(){
@@ -672,6 +1437,7 @@ function nextDeal(){
   document.getElementById('overlay').classList.remove('show');
 
   G.round++;
+  resetPlayedCards();
   let di=POS.indexOf(G.dealer);G.dealer=POS[(di+1)%4];
   document.getElementById('i-round').textContent='第 '+G.round+' 副';
   document.getElementById('i-contract').textContent='定约：--';
@@ -683,13 +1449,137 @@ function nextDeal(){
   hideDummy();
   G.phase='bidding';
   G.currentBidder=G.dealer;
-  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;
+  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;G.doubled=0;
   G.contract=null;G.declarer=null;G.dummy=null;G.trump=null;G.trumpSuit=null;
   G.nsTricks=0;G.ewTricks=0;G.trickNum=0;
+  updateVuln();
   setS('叫牌阶段');
   updateLabels();
   nextBid();
 }
+
+// ============ SOUND EFFECTS (Web Audio API) ============
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playSound(type){
+  if(!G||!G.soundEnabled)return;
+  try{
+    let ctx=getAudioCtx();
+    if(ctx.state==='suspended')ctx.resume();
+    let now=ctx.currentTime;
+    if(type==='card'){
+      // Short click/snap: 20ms noise burst filtered at 800Hz
+      let dur=0.02,bufSize=ctx.sampleRate*dur|0,buf=ctx.createBuffer(1,bufSize,ctx.sampleRate);
+      let d=buf.getChannelData(0);for(let i=0;i<bufSize;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(bufSize*0.3));
+      let src=ctx.createBufferSource();src.buffer=buf;
+      let filt=ctx.createBiquadFilter();filt.type='bandpass';filt.frequency.value=800;filt.Q.value=2;
+      let gain=ctx.createGain();gain.gain.setValueAtTime(0.3,now);gain.gain.exponentialRampToValueAtTime(0.001,now+dur);
+      src.connect(filt);filt.connect(gain);gain.connect(ctx.destination);src.start(now);src.stop(now+dur);
+    }else if(type==='trick'){
+      // Pleasant chime: two ascending tones, 200ms
+      [523.25,659.25].forEach((f,i)=>{
+        let o=ctx.createOscillator();o.type='sine';o.frequency.value=f;
+        let g=ctx.createGain();g.gain.setValueAtTime(0,now+i*0.1);
+        g.gain.linearRampToValueAtTime(0.2,now+i*0.1+0.02);
+        g.gain.exponentialRampToValueAtTime(0.001,now+i*0.1+0.18);
+        o.connect(g);g.connect(ctx.destination);o.start(now+i*0.1);o.stop(now+i*0.1+0.2);
+      });
+    }else if(type==='bid'){
+      // Soft ding: single tone 100ms
+      let o=ctx.createOscillator();o.type='sine';o.frequency.value=880;
+      let g=ctx.createGain();g.gain.setValueAtTime(0.15,now);
+      g.gain.exponentialRampToValueAtTime(0.001,now+0.1);
+      o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+0.12);
+    }else if(type==='game'){
+      // Victory fanfare: ascending chord, 500ms
+      [523.25,659.25,783.99].forEach((f,i)=>{
+        let o=ctx.createOscillator();o.type='triangle';o.frequency.value=f;
+        let g=ctx.createGain();g.gain.setValueAtTime(0,now+i*0.08);
+        g.gain.linearRampToValueAtTime(0.2,now+i*0.08+0.04);
+        g.gain.exponentialRampToValueAtTime(0.001,now+0.5);
+        o.connect(g);g.connect(ctx.destination);o.start(now+i*0.08);o.stop(now+0.55);
+      });
+    }
+  }catch(e){}
+}
+
+// ============ SOUND TOGGLE ============
+function toggleSound(){
+  G.soundEnabled=!G.soundEnabled;
+  localStorage.setItem('bridge-sound',G.soundEnabled?'1':'0');
+  updateSoundBtn();
+}
+function updateSoundBtn(){
+  let btn=document.getElementById('btn-sound');
+  if(!btn)return;
+  btn.textContent=G.soundEnabled?'🔊 音效':'🔇 音效';
+  btn.classList.toggle('active',G.soundEnabled);
+}
+
+// ============ SETTINGS ============
+function openSettings(){
+  document.getElementById('settings-modal').classList.add('show');
+  document.getElementById('settings-overlay').classList.add('show');
+}
+function closeSettings(){
+  document.getElementById('settings-modal').classList.remove('show');
+  document.getElementById('settings-overlay').classList.remove('show');
+}
+function selectOpt(containerId,val){
+  let c=document.getElementById(containerId);
+  c.querySelectorAll('.setting-opt').forEach(o=>o.classList.toggle('selected',o.dataset.val===val));
+}
+function setSeat(v){
+  G.humanSeat=v;
+  localStorage.setItem('bridge-seat',v);
+  selectOpt('opt-seat',v);
+}
+function setDifficulty(v){
+  G.aiDifficulty=v;
+  localStorage.setItem('bridge-diff',v);
+  selectOpt('opt-diff',v);
+}
+function setSpeed(v){
+  G.speed=v==='slow'?2:v==='fast'?0.5:1;
+  G.speedName=v;
+  localStorage.setItem('bridge-speed',v);
+  selectOpt('opt-speed',v);
+}
+function setCardSize(v){
+  document.body.classList.remove('card-sm','card-lg');
+  if(v==='sm')document.body.classList.add('card-sm');
+  else if(v==='lg')document.body.classList.add('card-lg');
+  G.cardSize=v;
+  localStorage.setItem('bridge-cardsize',v);
+  selectOpt('opt-cardsize',v);
+}
+function loadSettings(){
+  let seat=localStorage.getItem('bridge-seat')||'S';
+  let diff=localStorage.getItem('bridge-diff')||'normal';
+  let speed=localStorage.getItem('bridge-speed')||'normal';
+  let cardsize=localStorage.getItem('bridge-cardsize')||'md';
+  let sound=localStorage.getItem('bridge-sound');
+  G.humanSeat=seat;
+  G.aiDifficulty=diff;
+  G.speed=speed==='slow'?2:speed==='fast'?0.5:1;
+  G.speedName=speed;
+  G.cardSize=cardsize;
+  G.soundEnabled=sound!=='0'; // default on
+  selectOpt('opt-seat',seat);
+  selectOpt('opt-diff',diff);
+  selectOpt('opt-speed',speed);
+  selectOpt('opt-cardsize',cardsize);
+  setCardSize(cardsize);
+  updateSoundBtn();
+}
+
+// ============ AI DIFFICULTY: track played cards ============
+let playedCards=[];
+function trackPlayedCard(card){playedCards.push(cid(card))}
+function resetPlayedCards(){playedCards=[]}
+
+// ============ SPEED-AWARE DELAY HELPER ============
+function spd(ms){return ms*(G?G.speed:1)}
 
 init();
 </script>
