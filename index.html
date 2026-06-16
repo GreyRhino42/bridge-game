@@ -1681,6 +1681,151 @@ body.card-lg .card.sm .s{font-size:14px}
   #learn-container{bottom:60px;max-width:92vw}
   #learn-tip{right:6px;font-size:11px;max-width:170px;padding:8px 12px}
 }
+/* Lead Trainer */
+#btn-lead-trainer{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;font-weight:700;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(74,20,140,.4)}
+#btn-lead-trainer:hover{background:linear-gradient(135deg,#9c27b0,#7b1fa2);
+  box-shadow:0 5px 16px rgba(123,31,162,.5);transform:translateY(-2px)}
+#lead-trainer{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(10,20,10,.96);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:0;z-index:220;min-width:380px;max-width:92vw;max-height:85vh;
+  overflow:hidden;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+#lead-trainer.show{display:flex}
+.lt-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+.lt-header h3{font-size:17px;font-weight:700;color:#ce93d8;letter-spacing:.5px}
+.lt-header button{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer}
+.lt-body{padding:18px 22px;overflow-y:auto;max-height:60vh}
+.lt-contract{font-size:15px;color:#ffd54f;margin-bottom:12px;text-align:center}
+.lt-your-hand h4{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.lt-suit-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.lt-suit-label{font-size:18px;width:28px}
+.lt-cards{display:flex;gap:4px;flex-wrap:wrap}
+.lt-card-btn{padding:6px 12px;border:1px solid rgba(255,255,255,.15);border-radius:8px;
+  background:rgba(255,255,255,.05);color:#fff;font-size:14px;cursor:pointer;transition:all .2s}
+.lt-card-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.lt-feedback{margin-top:16px;padding:14px;border-radius:12px;font-size:13px;line-height:1.6;display:none}
+.lt-feedback.show{display:block}
+.lt-feedback.good{background:rgba(76,175,80,.15);border:1px solid rgba(76,175,80,.3);color:#81c784}
+.lt-feedback.ok{background:rgba(255,183,77,.15);border:1px solid rgba(255,183,77,.3);color:#ffb74d}
+.lt-feedback.bad{background:rgba(239,83,80,.15);border:1px solid rgba(239,83,80,.3);color:#ef5350}
+.lt-dummy{margin-top:16px;display:none}
+.lt-dummy.show{display:block}
+.lt-dummy h4{font-size:13px;color:#ffd54f;margin-bottom:8px}
+.lt-next{display:flex;justify-content:center;margin-top:16px}
+.lt-next button{padding:10px 28px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;font-weight:700;transition:all .2s}
+.lt-score{display:flex;justify-content:center;gap:20px;margin-bottom:14px;font-size:13px}
+.lt-score span{padding:4px 12px;border-radius:8px;background:rgba(255,255,255,.05)}
+
+/* Daily Challenge */
+#btn-dc{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#f57c00,#e65100);color:#fff;font-weight:700;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(230,81,0,.4)}
+#btn-dc:hover{background:linear-gradient(135deg,#ff9800,#f57c00);
+  box-shadow:0 5px 16px rgba(245,124,0,.5);transform:translateY(-2px)}
+#dc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center}
+#dc-overlay.show{display:flex}
+#dc-panel{background:rgba(15,25,15,.97);border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:28px 32px;max-width:420px;width:90vw;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.7)}
+#dc-panel h2{font-size:22px;font-weight:800;color:#ffd54f;margin-bottom:6px}
+.daily-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px}
+.daily-stat{display:flex;justify-content:center;gap:16px;margin-bottom:20px}
+.daily-stat div{padding:10px 16px;background:rgba(255,255,255,.05);border-radius:10px}
+.daily-stat .val{font-size:24px;font-weight:800;color:#ffd54f}
+.daily-stat .lbl{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+.daily-streak{font-size:14px;color:#ff9800;margin-bottom:16px}
+.daily-start{padding:12px 36px;border:none;border-radius:12px;cursor:pointer;
+  font-size:16px;font-weight:700;background:linear-gradient(135deg,#f57c00,#e65100);
+  color:#fff;transition:all .2s;box-shadow:0 4px 16px rgba(230,81,0,.4)}
+.daily-start:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(230,81,0,.5)}
+.daily-close{margin-top:12px;background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:12px}
+
+/* ============ CONVENTION TRAINER ============ */
+#conv-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center}
+#conv-overlay.show{display:flex}
+#conv-panel{background:rgba(15,25,15,.97);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:0;z-index:310;min-width:400px;max-width:92vw;max-height:85vh;overflow:hidden;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.7)}
+#conv-panel.show{display:flex}
+.conv-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+.conv-header h3{font-size:17px;font-weight:700;color:#4fc3f7;letter-spacing:.5px}
+.conv-header button{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer}
+.conv-body{padding:18px 22px;overflow-y:auto;max-height:60vh}
+.conv-seq{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;padding:12px;background:rgba(255,255,255,.03);border-radius:10px}
+.conv-bid{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:600}
+.conv-bid.pos-N{background:rgba(33,150,243,.15);color:#64b5f6}
+.conv-bid.pos-E{background:rgba(255,183,77,.15);color:#ffb74d}
+.conv-bid.pos-S{background:rgba(76,175,80,.15);color:#81c784}
+.conv-bid.pos-W{background:rgba(239,83,80,.15);color:#ef5350}
+.conv-bid.highlight{border:2px solid #ffd54f;animation:cpulse 1.5s infinite}
+@keyframes cpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,213,79,.4)}50%{box-shadow:0 0 12px 4px rgba(255,213,79,.2)}}
+.conv-hand{margin-bottom:16px}
+.conv-hand h4{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.conv-suit-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.conv-suit-label{font-size:18px;width:28px}
+.conv-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
+.conv-opt{padding:8px 18px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font-size:14px;cursor:pointer;transition:all .2s}
+.conv-opt:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+.conv-opt.correct{background:rgba(76,175,80,.2);border-color:#4caf50;color:#81c784}
+.conv-opt.wrong{background:rgba(239,83,80,.2);border-color:#ef5350;color:#ef5350}
+.conv-feedback{padding:14px;border-radius:12px;font-size:13px;line-height:1.6;display:none;margin-bottom:12px}
+.conv-feedback.show{display:block;background:rgba(33,150,243,.1);border:1px solid rgba(33,150,243,.3);color:#90caf9}
+.conv-next{display:flex;justify-content:center;margin-top:12px}
+.conv-next button{padding:10px 28px;border:none;border-radius:10px;cursor:pointer;font-size:14px;background:linear-gradient(135deg,#0288d1,#01579b);color:#fff;font-weight:700;transition:all .2s}
+.conv-score{display:flex;justify-content:center;gap:20px;margin-bottom:14px;font-size:13px}
+.conv-score span{padding:4px 12px;border-radius:8px;background:rgba(255,255,255,.05)}
+.conv-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.conv-tab{padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.6);transition:all .2s}
+.conv-tab.active{background:rgba(33,150,243,.15);border-color:rgba(33,150,243,.4);color:#64b5f6}
+
+/* ============ ENDGAME TRAINER ============ */
+#endgame-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center}
+#endgame-overlay.show{display:flex}
+#endgame-panel{background:rgba(15,25,15,.97);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:0;z-index:310;min-width:400px;max-width:92vw;max-height:85vh;overflow:hidden;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.7)}
+.eg-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+.eg-header h3{font-size:17px;font-weight:700;color:#ffd54f}
+.eg-header button{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer}
+.eg-body{padding:18px 22px;overflow-y:auto;max-height:65vh}
+.eg-desc{font-size:14px;color:rgba(255,255,255,.8);margin-bottom:16px;text-align:center;line-height:1.5}
+.eg-table{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;margin-bottom:16px;max-width:320px;margin-left:auto;margin-right:auto}
+.eg-cell{padding:10px;border-radius:10px;text-align:center;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.eg-cell.n{background:rgba(33,150,243,.1);grid-column:2}
+.eg-cell.w{background:rgba(239,83,80,.1);grid-column:1;grid-row:2}
+.eg-cell.e{background:rgba(255,183,77,.1);grid-column:3;grid-row:2}
+.eg-cell.s{background:rgba(76,175,80,.1);grid-column:2;grid-row:3}
+.eg-cell-label{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:4px}
+.eg-cell-cards{font-size:14px;line-height:1.6}
+.eg-cards-select{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.eg-card-opt{padding:8px 14px;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.05);color:#fff;font-size:14px;cursor:pointer;transition:all .2s}
+.eg-card-opt:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+.eg-card-opt.correct{background:rgba(76,175,80,.2);border-color:#4caf50}
+.eg-card-opt.wrong{background:rgba(239,83,80,.2);border-color:#ef5350}
+.eg-feedback{padding:14px;border-radius:12px;font-size:13px;line-height:1.6;display:none}
+.eg-feedback.show{display:block;background:rgba(255,213,79,.1);border:1px solid rgba(255,213,79,.3);color:#fff9c4}
+.eg-next{display:flex;justify-content:center;margin-top:12px}
+.eg-next button{padding:10px 28px;border:none;border-radius:10px;cursor:pointer;font-size:14px;background:linear-gradient(135deg,#f57c00,#e65100);color:#fff;font-weight:700}
+#tour-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center}
+#tour-overlay.show{display:flex}
+#tour-panel{background:rgba(15,25,15,.97);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 32px;max-width:500px;width:92vw;box-shadow:0 24px 64px rgba(0,0,0,.7);text-align:center}
+#tour-panel h2{font-size:22px;font-weight:800;color:#ffd54f;margin-bottom:6px}
+.tour-sub{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px}
+.tour-progress{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.tour-hand{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3)}
+.tour-hand.done{background:rgba(76,175,80,.15);border-color:rgba(76,175,80,.3);color:#81c784}
+.tour-hand.active{background:rgba(255,213,79,.15);border-color:#ffd54f;color:#ffd54f;animation:pulse 1.5s infinite}
+.tour-score{font-size:36px;font-weight:900;color:#ffd54f;margin:12px 0}
+.tour-breakdown{font-size:13px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:16px}
+.tour-btn{padding:12px 36px;border:none;border-radius:12px;cursor:pointer;font-size:16px;font-weight:700;background:linear-gradient(135deg,#f57c00,#e65100);color:#fff;transition:all .2s;box-shadow:0 4px 16px rgba(230,81,0,.4)}
+.tour-btn:hover{transform:translateY(-2px)}
+#speed-timer{position:fixed;top:8px;right:8px;z-index:100;padding:6px 14px;border-radius:20px;font-size:16px;font-weight:800;display:none;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.1)}
+#speed-timer.show{display:block}
+#speed-timer.warning{color:#ff9800;border-color:rgba(255,152,0,.3)}
+#speed-timer.danger{color:#f44336;border-color:rgba(244,67,54,.3);animation:pulse 0.5s infinite}
+#btn-tour{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;background:linear-gradient(135deg,#ff6d00,#e65100);color:#fff;font-weight:700;transition:all .2s ease;box-shadow:0 3px 12px rgba(230,81,0,.4)}
+#btn-tour:hover{background:linear-gradient(135deg,#ff8f00,#ff6d00);box-shadow:0 5px 16px rgba(255,109,0,.5);transform:translateY(-2px)}
+.pa-share{background:linear-gradient(135deg,#7b1fa2,#4a148c)!important;color:#fff!important}
+.pa-share:hover{background:linear-gradient(135deg,#9c27b0,#7b1fa2)!important;box-shadow:0 4px 14px rgba(123,31,162,.4)!important}
 </style>
 </head>
 <body>
@@ -1748,10 +1893,36 @@ body.card-lg .card.sm .s{font-size:14px}
       <div id="pa-content"></div>
       <div class="pa-btns">
         <button class="pa-replay" onclick="replayHand()">🔄 重打这副牌</button>
+        <button class="pa-share" onclick="shareHand()">📤 分享</button>
         <button class="pa-next" onclick="closeAnalysis();nextDeal()">🃏 下一副</button>
-      </div>
-    </div>
-    <div id="bid-tooltip"></div>
+        </div>
+        </div>
+        <div id="lead-trainer">
+        <div class="lt-header"><h3>🎯 首攻训练器</h3><button onclick="closeLeadTrainer()">✕</button></div>
+        <div class="lt-body">
+        <div class="lt-score"><span>✅ <b id="lt-correct">0</b></span><span>📊 <b id="lt-total">0</b></span><span>🎯 <b id="lt-pct">0%</b></span></div>
+        <div class="lt-contract" id="lt-contract"></div>
+        <div id="lt-hand"></div>
+        <div class="lt-feedback" id="lt-feedback"></div>
+        <div class="lt-dummy" id="lt-dummy"></div>
+        <div class="lt-next"><button onclick="nextLeadDrill()">下一手 →</button></div>
+        </div>
+        </div>
+        <div id="dc-overlay">
+          <div id="dc-panel">
+        <h2>📅 每日挑战</h2>
+        <div class="daily-sub" id="daily-date"></div>
+        <div class="daily-streak" id="daily-streak"></div>
+        <div class="daily-stat">
+          <div><div class="val" id="daily-best">-</div><div class="lbl">最佳得分</div></div>
+          <div><div class="val" id="daily-played">0</div><div class="lbl">已完成</div></div>
+          <div><div class="val" id="daily-win-rate">0%</div><div class="lbl">完成率</div></div>
+        </div>
+        <button class="daily-start" onclick="startDailyChallenge()">开始今日挑战 →</button>
+        <br><button class="daily-close" onclick="closeDaily()">返回</button>
+        </div>
+        </div>
+        <div id="bid-tooltip"></div>
     <div id="analysis-popup"></div>
   </div>
   <div id="settings-overlay" onclick="closeSettings()"></div>
@@ -1864,6 +2035,47 @@ body.card-lg .card.sm .s{font-size:14px}
   <div id="daily-overlay">
     <div id="daily-modal"></div>
   </div>
+  <!-- Convention Trainer Overlay -->
+  <div id="conv-overlay">
+    <div id="conv-panel">
+      <div class="conv-header"><h3>📋 叫牌约定训练</h3><button onclick="closeConvention()">✕</button></div>
+      <div class="conv-body">
+        <div class="conv-tabs" id="conv-tabs"></div>
+        <div class="conv-score"><span>✅ <b id="conv-correct">0</b></span><span>📊 <b id="conv-total">0</b></span></div>
+        <div class="conv-seq" id="conv-seq"></div>
+        <div class="conv-hand" id="conv-hand"></div>
+        <div class="conv-options" id="conv-options"></div>
+        <div class="conv-feedback" id="conv-feedback"></div>
+        <div class="conv-next"><button onclick="nextConventionDrill()">下一题 →</button></div>
+      </div>
+    </div>
+  </div>
+  <!-- Endgame Trainer Overlay -->
+  <div id="endgame-overlay">
+    <div id="endgame-panel">
+      <div class="eg-header"><h3>🏁 残局技巧</h3><button onclick="closeEndgame()">✕</button></div>
+      <div class="eg-body">
+        <div class="eg-desc" id="eg-desc"></div>
+        <div class="eg-table" id="eg-table"></div>
+        <div class="eg-cards-select" id="eg-cards"></div>
+        <div class="eg-feedback" id="eg-feedback"></div>
+        <div class="eg-next"><button onclick="nextEndgameDrill()">下一题 →</button></div>
+      </div>
+    </div>
+  </div>
+  <!-- Tournament Overlay -->
+  <div id="tour-overlay">
+    <div id="tour-panel">
+      <h2 id="tour-title">🏆 锦标赛模式</h2>
+      <div class="tour-sub" id="tour-sub">4副牌 · IMP计分</div>
+      <div class="tour-progress" id="tour-progress"></div>
+      <div id="tour-results"></div>
+      <button class="tour-btn" id="tour-btn" onclick="startTournament()">开始比赛 →</button>
+      <div id="tour-close-wrap" style="margin-top:10px;display:none"><button onclick="closeTournament();init()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px">返回主菜单</button></div>
+    </div>
+  </div>
+  <!-- Speed Timer -->
+  <div id="speed-timer"><span id="speed-time">30</span>s</div>
   <!-- Story Mode Overlays -->
   <div id="level-map-overlay" onclick="closeLevelMap()">
     <div id="level-map-modal" onclick="event.stopPropagation()"></div>
@@ -1932,6 +2144,11 @@ body.card-lg .card.sm .s{font-size:14px}
     <button id="btn-story" class="story-btn" onclick="openLevelMap()">🎮 故事模式</button>
     <button id="btn-just-play" onclick="startJustPlay()">🎯 只打牌</button>
     <button id="btn-defense" onclick="startDefenseMode()">🛡️ 防守模式</button>
+    <button id="btn-lead-trainer" onclick="openLeadTrainer()">🎯 首攻训练</button>
+    <button id="btn-dc" onclick="openDaily()">📅 每日挑战</button>
+    <button id="btn-conv" onclick="openConvention()">📋 约定叫</button>
+    <button id="btn-endgame" onclick="openEndgame()">🏁 残局</button>
+    <button id="btn-tour" onclick="openTournament()">🏆 锦标赛</button>
   </div>
   <div id="onboarding">
     <div class="ob-card">
@@ -2191,8 +2408,10 @@ function init(){
     humanSeat:'S',aiDifficulty:'normal',speed:1,speedName:'normal',
     cardSize:'md',soundEnabled:true,
     justPlayMode:false,replayHands:null,trickHistoryFull:[],
-    defenseMode:false
+    defenseMode:false,
+    dailyMode:false
   };
+  G.stats={defensePlayed:0,defenseWon:0,leadAccuracy:0,dailyStreak:0,convCorrect:0,fastestHand:999,maxTricks:0,comeback:false,grandSlam:false,tripleGame:0};
   loadSettings();
   initStoryState();
   resetPlayedCards();
@@ -2200,6 +2419,11 @@ function init(){
   document.getElementById('btn-story').style.display='';
   document.getElementById('btn-just-play').style.display='';
   document.getElementById('btn-defense').style.display='';
+  document.getElementById('btn-lead-trainer').style.display='';
+  document.getElementById('btn-dc').style.display='';
+  document.getElementById('btn-conv').style.display='';
+  document.getElementById('btn-endgame').style.display='';
+  document.getElementById('btn-tour').style.display='';
   setS('点击"开始游戏"开始');
   clearTrick();
   hideDummy();
@@ -2271,6 +2495,11 @@ function startGame(){
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
   document.getElementById('btn-defense').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';
+  document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';
+  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-tour').style.display='none';
   resetPlayedCards();
   deal();
   G.justPlayMode=false;
@@ -4561,6 +4790,17 @@ function resolveTrick(){
   document.getElementById('i-tricks').textContent='南北: '+G.nsTricks+' | 东西: '+G.ewTricks;
   setS(PN[win.pos]+'赢得此墩 ('+G.trickNum+'/13)');
   playSound('trick');
+  // AI Commentary
+  try{
+    let comment='';
+    let trumpUsed=trick.filter(t=>t.card.suit===G.trump).length>0;
+    if(G.trickNum===1){comment='第1墩: '+PN[trick[0].pos]+'首攻'+trick[0].card.suit+trick[0].card.rank}
+    if(trumpUsed)comment+=(comment?' · ':'')+'将牌出场！';
+    let winTeam=(win.pos==='N'||win.pos==='S')?'NS':'EW';
+    comment+=(comment?' · ':'')+PN[win.pos]+'赢墩';
+    if(G.defenseMode&&(win.pos==='N'||win.pos==='S'))comment+=' 👍';
+    if(comment)showLearnToast('🗣️ 小桥',comment,2500);
+  }catch(e){}
 
   // Highlight winning card
   let winEl=document.getElementById('ts-'+win.pos).querySelector('.card');
@@ -4712,6 +4952,12 @@ function finishPlay(){
   document.getElementById('score-popup').classList.add('show');
   document.getElementById('overlay').classList.add('show');
   playSound('game');
+  // Record daily challenge result
+  if(G.dailyMode)try{recordDailyResult(made,bonus)}catch(e){}
+  // Tournament mode: record hand result
+  if(G.tournamentMode)try{finishTournamentHand(made,bonus)}catch(e){}
+  // Speed round: stop timer on hand finish
+  if(SPEED.active)try{stopSpeedRound()}catch(e){}
 
   // Learning overlay: populate review content and show button
   try{
@@ -6466,6 +6712,18 @@ function renderEnhancedStats(){
   badgesHtml+=`<div class="analytics-badge ${has20?'earned':'locked'}"><span class="ab-icon">📚</span><div class="ab-name">场景大师<br>完成20场景</div></div>`;
   badgesHtml+=`<div class="analytics-badge ${has3Streak?'earned':'locked'}"><span class="ab-icon">🔥</span><div class="ab-name">连续${has3Streak?streakDays:3}天<br>持续练习</div></div>`;
   badgesHtml+=`<div class="analytics-badge ${has50Hints?'earned':'locked'}"><span class="ab-icon">💡</span><div class="ab-name">提示专家<br>使用50次</div></div>`;
+  // New achievement badges
+  let _st=G.stats||{};
+  badgesHtml+=`<div class="analytics-badge ${(_st.defensePlayed||0)>=1?'earned':'locked'}"><span class="ab-icon">🛡️</span><div class="ab-name">首次防守<br>完成防守模式</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.defenseWon||0)>=10?'earned':'locked'}"><span class="ab-icon">🏰</span><div class="ab-name">防守大师<br>击败定约10次</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.leadAccuracy||0)>=80?'earned':'locked'}"><span class="ab-icon">🎯</span><div class="ab-name">首攻专家<br>正确率80%</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.dailyStreak||0)>=7?'earned':'locked'}"><span class="ab-icon">📅</span><div class="ab-name">每日战士<br>连续7天</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.convCorrect||0)>=20?'earned':'locked'}"><span class="ab-icon">📋</span><div class="ab-name">约定叫专家<br>答对20题</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.fastestHand||999)<=30?'earned':'locked'}"><span class="ab-icon">⚡</span><div class="ab-name">闪电手<br>30秒内完成</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.maxTricks||0)>=13?'earned':'locked'}"><span class="ab-icon">💎</span><div class="ab-name">完美一局<br>赢得13墩</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${_st.comeback?'earned':'locked'}"><span class="ab-icon">🔥</span><div class="ab-name">逆转之王<br>从宕3到完成</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${_st.grandSlam?'earned':'locked'}"><span class="ab-icon">👑</span><div class="ab-name">大满贯<br>完成7阶定约</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${(_st.tripleGame||0)>=3?'earned':'locked'}"><span class="ab-icon">🎯</span><div class="ab-name">三连成局<br>连续3副成局</div></div>`;
   badgesHtml+='</div>';
 
   body.innerHTML=`
@@ -7627,6 +7885,11 @@ function beginStoryLevel(levelId){
   // Update UI
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-story').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';
+  document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';
+  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-tour').style.display='none';
   document.getElementById('i-contract').textContent='定约：'+G.contract;
   document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
   document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
@@ -7911,6 +8174,11 @@ function completeStoryLevel(){
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
   document.getElementById('btn-defense').style.display='';
+  document.getElementById('btn-lead-trainer').style.display='';
+  document.getElementById('btn-dc').style.display='';
+  document.getElementById('btn-conv').style.display='';
+  document.getElementById('btn-endgame').style.display='';
+  document.getElementById('btn-tour').style.display='';
   G.humanSeat='S';
 
   // Check level up
@@ -7975,6 +8243,11 @@ function exitStoryMode(){
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
   document.getElementById('btn-defense').style.display='';
+  document.getElementById('btn-lead-trainer').style.display='';
+  document.getElementById('btn-dc').style.display='';
+  document.getElementById('btn-conv').style.display='';
+  document.getElementById('btn-endgame').style.display='';
+  document.getElementById('btn-tour').style.display='';
   G.humanSeat='S';
   init();
   setS('点击"开始游戏"开始');
@@ -8643,6 +8916,11 @@ function startJustPlay(){
   document.getElementById('btn-story').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
   document.getElementById('btn-defense').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';
+  document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';
+  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-tour').style.display='none';
 
   // Clean up any existing state
   document.getElementById('score-popup').classList.remove('show');
@@ -8696,6 +8974,11 @@ function startDefenseMode(){
   document.getElementById('btn-story').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
   document.getElementById('btn-defense').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';
+  document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';
+  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-tour').style.display='none';
   document.getElementById('score-popup').classList.remove('show');
   document.getElementById('post-analysis').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
@@ -9039,6 +9322,514 @@ function replayHand(){
     setTimeout(function(){nextBid()},spd(500));
   } else {
     setTimeout(nextBid,spd(500));
+  }
+}
+
+// ============ OPENING LEAD TRAINER ============
+var LT={correct:0,total:0,hand:null,optimalLead:null,explanation:''};
+var LEAD_DRILLS=[
+  {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'7'},{suit:'♠',rank:'3'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'9'},{suit:'♥',rank:'5'},{suit:'♦',rank:'J'},{suit:'♦',rank:'8'},{suit:'♦',rank:'4'},{suit:'♣',rank:'K'},{suit:'♣',rank:'6'},{suit:'♣',rank:'2'}],
+   contract:'4♥',declarer:'W',vuln:'None',
+   dummy:[{suit:'♠',rank:'J'},{suit:'♠',rank:'9'},{suit:'♠',rank:'6'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♥',rank:'4'},{suit:'♦',rank:'A'},{suit:'♦',rank:'7'},{suit:'♦',rank:'3'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'5'},{suit:'♣',rank:'3'}],
+   optimal:{suit:'♠',rank:'A'},explanation:'♠AK连张首攻A！建立快速赢墩。'},
+  {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'8'},{suit:'♠',rank:'5'},{suit:'♠',rank:'2'},{suit:'♥',rank:'A'},{suit:'♥',rank:'J'},{suit:'♥',rank:'6'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'9'},{suit:'♦',rank:'7'},{suit:'♦',rank:'3'},{suit:'♣',rank:'K'},{suit:'♣',rank:'4'}],
+   contract:'3NT',declarer:'W',vuln:'NS',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'10'},{suit:'♠',rank:'6'},{suit:'♥',rank:'K'},{suit:'♥',rank:'9'},{suit:'♥',rank:'7'},{suit:'♥',rank:'3'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'5'},{suit:'♣',rank:'A'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'8'}],
+   optimal:{suit:'♦',rank:'3'},explanation:'无连张首攻长套第四大(♦3)。'},
+  {hand:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♠',rank:'6'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♦',rank:'4'},{suit:'♣',rank:'7'},{suit:'♣',rank:'3'}],
+   contract:'4♠',declarer:'W',vuln:'EW',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'J'},{suit:'♠',rank:'9'},{suit:'♥',rank:'A'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'7'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'6'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'5'}],
+   optimal:{suit:'♥',rank:'K'},explanation:'搭档叫过♥，首攻搭档花色♥K！'},
+  {hand:[{suit:'♠',rank:'J'},{suit:'♠',rank:'9'},{suit:'♠',rank:'5'},{suit:'♠',rank:'2'},{suit:'♥',rank:'K'},{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♦',rank:'A'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'8'},{suit:'♦',rank:'3'},{suit:'♣',rank:'9'},{suit:'♣',rank:'4'}],
+   contract:'2♥',declarer:'W',vuln:'None',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'8'},{suit:'♥',rank:'A'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'7'},{suit:'♥',rank:'5'},{suit:'♦',rank:'K'},{suit:'♦',rank:'9'},{suit:'♣',rank:'A'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'7'}],
+   optimal:{suit:'♦',rank:'A'},explanation:'避免首攻对手花色♥。♦AQ连张，攻♦A。'},
+  {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'8'},{suit:'♠',rank:'4'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'3'},{suit:'♦',rank:'K'},{suit:'♦',rank:'10'},{suit:'♦',rank:'7'},{suit:'♦',rank:'2'},{suit:'♣',rank:'K'},{suit:'♣',rank:'5'}],
+   contract:'3NT',declarer:'E',vuln:'Both',
+   dummy:[{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♠',rank:'6'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♦',rank:'A'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'6'},{suit:'♣',rank:'A'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'}],
+   optimal:{suit:'♥',rank:'Q'},explanation:'♥QJ连张，首攻Q。建立高花赢墩。'},
+  {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'7'},{suit:'♠',rank:'3'},{suit:'♥',rank:'A'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'8'},{suit:'♣',rank:'K'},{suit:'♣',rank:'6'},{suit:'♣',rank:'4'}],
+   contract:'4♠',declarer:'W',vuln:'NS',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'8'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'7'},{suit:'♣',rank:'A'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'3'}],
+   optimal:{suit:'♥',rank:'A'},explanation:'对手打4♠，安全首攻♥A。攻A看明手再决定。'},
+  {hand:[{suit:'♠',rank:'10'},{suit:'♠',rank:'7'},{suit:'♠',rank:'4'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'6'},{suit:'♥',rank:'3'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'},{suit:'♣',rank:'7'}],
+   contract:'3NT',declarer:'E',vuln:'EW',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'10'},{suit:'♦',rank:'A'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'J'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'9'}],
+   optimal:{suit:'♠',rank:'10'},explanation:'无好进攻牌，被动首攻♠10。不送墩，等对手动。'},
+  {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'9'},{suit:'♠',rank:'5'},{suit:'♥',rank:'J'},{suit:'♥',rank:'8'},{suit:'♥',rank:'4'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'10'},{suit:'♦',rank:'7'},{suit:'♦',rank:'3'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'2'}],
+   contract:'2♥',declarer:'W',vuln:'None',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'7'},{suit:'♥',rank:'5'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'}],
+   optimal:{suit:'♣',rank:'A'},explanation:'♣AK强连张，首攻A。看搭档信号再决定。'},
+  {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'8'},{suit:'♥',rank:'K'},{suit:'♥',rank:'10'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♦',rank:'6'},{suit:'♦',rank:'2'},{suit:'♣',rank:'K'},{suit:'♣',rank:'3'}],
+   contract:'4♥',declarer:'E',vuln:'Both',
+   dummy:[{suit:'♠',rank:'K'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'8'},{suit:'♦',rank:'A'},{suit:'♦',rank:'Q'},{suit:'♣',rank:'A'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+   optimal:{suit:'♠',rank:'A'},explanation:'♠AQ结构，攻A看明手再决定后续。'},
+  {hand:[{suit:'♠',rank:'J'},{suit:'♠',rank:'8'},{suit:'♠',rank:'5'},{suit:'♠',rank:'2'},{suit:'♥',rank:'A'},{suit:'♥',rank:'9'},{suit:'♥',rank:'6'},{suit:'♥',rank:'3'},{suit:'♦',rank:'K'},{suit:'♦',rank:'J'},{suit:'♦',rank:'7'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'8'}],
+   contract:'3NT',declarer:'W',vuln:'EW',
+   dummy:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♦',rank:'A'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'10'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'}],
+   optimal:{suit:'♥',rank:'3'},explanation:'♥4张套第四大首攻(♥3)。无连张从长套攻第四大。'}
+];
+
+function openLeadTrainer(){
+  document.getElementById('lead-trainer').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+  LT.correct=0;LT.total=0;updateLTScore();nextLeadDrill();
+}
+function closeLeadTrainer(){
+  document.getElementById('lead-trainer').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+}
+function updateLTScore(){
+  document.getElementById('lt-correct').textContent=LT.correct;
+  document.getElementById('lt-total').textContent=LT.total;
+  document.getElementById('lt-pct').textContent=(LT.total>0?Math.round(LT.correct/LT.total*100):0)+'%';
+}
+function nextLeadDrill(){
+  let sc=LEAD_DRILLS[Math.floor(Math.random()*LEAD_DRILLS.length)];
+  LT.hand=sc.hand;LT.optimalLead=sc.optimal;LT.explanation=sc.explanation;LT.currentScenario=sc;
+  document.getElementById('lt-contract').textContent='定约: '+sc.contract+' ('+PN[sc.declarer]+'主打) | 局况: '+sc.vuln;
+  let h='<h4>你是西家 — 选择首攻</h4>';
+  let suits={};S4.forEach(s=>suits[s]=sc.hand.filter(c=>c.suit===s).sort((a,b)=>RV[b.rank]-RV[a.rank]));
+  S4.forEach(s=>{
+    h+='<div class="lt-suit-row"><span class="lt-suit-label" style="color:'+(SC[s]==='red'?'#ef9a9a':'#bbb')+'">'+s+'</span><div class="lt-cards">';
+    suits[s].forEach(c=>{h+='<button class="lt-card-btn" style="color:'+(SC[s]==='red'?'#ef9a9a':'#bbb')+'" onclick="selectLead(\''+s+'\',\''+c.rank+'\')">'+c.rank+'</button>'});
+    h+='</div></div>';
+  });
+  document.getElementById('lt-hand').innerHTML=h;
+  let fb=document.getElementById('lt-feedback');fb.classList.remove('show','good','ok','bad');
+  document.getElementById('lt-dummy').classList.remove('show');
+}
+function selectLead(suit,rank){
+  LT.total++;
+  let isOptimal=(suit===LT.optimalLead.suit&&rank===LT.optimalLead.rank);
+  let isSameSuit=(suit===LT.optimalLead.suit);
+  let fb=document.getElementById('lt-feedback');fb.classList.remove('good','ok','bad');
+  if(isOptimal){LT.correct++;fb.classList.add('good');fb.innerHTML='✅ <b>最佳首攻！</b> '+suit+rank+'<br>'+LT.explanation}
+  else if(isSameSuit){fb.classList.add('ok');fb.innerHTML='⚠️ <b>花色对但张数不对</b><br>最佳: '+LT.optimalLead.suit+LT.optimalLead.rank+'<br>'+LT.explanation}
+  else{fb.classList.add('bad');fb.innerHTML='❌ <b>首攻有误</b><br>最佳: '+LT.optimalLead.suit+LT.optimalLead.rank+'<br>'+LT.explanation}
+  fb.classList.add('show');
+  let dh='<h4>明手</h4>';let ds={};S4.forEach(s=>ds[s]=LT.currentScenario.dummy.filter(c=>c.suit===s).sort((a,b)=>RV[b.rank]-RV[a.rank]));
+  S4.forEach(s=>{dh+='<div class="lt-suit-row"><span class="lt-suit-label" style="color:'+(SC[s]==='red'?'#ef9a9a':'#bbb')+'">'+s+'</span><div class="lt-cards">';
+  ds[s].forEach(c=>{dh+='<span style="padding:4px 8px;font-size:13px;color:'+(SC[c.suit]==='red'?'#ef9a9a':'#bbb')+'">'+c.rank+'</span>'});dh+='</div></div>'});
+  document.getElementById('lt-dummy').innerHTML=dh;document.getElementById('lt-dummy').classList.add('show');
+  updateLTScore();playSound(isOptimal?'trick':'card');
+}
+
+// ============ DAILY CHALLENGE ============
+function getDailySeed(){let d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+function seededRandom(seed){let s=seed;return function(){s=(s*16807+0)%2147483647;return(s-1)/2147483646}}
+function openDaily(){
+  let d=new Date();document.getElementById('daily-date').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
+  let stats=JSON.parse(localStorage.getItem('bridge-daily')||'{}');
+  document.getElementById('daily-best').textContent=stats.best||'-';
+  document.getElementById('daily-played').textContent=stats.played||0;
+  document.getElementById('daily-win-rate').textContent=(stats.played>0?Math.round((stats.won||0)/stats.played*100):0)+'%';
+  let streak=0,check=getDailySeed();while(stats[check]){streak++;check--}
+  document.getElementById('daily-streak').textContent=streak>0?'🔥 连续 '+streak+' 天':'';
+  document.getElementById('dc-overlay').classList.add('show');
+}
+function closeDaily(){document.getElementById('dc-overlay').classList.remove('show')}
+function startDailyChallenge(){
+  closeDaily();
+  document.getElementById('btn-go').style.display='none';document.getElementById('btn-story').style.display='none';
+  document.getElementById('btn-just-play').style.display='none';document.getElementById('btn-defense').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';document.getElementById('btn-endgame').style.display='none';document.getElementById('btn-tour').style.display='none';
+  init();G.dailyMode=true;G.round=1;
+  let seed=getDailySeed(),rng=seededRandom(seed),deck=[];
+  S4.forEach(s=>{['A','K','Q','J','10','9','8','7','6','5','4','3','2'].forEach(r=>deck.push({suit:s,rank:r}))});
+  for(let i=deck.length-1;i>0;i--){let j=Math.floor(rng()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
+  G.hands={S:deck.slice(0,13),W:deck.slice(13,26),N:deck.slice(26,39),E:deck.slice(39,52)};
+  G.replayHands={N:G.hands.N.slice(),S:G.hands.S.slice(),E:G.hands.E.slice(),W:G.hands.W.slice()};
+  resetPlayedCards();G.justPlayMode=true;
+  let ac=autoSelectContract();G.contract=ac.contract;G.declarer='S';G.dummy='N';G.trumpSuit=ac.trumpSuit;G.trump=ac.trump;
+  G.trickNum=0;G.nsTricks=0;G.ewTricks=0;G.doubled=0;
+  document.getElementById('i-contract').textContent='定约：'+G.contract+' (南主打)';
+  document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-round').textContent='📅 每日挑战';
+  setS('📅 每日挑战 — '+ac.reason);updateLabels();renderHands();setTimeout(startPlay,spd(1000));
+}
+function recordDailyResult(made,score){
+  if(!G.dailyMode)return;let seed=getDailySeed(),stats=JSON.parse(localStorage.getItem('bridge-daily')||'{}');
+  stats.played=(stats.played||0)+1;if(made)stats.won=(stats.won||0)+1;
+  if(!stats.best||score>stats.best)stats.best=score;
+  stats[seed]={made:made,score:score};localStorage.setItem('bridge-daily',JSON.stringify(stats));
+}
+
+// ============ CONVENTION TRAINER ============
+var CONV_DATA={
+  stayman:{
+    name:'Stayman',icon:'🔍',
+    drills:[
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'8'},{suit:'♠',rank:'3'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'5'},{suit:'♦',rank:'K'},{suit:'♦',rank:'7'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'4'}],
+       sequence:[{pos:'W',bid:'Pass'},{pos:'N',bid:'1NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'10 HCP',context:'搭档开叫1NT(15-17)，你持4张高花',
+       options:['Pass','2♣','2♦','2♥'],
+       correct:1,
+       explanation:'Stayman! 搭档开叫1NT，你有4张♠和4张♥，用2♣问高花。'},
+      {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'9'},{suit:'♠',rank:'6'},{suit:'♥',rank:'A'},{suit:'♥',rank:'J'},{suit:'♥',rank:'8'},{suit:'♥',rank:'3'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'7'},{suit:'♣',rank:'K'},{suit:'♣',rank:'9'},{suit:'♣',rank:'5'}],
+       sequence:[{pos:'W',bid:'Pass'},{pos:'N',bid:'1NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'13 HCP',context:'搭档开叫1NT，你有4张♠和4张♥',
+       options:['Pass','2♣','2NT','3NT'],
+       correct:1,
+       explanation:'Stayman 2♣! 有4-4高花，先用Stayman寻找高花配合。'},
+      {hand:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♠',rank:'7'},{suit:'♥',rank:'K'},{suit:'♥',rank:'9'},{suit:'♥',rank:'6'},{suit:'♥',rank:'3'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'8'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'5'}],
+       sequence:[{pos:'W',bid:'Pass'},{pos:'N',bid:'1NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'14 HCP',context:'搭档开叫1NT，只有3张高花',
+       options:['2♣','2♦','2NT','3NT'],
+       correct:3,
+       explanation:'直接3NT! 没有4张高花不用Stayman，14HCP+联手29点够成局。'}
+    ]
+  },
+  jacoby:{
+    name:'Jacoby Transfer',icon:'🔄',
+    drills:[
+      {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'J'},{suit:'♠',rank:'9'},{suit:'♠',rank:'7'},{suit:'♠',rank:'5'},{suit:'♥',rank:'A'},{suit:'♥',rank:'8'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'9'},{suit:'♦',rank:'6'},{suit:'♣',rank:'K'},{suit:'♣',rank:'7'},{suit:'♣',rank:'3'}],
+       sequence:[{pos:'W',bid:'Pass'},{pos:'N',bid:'1NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'10 HCP',context:'搭档开叫1NT，你有5张♠',
+       options:['Pass','2♦','2♥','2♠'],
+       correct:1,
+       explanation:'Jacoby Transfer! 2♦转移到♥，2♥转移到♠。你有5张♠，叫2♥转移到♠。'},
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'8'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'6'},{suit:'♦',rank:'K'},{suit:'♦',rank:'10'},{suit:'♦',rank:'7'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'8'},{suit:'♣',rank:'3'}],
+       sequence:[{pos:'W',bid:'Pass'},{pos:'N',bid:'1NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'13 HCP',context:'搭档开叫1NT，你有5张♥',
+       options:['2♣','2♦','2♥','2♠'],
+       correct:1,
+       explanation:'Jacoby Transfer! 2♦转移到♥，让开叫人成为庄家，保护大牌位置。'},
+      {hand:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♠',rank:'8'},{suit:'♠',rank:'6'},{suit:'♥',rank:'K'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'7'},{suit:'♦',rank:'A'},{suit:'♦',rank:'8'},{suit:'♣',rank:'K'},{suit:'♣',rank:'6'},{suit:'♣',rank:'3'}],
+       sequence:[{pos:'W',bid:'Pass'},{pos:'N',bid:'1NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'11 HCP',context:'搭档开叫1NT，你有4张♠和4张♥',
+       options:['2♣','2♦','2♥','2♠'],
+       correct:0,
+       explanation:'4-4高花用Stayman(2♣)而非转移。Stayman优先于转移当有4-4高花时。'}
+    ]
+  },
+  blackwood:{
+    name:'Blackwood',icon:'🖐️',
+    drills:[
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'9'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'K'}],
+       sequence:[{pos:'S',bid:'1♠'},{pos:'W',bid:'Pass'},{pos:'N',bid:'4♠'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'22 HCP',context:'你开叫1♠，搭档加叫4♠。你有满贯兴趣！',
+       options:['Pass','4NT','5NT','6♠'],
+       correct:1,
+       explanation:'Blackwood 4NT! 问搭档的A数。有4个A+KQ配合，试探满贯。'},
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'}],
+       sequence:[{pos:'S',bid:'1♠'},{pos:'W',bid:'Pass'},{pos:'N',bid:'4NT'},{pos:'E',bid:'Pass'}],
+       yourPos:'S',hcp:'24 HCP',context:'搭档用4NT问A。你有3个A。',
+       options:['5♣(0A)','5♦(1A)','5♥(2A)','5♠(3A)'],
+       correct:3,
+       explanation:'回答5♠表示3个A！Blackwood回答：5♣=0/4A, 5♦=1A, 5♥=2A, 5♠=3A。'}
+    ]
+  },
+  negdbl:{
+    name:'Negative Double',icon:'✖️',
+    drills:[
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'9'},{suit:'♥',rank:'K'},{suit:'♥',rank:'J'},{suit:'♥',rank:'8'},{suit:'♥',rank:'5'},{suit:'♦',rank:'A'},{suit:'♦',rank:'10'},{suit:'♦',rank:'7'},{suit:'♣',rank:'K'},{suit:'♣',rank:'9'},{suit:'♣',rank:'3'}],
+       sequence:[{pos:'N',bid:'1♣'},{pos:'E',bid:'1♠'}],
+       yourPos:'S',hcp:'12 HCP',context:'搭档开叫1♣，对手争叫1♠。你有4张♥。',
+       options:['Pass','1NT','X(负加倍)','2♥'],
+       correct:2,
+       explanation:'负加倍! 表示有未叫高花(♥)的支持。12HCP+4张♥，完美负加倍。'},
+      {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'10'},{suit:'♠',rank:'8'},{suit:'♥',rank:'A'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'9'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'9'},{suit:'♣',rank:'5'}],
+       sequence:[{pos:'N',bid:'1♦'},{pos:'E',bid:'1♠'}],
+       yourPos:'S',hcp:'11 HCP',context:'搭档开叫1♦，对手争叫1♠。',
+       options:['Pass','1NT','X(负加倍)','2♥'],
+       correct:2,
+       explanation:'负加倍! 有4张♥未叫高花。负加倍比直接叫2♥更灵活。'}
+    ]
+  }
+};
+var CONV={current:'stayman',correct:0,total:0,currentDrill:null};
+function openConvention(){
+  document.getElementById('conv-overlay').classList.add('show');
+  CONV.correct=0;CONV.total=0;updateConvScore();
+  renderConvTabs();nextConventionDrill();
+}
+function closeConvention(){document.getElementById('conv-overlay').classList.remove('show')}
+function renderConvTabs(){
+  let h='';let first=true;
+  for(let key in CONV_DATA){
+    let c=CONV_DATA[key];
+    h+='<button class="conv-tab'+(first?' active':'')+'" onclick="switchConvention(\''+key+'\')">'+c.icon+' '+c.name+'</button>';
+    first=false;
+  }
+  document.getElementById('conv-tabs').innerHTML=h;
+}
+function switchConvention(key){
+  CONV.current=key;
+  document.querySelectorAll('.conv-tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  nextConventionDrill();
+}
+function updateConvScore(){
+  document.getElementById('conv-correct').textContent=CONV.correct;
+  document.getElementById('conv-total').textContent=CONV.total;
+}
+function nextConventionDrill(){
+  let data=CONV_DATA[CONV.current];
+  if(!data||!data.drills.length)return;
+  let drill=data.drills[Math.floor(Math.random()*data.drills.length)];
+  CONV.currentDrill=drill;
+  let seq='<div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px;text-align:center">'+drill.context+'</div>';
+  drill.sequence.forEach(b=>{
+    seq+='<span class="conv-bid pos-'+b.pos+'">'+PN[b.pos]+': '+b.bid+'</span>';
+  });
+  seq+='<span class="conv-bid pos-'+drill.yourPos+' highlight">'+PN[drill.yourPos]+': ?</span>';
+  document.getElementById('conv-seq').innerHTML=seq;
+  let hand='<h4>你的手牌 ('+drill.hcp+')</h4>';
+  let suits={};S4.forEach(s=>suits[s]=drill.hand.filter(c=>c.suit===s).sort((a,b)=>RV[b.rank]-RV[a.rank]));
+  S4.forEach(s=>{
+    hand+='<div class="conv-suit-row"><span class="conv-suit-label" style="color:'+(SC[s]==='red'?'#ef9a9a':'#bbb')+'">'+s+'</span>';
+    hand+=suits[s].map(c=>'<span style="font-size:14px;color:'+(SC[s]==='red'?'#ef9a9a':'#bbb')+'">'+c.rank+'</span>').join(' ');
+    hand+='</div>';
+  });
+  document.getElementById('conv-hand').innerHTML=hand;
+  let opts='';
+  drill.options.forEach((o,i)=>{
+    opts+='<button class="conv-opt" onclick="selectConvention('+i+')">'+o+'</button>';
+  });
+  document.getElementById('conv-options').innerHTML=opts;
+  document.getElementById('conv-feedback').classList.remove('show');
+}
+function selectConvention(idx){
+  CONV.total++;
+  let drill=CONV.currentDrill;
+  let isCorrect=(idx===drill.correct);
+  if(isCorrect){CONV.correct++;try{G.stats.convCorrect=(G.stats.convCorrect||0)+1}catch(e){}}
+  document.querySelectorAll('.conv-opt').forEach((o,i)=>{
+    if(i===drill.correct)o.classList.add('correct');
+    else if(i===idx&&!isCorrect)o.classList.add('wrong');
+    o.style.pointerEvents='none';
+  });
+  let fb=document.getElementById('conv-feedback');
+  fb.innerHTML=(isCorrect?'✅ <b>正确！</b>':'❌ <b>不正确</b>')+'<br>'+drill.explanation;
+  fb.classList.add('show');
+  updateConvScore();
+  try{playSound(isCorrect?'trick':'card')}catch(e){}
+}
+
+// ============ ENDGAME TRAINER ============
+var EG_DRILLS=[
+  {name:'挤牌入门',desc:'你是南家，♠定约。西家必须在♦和♣中放弃一张，你就能赢。你该出什么？',
+   hands:{S:[{suit:'♠',rank:'A'},{suit:'♦',rank:'A'},{suit:'♣',rank:'K'}],
+          N:[{suit:'♠',rank:'K'},{suit:'♥',rank:'A'},{suit:'♦',rank:'K'}],
+          E:[{suit:'♥',rank:'K'},{suit:'♦',rank:'Q'},{suit:'♣',rank:'A'}],
+          W:[{suit:'♥',rank:'Q'},{suit:'♦',rank:'J'},{suit:'♣',rank:'Q'}]},
+   trump:'♠',lead:'S',
+   correctCard:{suit:'♥',rank:'A'},
+   explanation:'出♥A挤压西家！西家必须保留♦J(防♦K)和♣Q(防♣K)，但只有2张牌可留，必丢一墩。这就是简单挤牌！'},
+  {name:'投入法',desc:'你是南家，NT定约。用♠K投入西家，让西家被迫出对你有利的花色。',
+   hands:{S:[{suit:'♠',rank:'K'},{suit:'♥',rank:'A'},{suit:'♦',rank:'A'}],
+          N:[{suit:'♠',rank:'Q'},{suit:'♥',rank:'K'},{suit:'♣',rank:'A'}],
+          E:[{suit:'♠',rank:'J'},{suit:'♥',rank:'Q'},{suit:'♣',rank:'K'}],
+          W:[{suit:'♠',rank:'10'},{suit:'♥',rank:'J'},{suit:'♣',rank:'Q'}]},
+   trump:null,lead:'S',
+   correctCard:{suit:'♠',rank:'K'},
+   explanation:'出♠K投入西家！西家♠10赢墩后被迫出♥或♣，无论出哪个都给你一墩。这就是投入法(Endplay)！'},
+  {name:'将吃妙手',desc:'你是南家，♥定约。明手最后一张将牌可以将吃你的♠输张。',
+   hands:{S:[{suit:'♥',rank:'A'},{suit:'♠',rank:'5'},{suit:'♦',rank:'A'}],
+          N:[{suit:'♥',rank:'K'},{suit:'♠',rank:'A'},{suit:'♦',rank:'K'}],
+          E:[{suit:'♥',rank:'Q'},{suit:'♠',rank:'K'},{suit:'♦',rank:'Q'}],
+          W:[{suit:'♥',rank:'J'},{suit:'♠',rank:'Q'},{suit:'♣',rank:'A'}]},
+   trump:'♥',lead:'S',
+   correctCard:{suit:'♠',rank:'A'},
+   explanation:'先出♠A兑现赢墩，然后用明手♥K将吃你的♠5。这就是交叉将吃的关键时机！'},
+  {name:'飞牌时机',desc:'你是南家，♠定约。♠需要飞东家的K才能多赢一墩。',
+   hands:{S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'}],
+          N:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♥',rank:'K'}],
+          E:[{suit:'♠',rank:'K'},{suit:'♠',rank:'9'},{suit:'♥',rank:'Q'}],
+          W:[{suit:'♠',rank:'8'},{suit:'♠',rank:'7'},{suit:'♥',rank:'J'}]},
+   trump:'♠',lead:'S',
+   correctCard:{suit:'♠',rank:'J'},
+   explanation:'出♠J飞牌！如果东家不出K，你的J赢墩。如果东家出K，明手A赢，♠Q成为赢张。飞牌是桥牌基本技巧。'}
+];
+var EG={current:null};
+function openEndgame(){document.getElementById('endgame-overlay').classList.add('show');nextEndgameDrill()}
+function closeEndgame(){document.getElementById('endgame-overlay').classList.remove('show')}
+function nextEndgameDrill(){
+  let drill=EG_DRILLS[Math.floor(Math.random()*EG_DRILLS.length)];
+  EG.current=drill;
+  document.getElementById('eg-desc').innerHTML='<b>'+drill.name+'</b><br>'+drill.desc;
+  let table='';
+  ['N','W','E','S'].forEach(pos=>{
+    let cls=pos.toLowerCase();
+    table+='<div class="eg-cell '+cls+'"><div class="eg-cell-label">'+PN[pos]+'</div><div class="eg-cell-cards">';
+    drill.hands[pos].forEach(c=>{
+      let color=SC[c.suit]==='red'?'#ef9a9a':'#bbb';
+      table+='<span style="color:'+color+'">'+c.suit+c.rank+'</span> ';
+    });
+    table+='</div></div>';
+  });
+  document.getElementById('eg-table').innerHTML=table;
+  let opts='';
+  drill.hands.S.forEach(c=>{
+    let color=SC[c.suit]==='red'?'#ef9a9a':'#bbb';
+    opts+='<button class="eg-card-opt" style="color:'+color+'" onclick="selectEndgameCard(\''+c.suit+'\',\''+c.rank+'\')">'+c.suit+c.rank+'</button>';
+  });
+  document.getElementById('eg-cards').innerHTML=opts;
+  document.getElementById('eg-feedback').classList.remove('show');
+}
+function selectEndgameCard(suit,rank){
+  let drill=EG.current;
+  let isCorrect=(suit===drill.correctCard.suit&&rank===drill.correctCard.rank);
+  document.querySelectorAll('.eg-card-opt').forEach(o=>{
+    let txt=o.textContent;
+    if(txt===drill.correctCard.suit+drill.correctCard.rank)o.classList.add('correct');
+    else if(txt===suit+rank&&!isCorrect)o.classList.add('wrong');
+    o.style.pointerEvents='none';
+  });
+  let fb=document.getElementById('eg-feedback');
+  fb.innerHTML=(isCorrect?'✅ <b>正确！</b>':'❌ <b>不正确</b><br>最佳: '+drill.correctCard.suit+drill.correctCard.rank)+'<br>'+drill.explanation;
+  fb.classList.add('show');
+  try{playSound(isCorrect?'trick':'card')}catch(e){}
+}
+
+// ============ TOURNAMENT MODE ============
+var TOUR={hands:[],scores:[],current:0,total:0,results:[]};
+
+function openTournament(){
+  document.getElementById('tour-overlay').classList.add('show');
+  document.getElementById('tour-title').textContent='🏆 锦标赛模式';
+  document.getElementById('tour-sub').textContent='4副牌 · IMP计分';
+  document.getElementById('tour-results').innerHTML='';
+  document.getElementById('tour-close-wrap').style.display='none';
+  let prog='';
+  for(let i=0;i<4;i++)prog+='<div class="tour-hand">'+(i+1)+'</div>';
+  document.getElementById('tour-progress').innerHTML=prog;
+  document.getElementById('tour-btn').textContent='开始比赛 →';
+  document.getElementById('tour-btn').onclick=function(){startTournament()};
+}
+
+function closeTournament(){document.getElementById('tour-overlay').classList.remove('show')}
+
+function startTournament(){
+  closeTournament();
+  TOUR.scores=[];TOUR.results=[];TOUR.current=0;TOUR.total=0;
+  document.getElementById('btn-go').style.display='none';
+  document.getElementById('btn-story').style.display='none';
+  document.getElementById('btn-just-play').style.display='none';
+  document.getElementById('btn-defense').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';
+  document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';
+  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-tour').style.display='none';
+
+  playTournamentHand();
+}
+
+function playTournamentHand(){
+  init();G.tournamentMode=true;G.tourHand=TOUR.current+1;G.round=TOUR.current+1;
+  resetPlayedCards();deal();
+  G.justPlayMode=true;
+  let ac=autoSelectContract();
+  G.contract=ac.contract;G.declarer='S';G.dummy='N';G.trumpSuit=ac.trumpSuit;G.trump=ac.trump;
+  G.trickNum=0;G.nsTricks=0;G.ewTricks=0;G.doubled=0;
+  document.getElementById('i-contract').textContent='定约：'+G.contract+' (南主打)';
+  document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-round').textContent='🏆 锦标赛 第'+(TOUR.current+1)+'/4副';
+  setS('🏆 锦标赛 第'+(TOUR.current+1)+'副 — '+ac.reason);
+  updateLabels();renderHands();setTimeout(startPlay,spd(1000));
+}
+
+function finishTournamentHand(made,bonus){
+  TOUR.scores.push(bonus);
+  TOUR.total+=bonus;
+  TOUR.results.push({hand:TOUR.current+1,score:bonus,made:made});
+  TOUR.current++;
+
+  if(TOUR.current>=4){
+    setTimeout(showTournamentResults,spd(1500));
+  } else {
+    setS('🏆 第'+TOUR.current+'副完成！得分: '+(bonus>=0?'+':'')+bonus+' — 点击继续');
+    setTimeout(function(){playTournamentHand()},spd(3000));
+  }
+}
+
+function showTournamentResults(){
+  document.getElementById('tour-overlay').classList.add('show');
+  document.getElementById('tour-title').textContent='🏆 锦标赛结束！';
+  document.getElementById('tour-sub').textContent='4副牌总成绩';
+
+  let prog='';
+  for(let i=0;i<4;i++){
+    let s=TOUR.scores[i]||0;
+    prog+='<div class="tour-hand done">'+(s>=0?'+':'')+s+'</div>';
+  }
+  document.getElementById('tour-progress').innerHTML=prog;
+
+  let html='<div class="tour-score">'+(TOUR.total>=0?'+':'')+TOUR.total+'</div>';
+  html+='<div class="tour-breakdown">';
+  TOUR.results.forEach(r=>{
+    html+='第'+r.hand+'副: '+(r.made?'✅':'❌')+' '+(r.score>=0?'+':'')+r.score+'<br>';
+  });
+  html+='</div>';
+  document.getElementById('tour-results').innerHTML=html;
+
+  document.getElementById('tour-btn').textContent='再来一轮';
+  document.getElementById('tour-btn').onclick=function(){startTournament()};
+  document.getElementById('tour-close-wrap').style.display='';
+}
+
+// ============ SPEED ROUND ============
+var SPEED={active:false,timeLeft:0,interval:null};
+
+function startSpeedRound(){
+  SPEED.active=true;SPEED.timeLeft=60;
+  let timer=document.getElementById('speed-timer');
+  timer.classList.add('show');
+  timer.classList.remove('warning','danger');
+  updateSpeedDisplay();
+
+  SPEED.interval=setInterval(function(){
+    SPEED.timeLeft--;
+    updateSpeedDisplay();
+    if(SPEED.timeLeft<=10)timer.classList.add('danger');
+    else if(SPEED.timeLeft<=20)timer.classList.add('warning');
+
+    if(SPEED.timeLeft<=0){
+      clearInterval(SPEED.interval);
+      SPEED.active=false;
+      timer.classList.remove('show');
+      setS('⏱️ 时间到！');
+    }
+  },1000);
+}
+
+function updateSpeedDisplay(){
+  document.getElementById('speed-time').textContent=SPEED.timeLeft;
+}
+
+function stopSpeedRound(){
+  SPEED.active=false;
+  if(SPEED.interval)clearInterval(SPEED.interval);
+  document.getElementById('speed-timer').classList.remove('show');
+}
+
+// ============ HAND SHARE ============
+function encodeDeal(){
+  if(!G.hands||!G.hands.S)return'';
+  let all=[...G.hands.S,...G.hands.W,...G.hands.N,...G.hands.E];
+  let suits={'♠':0,'♥':1,'♦':2,'♣':3};
+  let ranks={'A':0,'K':1,'Q':2,'J':3,'10':4,'9':5,'8':6,'7':7,'6':8,'5':9,'4':10,'3':11,'2':12};
+  let encoded='';
+  all.forEach(c=>{
+    encoded+=suits[c.suit].toString(4)+ranks[c.rank].toString(13).padStart(2,'0');
+  });
+  return btoa(encoded).replace(/=/g,'').substring(0,40);
+}
+
+function shareHand(){
+  let code=encodeDeal();
+  let url=window.location.href.split('?')[0]+'?deal='+code;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      showLearnToast('📤 已复制','牌局链接已复制到剪贴板',2000);
+    });
+  } else {
+    prompt('复制链接:',url);
   }
 }
 
