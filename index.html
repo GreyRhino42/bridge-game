@@ -2066,6 +2066,14 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 .speed-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;
   background:#ffd54f;cursor:pointer;border:none;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .speed-label{text-align:center;font-size:11px;color:rgba(255,255,255,.6);margin-top:4px}
+
+/* ============ FEATURE: CARD ANIMATION SMOOTHNESS ============ */
+.card{transition:transform .2s ease,box-shadow .2s ease,filter .2s ease,opacity .2s ease}
+#south-cards .card{transition:transform .15s cubic-bezier(.4,0,.2,1),box-shadow .15s ease}
+.card-enter{animation:cardEnter .3s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes cardEnter{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.trick-card{animation:trickLand .25s ease-out}
+@keyframes trickLand{from{transform:scale(1.3);opacity:.5}to{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
@@ -2078,6 +2086,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tag" id="i-trump">将牌：无</span>
       <span class="tag" id="i-vuln">无局</span>
       <span id="streak-badge" class="streak-badge"></span>
+      <span class="tag" id="i-progress" style="font-size:12px;background:rgba(76,175,80,.15);border-color:rgba(76,175,80,.25);color:#81c784;display:none">📚 课程进度: 0%</span>
     </div>
     <div id="info-row2">
       <span class="tool-btn" id="btn-score-toggle" onclick="toggleScoreHistory()" title="记分板">📊</span>
@@ -2092,6 +2101,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tool-btn" id="btn-daily" onclick="openDailyChallenge()" title="挑战">🏆</span>
       <span class="tool-btn" id="btn-hint-level" onclick="cycleHintLevel()" title="提示"><span class="hint-bulb">💡</span><span id="hint-level-label" style="font-size:10px;margin-left:2px"></span></span>
       <span class="tool-btn" id="btn-help" onclick="replayOnboarding()" title="帮助">❓</span>
+      <span class="tool-btn" id="btn-undo" onclick="if(canUndo())undoLastPlay()" title="撤销出牌">↩️</span>
       <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
     </div>
   </div>
@@ -2144,6 +2154,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
         <button onclick="showSkillRadar()">📊 技能图</button>
         <button onclick="showAchievementProgress()">🏆 成就进度</button>
         <button class="pa-share" onclick="shareHand()">📤 分享</button>
+        <button onclick="saveFavoriteHand()" style="background:rgba(244,67,54,.15);color:#ef9a9a;border:1px solid rgba(244,67,54,.2);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s">❤️ 收藏</button>
         <button class="pa-next" onclick="closeAnalysis();nextDeal()">🃏 下一副</button>
         </div>
         </div>
@@ -2750,6 +2761,7 @@ function init(){
   initStoryState();
   resetPlayedCards();
   try{updatePlayStreak();showStreakBadge()}catch(e){}
+  try{updateProgressDisplay()}catch(e){}
   // Apply reduced motion preference
   try{updateReduceMotionBtn()}catch(e){}
   // Apply colorblind mode preference
@@ -4740,6 +4752,8 @@ function processBid(pos,bid){
   if(pos!==(G.humanSeat||'S'))playSound('bid');
   // Feature 4: AI Bidding Explanations
   if(pos!==(G.humanSeat||'S')){try{showLearnToast('🤖 AI叫牌',explainAIBid(pos,bid),2000)}catch(e){}}
+  // Bidding alert for conventional bids
+  if(pos!==(G.humanSeat||'S')){let _alert=checkBidAlert(pos,bid);if(_alert)try{showLearnToast('🔔 叫牌提醒',_alert,3500)}catch(e){}}
   if(bid==='X'||bid==='XX'){
     // Validate Double/Redouble legality
     let lastNP=getLastNonPass();
@@ -12517,6 +12531,49 @@ function showSessionSummary(){
   html+='</div>';
   document.getElementById('trick-log').innerHTML=html;
   document.getElementById('trick-log').classList.add('show');
+}
+
+// ============ FEATURE: PROGRESS PERCENTAGE (📈 总体进度) ============
+function updateProgressDisplay(){
+  let stars=JSON.parse(localStorage.getItem('bridge-lesson-stars')||'{}');
+  let total=108;let completed=Object.keys(stars).length;
+  let pct=Math.round(completed/total*100);
+  let el=document.getElementById('i-progress');
+  if(el){el.textContent='📚 课程进度: '+pct+'%';el.style.display=pct>0?'':'none';}
+}
+
+// ============ FEATURE: FAVORITE HANDS (❤️ 收藏牌局) ============
+function saveFavoriteHand(){
+  if(!G.hands)return;
+  let favs=JSON.parse(localStorage.getItem('bridge-favorites')||'[]');
+  favs.push({hands:JSON.parse(JSON.stringify(G.hands)),contract:G.contract,declarer:G.declarer,date:new Date().toISOString()});
+  if(favs.length>20)favs=favs.slice(-20);
+  localStorage.setItem('bridge-favorites',JSON.stringify(favs));
+  showLearnToast('❤️ 已收藏','牌局已保存到收藏',2000);
+}
+
+// ============ FEATURE: UNDO LAST PLAY (↩️ 撤销出牌) ============
+function canUndo(){
+  return G.justPlayMode&&G.trick.length>0&&G.trick[G.trick.length-1].pos==='S';
+}
+function undoLastPlay(){
+  if(!canUndo())return;
+  let last=G.trick.pop();
+  G.hands['S'].push(last.card);
+  G.hands['S'].sort(function(a,b){return S4.indexOf(a.suit)-S4.indexOf(b.suit)||RV[b.rank]-RV[a.rank]});
+  G.current='S';
+  renderHands();updateLabels();
+  showLearnToast('↩️ 已撤销','上一张牌已收回',1500);
+}
+
+// ============ FEATURE: BIDDING ALERT SYSTEM (🔔 叫牌提醒) ============
+function checkBidAlert(pos,bid){
+  if(bid==='Pass'||bid==='X'||bid==='XX')return null;
+  let lv=+bid[0];let suit=bid.slice(1);
+  if(lv===2&&suit==='♣'&&pos!=='S')return'⚠️ 2♣强开叫！22+HCP';
+  if(lv===1&&suit==='NT'&&pos!=='S')return'ℹ️ 1NT开叫：15-17HCP均型';
+  if(lv>=3&&suit!=='NT')return'⚠️ 阻击叫：弱牌长套';
+  return null;
 }
 
 // ============ INIT SETTINGS UI ============
