@@ -263,6 +263,164 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
   .sh-total-box .value{font-size:20px}
 }
 
+/* ============ SCENARIO LIBRARY ============ */
+#scenario-overlay{display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#scenario-overlay.show{display:flex;align-items:center;justify-content:center}
+#scenario-modal{background:rgba(10,20,10,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.12);border-radius:20px;
+  width:720px;max-width:95vw;max-height:90vh;overflow:hidden;position:relative;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);color:rgba(255,255,255,.9);font-size:13px;
+  display:flex;flex-direction:column}
+#scenario-modal h2{text-align:center;font-size:20px;font-weight:700;color:#ffd54f;letter-spacing:.5px;
+  padding:20px 24px 12px;flex-shrink:0}
+.sc-tabs{display:flex;gap:4px;justify-content:center;padding:0 24px 12px;flex-wrap:wrap;flex-shrink:0}
+.sc-tab{padding:6px 16px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.5);transition:all .2s;user-select:none}
+.sc-tab:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)}
+.sc-tab.active{background:rgba(255,193,7,.2);border-color:rgba(255,193,7,.4);color:#ffd54f}
+.sc-diff-filters{display:flex;gap:4px;justify-content:center;padding:0 24px 8px;flex-shrink:0}
+.sc-df{padding:3px 10px;border-radius:8px;cursor:pointer;font-size:10px;font-weight:600;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  color:rgba(255,255,255,.4);transition:all .2s;user-select:none}
+.sc-df:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.sc-df.active{background:rgba(255,215,0,.15);border-color:rgba(255,215,0,.3);color:#ffd54f}
+.sc-list{flex:1;overflow-y:auto;padding:8px 20px 20px}
+.sc-card{margin:10px 0;padding:16px 18px;border-radius:14px;cursor:pointer;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  transition:all .25s ease;position:relative;overflow:hidden}
+.sc-card:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);
+  transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.sc-card.cat-opening{border-left:3px solid #81c784}
+.sc-card.cat-response{border-left:3px solid #64b5f6}
+.sc-card.cat-competitive{border-left:3px solid #ef9a9a}
+.sc-card.cat-slam{border-left:3px solid #ffd54f}
+.sc-card.cat-mixed{border-left:3px solid #ce93d8}
+.sc-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sc-card-title{font-size:14px;font-weight:700;color:rgba(255,255,255,.95)}
+.sc-card-diff{font-size:11px;color:#ffd54f;letter-spacing:2px}
+.sc-card-desc{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px}
+.sc-card-cat{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;
+  letter-spacing:.3px}
+.sc-card-cat.opening{background:rgba(129,199,132,.12);color:#81c784}
+.sc-card-cat.response{background:rgba(100,181,246,.12);color:#64b5f6}
+.sc-card-cat.competitive{background:rgba(239,150,150,.1);color:#ef9a9a}
+.sc-card-cat.slam{background:rgba(255,213,79,.1);color:#ffd54f}
+.sc-card-cat.mixed{background:rgba(206,147,216,.1);color:#ce93d8}
+.sc-card .sc-done-badge{position:absolute;top:12px;right:14px;font-size:16px}
+
+/* Scenario Detail */
+#scenario-detail{display:none;position:fixed;inset:0;z-index:310;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#scenario-detail.show{display:flex;align-items:center;justify-content:center}
+#sc-detail-modal{background:rgba(10,20,10,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 32px;
+  width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;position:relative;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);color:rgba(255,255,255,.9);font-size:13px}
+#sc-detail-modal h3{text-align:center;font-size:18px;font-weight:700;color:#ffd54f;letter-spacing:.5px;margin-bottom:12px}
+.sc-hand{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:10px 0;padding:12px;
+  background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08)}
+.sc-hand-card{width:40px;height:58px;border-radius:6px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;font-weight:600;background:linear-gradient(135deg,#fff,#f5f5f5);color:#333;
+  box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.sc-hand-card .r{font-size:13px;font-weight:800;line-height:1}
+.sc-hand-card .s{font-size:12px;line-height:1}
+.sc-hand-card.red{color:#c62828}
+.sc-hand-card.black{color:#1a1a1a}
+.sc-info-row{display:flex;gap:10px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+.sc-info-tag{padding:4px 12px;border-radius:10px;background:rgba(255,193,7,.12);
+  border:1px solid rgba(255,193,7,.2);font-size:12px;font-weight:600;color:#ffd54f}
+.sc-context{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0}
+.sc-ctx-chip{padding:4px 10px;border-radius:10px;font-size:12px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.06)}
+.sc-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.sc-opt{padding:8px 18px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.9);
+  transition:all .2s ease}
+.sc-opt:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
+.sc-opt.correct{background:rgba(76,175,80,.3);border-color:rgba(76,175,80,.5);color:#81c784;
+  animation:prBounce .4s ease;pointer-events:none}
+.sc-opt.wrong{background:rgba(244,67,54,.3);border-color:rgba(244,67,54,.5);color:#ef9a9a;
+  animation:prShake .4s ease;pointer-events:none}
+.sc-opt.disabled{pointer-events:none;opacity:.5}
+.sc-opt.show-correct{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.4);color:#81c784}
+.sc-feedback{margin:12px 0;padding:12px 16px;border-radius:12px;font-size:13px;line-height:1.6;display:none}
+.sc-feedback.show{display:block}
+.sc-feedback.correct-fb{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.25);color:#81c784}
+.sc-feedback.wrong-fb{background:rgba(244,67,54,.12);border:1px solid rgba(244,67,54,.25);color:#ef9a9a}
+.sc-why-btn{display:block;margin:8px auto 0;padding:6px 18px;border:none;border-radius:8px;
+  cursor:pointer;font-size:12px;font-weight:600;
+  background:rgba(33,150,243,.2);border:1px solid rgba(33,150,243,.3);color:#64b5f6;
+  transition:all .2s}
+.sc-why-btn:hover{background:rgba(33,150,243,.35);transform:translateY(-1px)}
+.sc-why-panel{display:none;margin:10px 0;padding:12px 16px;border-radius:10px;
+  background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.15);
+  font-size:12px;line-height:1.7;color:rgba(255,255,255,.8)}
+.sc-why-panel.show{display:block}
+.sc-close{position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,.5);
+  font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+.sc-close:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ============ ENHANCED ANALYTICS DASHBOARD ============ */
+.analytics-score{text-align:center;margin:14px 0;padding:20px;
+  background:linear-gradient(135deg,rgba(76,175,80,.15),rgba(33,150,243,.1));
+  border:1px solid rgba(76,175,80,.25);border-radius:16px}
+.analytics-score .as-num{font-size:56px;font-weight:900;color:#81c784;
+  text-shadow:0 0 20px rgba(129,199,132,.3)}
+.analytics-score .as-label{font-size:14px;color:rgba(255,255,255,.5);margin-top:4px}
+.analytics-cat-bars{margin:14px 0}
+.analytics-bar-row{display:flex;align-items:center;gap:10px;margin:10px 0}
+.analytics-bar-label{width:70px;font-size:12px;color:rgba(255,255,255,.6);text-align:right}
+.analytics-bar-track{flex:1;height:24px;background:rgba(255,255,255,.06);border-radius:12px;overflow:hidden}
+.analytics-bar-fill{height:100%;border-radius:12px;transition:width .8s ease;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:700}
+.analytics-bar-fill.cat-open{background:linear-gradient(90deg,#2e7d32,#66bb6a);color:rgba(255,255,255,.9)}
+.analytics-bar-fill.cat-resp{background:linear-gradient(90deg,#1565c0,#42a5f5);color:rgba(255,255,255,.9)}
+.analytics-bar-fill.cat-comp{background:linear-gradient(90deg,#c62828,#ef5350);color:rgba(255,255,255,.9)}
+.analytics-bar-fill.cat-slam{background:linear-gradient(90deg,#f57f17,#fdd835);color:rgba(0,0,0,.7)}
+.analytics-bar-fill.cat-mix{background:linear-gradient(90deg,#7b1fa2,#ba68c8);color:rgba(255,255,255,.9)}
+.analytics-bar-pct{width:45px;font-size:12px;font-weight:600;color:rgba(255,255,255,.8)}
+.analytics-trend{display:flex;gap:4px;align-items:flex-end;justify-content:center;height:70px;margin:12px 0;
+  padding:0 10px}
+.analytics-trend-bar{flex:1;max-width:28px;border-radius:4px 4px 0 0;transition:height .4s ease;
+  min-height:3px;position:relative}
+.analytics-trend-bar.good{background:linear-gradient(0deg,#2e7d32,#66bb6a)}
+.analytics-trend-bar.mid{background:linear-gradient(0deg,#f57f17,#fdd835)}
+.analytics-trend-bar.low{background:linear-gradient(0deg,#c62828,#ef5350)}
+.analytics-trend-label{font-size:11px;color:rgba(255,255,255,.3);text-align:center;margin-top:4px}
+.analytics-mistakes{margin:14px 0}
+.analytics-mistake{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;margin:6px 0;
+  background:rgba(244,67,54,.06);border:1px solid rgba(244,67,54,.1);border-radius:10px}
+.analytics-mistake .am-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.analytics-mistake .am-text{flex:1}
+.analytics-mistake .am-bid{font-weight:700;color:rgba(255,255,255,.9)}
+.analytics-mistake .am-explain{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.analytics-recommend{padding:14px 18px;background:linear-gradient(135deg,rgba(33,150,243,.1),rgba(76,175,80,.08));
+  border:1px solid rgba(33,150,243,.2);border-radius:12px;margin:14px 0}
+.analytics-recommend .ar-title{font-weight:700;color:#64b5f6;margin-bottom:6px;font-size:14px}
+.analytics-recommend .ar-text{font-size:12px;color:rgba(255,255,255,.7)}
+.analytics-badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.analytics-badge{width:80px;text-align:center;padding:12px 8px;border-radius:14px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  transition:all .3s}
+.analytics-badge.earned{background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.3);
+  box-shadow:0 0 12px rgba(255,215,0,.2);animation:badgeGlow 2s ease-in-out infinite}
+.analytics-badge.locked{opacity:.35;filter:grayscale(.8)}
+.analytics-badge .ab-icon{font-size:28px;display:block;margin-bottom:4px}
+.analytics-badge .ab-name{font-size:9px;font-weight:600;color:rgba(255,255,255,.6);
+  letter-spacing:.3px;line-height:1.3}
+.analytics-badge.earned .ab-name{color:#ffd54f}
+@keyframes badgeGlow{0%,100%{box-shadow:0 0 8px rgba(255,215,0,.15)}50%{box-shadow:0 0 20px rgba(255,215,0,.35)}}
+
+@media(max-width:768px){
+  #scenario-modal{width:100vw;max-height:100vh;border-radius:0}
+  #sc-detail-modal{width:100vw;max-height:100vh;border-radius:0;padding:20px 16px}
+  .sc-card{padding:12px 14px}
+  .sc-card-title{font-size:13px}
+}
+
 /* ============ BID TOOLTIP ============ */
 #bid-tooltip{position:fixed;background:rgba(0,0,0,.92);color:rgba(255,255,255,.95);
   padding:8px 14px;border-radius:10px;font-size:11px;line-height:1.5;
@@ -385,6 +543,96 @@ body.card-lg .card.sm .s{font-size:14px}
   #hint-panel .hint-rec .bid-name{font-size:14px}
 }
 
+/* ============ ENHANCED HINT SYSTEM ============ */
+
+/* Hint Level Selector */
+.hint-level-selector{display:flex;gap:4px;margin-bottom:10px;justify-content:center}
+.hint-level-btn{padding:3px 10px;border-radius:8px;cursor:pointer;font-size:10px;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.5);transition:all .2s;user-select:none;letter-spacing:.3px}
+.hint-level-btn:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)}
+.hint-level-btn.active{background:rgba(255,193,7,.2);border-color:rgba(255,193,7,.4);color:#ffd54f}
+
+/* Hand Analysis Panel */
+.hand-analysis{margin-bottom:10px;padding:10px 12px;
+  background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.15);border-radius:10px}
+.hand-analysis .ha-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.hand-analysis .ha-hcp{font-weight:700;font-size:13px;color:#64b5f6}
+.hand-analysis .ha-quality{font-size:11px;padding:2px 8px;border-radius:6px;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
+.hand-analysis .ha-quality.strong{background:rgba(76,175,80,.15);color:#81c784}
+.hand-analysis .ha-quality.medium{background:rgba(255,193,7,.12);color:#ffd54f}
+.hand-analysis .ha-quality.weak{background:rgba(244,67,54,.1);color:#ef9a9a}
+.hand-analysis .ha-dist{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px}
+.hand-analysis .ha-suits{margin:4px 0}
+.hand-analysis .ha-suit{display:inline-block;margin-right:10px;font-size:12px}
+.hand-analysis .ha-suit .honor{color:#ffd54f;font-weight:700}
+.hand-analysis .ha-suit .normal{color:rgba(255,255,255,.6)}
+.hand-analysis .ha-assess{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06);
+  font-size:11px;font-weight:600}
+.hand-analysis .ha-assess.opening{color:#81c784}
+.hand-analysis .ha-assess.response{color:#64b5f6}
+.hand-analysis .ha-assess.weak{color:#ef9a9a}
+
+/* Phase Badge */
+.hint-phase{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;
+  margin-bottom:6px;letter-spacing:.3px}
+.hint-phase.opening{background:rgba(76,175,80,.15);color:#81c784;border:1px solid rgba(76,175,80,.2)}
+.hint-phase.response{background:rgba(33,150,243,.12);color:#64b5f6;border:1px solid rgba(33,150,243,.2)}
+.hint-phase.competitive{background:rgba(244,67,54,.1);color:#ef9a9a;border:1px solid rgba(244,67,54,.15)}
+.hint-phase.rebid{background:rgba(255,193,7,.1);color:#ffd54f;border:1px solid rgba(255,193,7,.15)}
+
+/* Color-coded recommendations */
+.hint-rec.green{background:rgba(76,175,80,.15);border-color:rgba(76,175,80,.3)}
+.hint-rec.green .bid-name{color:#81c784}
+.hint-rec.yellow{background:rgba(255,193,7,.15);border-color:rgba(255,193,7,.25)}
+.hint-rec.yellow .bid-name{color:#ffd54f}
+.hint-rec.red{background:rgba(244,67,54,.1);border-color:rgba(244,67,54,.2)}
+.hint-rec.red .bid-name{color:#ef9a9a}
+
+/* Alternatives with color coding */
+.hint-alt-item.acceptable{border-color:rgba(255,193,7,.2);color:#ffd54f}
+.hint-alt-item.not-rec{border-color:rgba(244,67,54,.15);color:rgba(244,67,54,.6)}
+
+/* Partner explanation */
+.hint-partner-info{margin:6px 0;padding:8px 10px;
+  background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.12);
+  border-radius:8px;font-size:11px;color:rgba(255,255,255,.7)}
+.hint-partner-info .pi-label{color:#64b5f6;font-weight:600;font-size:10px;letter-spacing:.3px;margin-bottom:2px}
+
+/* Pulsing lightbulb */
+.hint-bulb{display:inline-block;animation:bulbPulse 2s ease-in-out infinite}
+@keyframes bulbPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
+
+/* Detailed mode extras */
+.hint-detail-section{margin:8px 0;padding:8px 10px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:8px}
+.hint-detail-section h4{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px;
+  letter-spacing:.3px;text-transform:uppercase}
+.hint-pros{color:#81c784;font-size:11px;margin:2px 0}
+.hint-pros::before{content:'✅ '}
+.hint-cons{color:#ef9a9a;font-size:11px;margin:2px 0}
+.hint-cons::before{content:'⚠️ '}
+.hint-strategy{margin-top:8px;padding:8px 10px;
+  background:rgba(255,193,7,.06);border:1px solid rgba(255,193,7,.1);
+  border-radius:8px;font-size:11px;color:rgba(255,255,255,.7)}
+.hint-strategy::before{content:'🎯 策略建议：';font-weight:700;color:#ffd54f}
+
+/* Collapse animation improvements */
+#hint-panel{transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s ease}
+
+/* Brief mode */
+#hint-panel.brief-mode .hint-alt,
+#hint-panel.brief-mode .hint-tip,
+#hint-panel.brief-mode .hand-analysis,
+#hint-panel.brief-mode .hint-detail-section,
+#hint-panel.brief-mode .hint-strategy{display:none}
+
+@media(max-width:768px){
+  .hand-analysis .ha-suit{margin-right:6px;font-size:11px}
+  .hint-level-btn{padding:2px 8px;font-size:9px}
+}
+
 /* ============ TUTORIAL PANEL ============ */
 #tutorial-overlay{display:none;position:fixed;inset:0;
   background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:280}
@@ -454,6 +702,22 @@ body.card-lg .card.sm .s{font-size:14px}
   background:rgba(255,255,255,.15);transition:all .2s}
 #tutorial-panel .tut-progress-dot.done{background:#ffd54f}
 #tutorial-panel .tut-progress-dot.current{background:#f9a825;box-shadow:0 0 6px rgba(249,168,37,.5)}
+#tutorial-panel .tut-progress-bar-wrap{margin:12px 0;padding:0 4px}
+#tutorial-panel .tut-progress-label{font-size:11px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:6px}
+#tutorial-panel .tut-progress-bar-track{width:100%;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
+#tutorial-panel .tut-progress-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#f9a825,#ffd54f);transition:width .5s ease}
+#tutorial-panel .tut-final-btn{display:block;margin:20px auto;padding:12px 32px;
+  border:none;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;
+  background:linear-gradient(135deg,#f9a825,#f57f17);color:#fff;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(249,168,37,.4);letter-spacing:.5px}
+#tutorial-panel .tut-final-btn:hover{background:linear-gradient(135deg,#fdd835,#f9a825);
+  box-shadow:0 6px 20px rgba(249,168,37,.5);transform:translateY(-2px)}
+#tutorial-panel .tut-cert{margin:16px auto;padding:20px 24px;border-radius:14px;text-align:center;
+  background:linear-gradient(135deg,rgba(76,175,80,.15),rgba(33,150,243,.1));
+  border:2px solid rgba(255,215,0,.4);box-shadow:0 0 20px rgba(255,215,0,.15)}
+#tutorial-panel .tut-cert .cert-icon{font-size:48px;margin-bottom:8px}
+#tutorial-panel .tut-cert .cert-title{font-size:18px;font-weight:800;color:#ffd54f;margin-bottom:6px}
+#tutorial-panel .tut-cert .cert-sub{font-size:13px;color:rgba(255,255,255,.7)}
 
 @media(max-width:768px){
   #tutorial-panel{width:100vw}
@@ -626,6 +890,164 @@ body.card-lg .card.sm .s{font-size:14px}
 .dy-complete{text-align:center;margin:16px 0}
 .dy-complete .dc-score{font-size:48px;font-weight:800}
 .dy-complete .dc-label{font-size:14px;color:rgba(255,255,255,.6);margin-top:4px}
+
+/* ============ ONBOARDING ============ */
+#onboarding{display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+  animation:onboardFadeIn .4s ease}
+#onboarding.show{display:flex}
+@keyframes onboardFadeIn{from{opacity:0}to{opacity:1}}
+.ob-card{background:rgba(10,25,15,.92);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;padding:40px 48px;max-width:520px;width:90vw;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);
+  text-align:center;position:relative;overflow:hidden;
+  animation:obCardIn .45s cubic-bezier(.4,0,.2,1)}
+@keyframes obCardIn{from{opacity:0;transform:translateY(30px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+.ob-step{display:none;animation:obSlideIn .35s ease}
+.ob-step.active{display:block}
+@keyframes obSlideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.ob-step.reverse{animation:obSlideInR .35s ease}
+@keyframes obSlideInR{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+.ob-title{font-size:26px;font-weight:800;letter-spacing:1px;margin-bottom:16px;
+  background:linear-gradient(135deg,#81c784,#4caf50,#ffeb3b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ob-desc{font-size:15px;color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:24px}
+.ob-desc em{color:#ffeb3b;font-style:normal;font-weight:600}
+.ob-btns{display:flex;gap:12px;justify-content:center;margin-top:24px}
+.ob-btn{padding:12px 36px;border:none;border-radius:14px;cursor:pointer;
+  font-size:15px;font-weight:700;letter-spacing:.5px;transition:all .25s ease;
+  box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.ob-btn.primary{background:linear-gradient(135deg,#43a047,#388e3c);color:#fff}
+.ob-btn.primary:hover{background:linear-gradient(135deg,#66bb6a,#4caf50);
+  box-shadow:0 6px 24px rgba(67,160,71,.5);transform:translateY(-2px)}
+.ob-btn.secondary{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);
+  border:1px solid rgba(255,255,255,.1)}
+.ob-btn.secondary:hover{background:rgba(255,255,255,.18);color:#fff}
+.ob-dots{display:flex;justify-content:center;gap:10px;margin-top:28px}
+.ob-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2);
+  transition:all .35s ease}
+.ob-dot.active{background:#4caf50;box-shadow:0 0 8px rgba(76,175,80,.5);transform:scale(1.3)}
+.ob-skip{position:absolute;top:16px;right:20px;background:none;border:none;
+  color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;padding:4px 10px;
+  border-radius:8px;transition:all .2s}
+.ob-skip:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+
+/* Onboarding Table Diagram */
+.ob-table{width:260px;height:200px;margin:20px auto;position:relative;
+  background:radial-gradient(ellipse,#1a7a35,#0d4a1e);border-radius:16px;
+  border:2px solid rgba(218,165,32,.3);box-shadow:inset 0 0 30px rgba(0,0,0,.3)}
+.ob-pos{position:absolute;font-size:13px;font-weight:700;padding:6px 14px;
+  border-radius:10px;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);
+  white-space:nowrap}
+.ob-pos.n{top:10px;left:50%;transform:translateX(-50%);color:#64b5f6}
+.ob-pos.s{bottom:10px;left:50%;transform:translateX(-50%);color:#81c784}
+.ob-pos.e{right:10px;top:50%;transform:translateY(-50%);color:#ef5350}
+.ob-pos.w{left:10px;top:50%;transform:translateY(-50%);color:#ffb74d}
+.ob-pos .arrow{display:block;font-size:10px;opacity:.6;margin-top:2px}
+
+/* Onboarding Sample Cards */
+.ob-hand{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;margin:16px 0}
+.ob-card-mini{width:42px;height:60px;border-radius:6px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-weight:700;
+  background:linear-gradient(135deg,#fff,#f0f0f0);border:1px solid rgba(0,0,0,.1);
+  box-shadow:0 2px 6px rgba(0,0,0,.2);transition:all .3s ease}
+.ob-card-mini .r{font-size:14px;font-weight:800;line-height:1}
+.ob-card-mini .s{font-size:13px;line-height:1}
+.ob-card-mini.red{color:#c62828}
+.ob-card-mini.black{color:#1a1a1a}
+.ob-card-mini.highlight{box-shadow:0 0 12px rgba(255,215,0,.6);border-color:#ffd700;
+  transform:translateY(-6px)}
+
+/* Onboarding Bid Buttons */
+.ob-bid-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.ob-bid-btn{padding:8px 18px;border:2px solid rgba(255,255,255,.15);border-radius:10px;
+  background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-size:14px;
+  font-weight:600;transition:all .25s ease}
+.ob-bid-btn:hover{background:rgba(76,175,80,.3);border-color:rgba(76,175,80,.5);
+  transform:translateY(-2px);box-shadow:0 4px 12px rgba(76,175,80,.3)}
+.ob-bid-btn.recommended{border-color:rgba(255,215,0,.5);background:rgba(255,215,0,.12);
+  animation:obGlow 2s ease-in-out infinite}
+@keyframes obGlow{0%,100%{box-shadow:0 0 8px rgba(255,215,0,.2)}50%{box-shadow:0 0 16px rgba(255,215,0,.45)}}
+.ob-feedback{margin-top:16px;padding:14px 20px;border-radius:12px;
+  background:rgba(76,175,80,.15);border:1px solid rgba(76,175,80,.3);
+  color:#81c784;font-size:14px;display:none;animation:obCardIn .35s ease}
+.ob-feedback.show{display:block}
+
+#btn-help{cursor:pointer;font-size:16px;padding:2px 10px;border-radius:10px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.6);transition:all .2s;font-weight:700}
+#btn-help:hover{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.3);
+  color:#81c784;transform:scale(1.1)}
+
+@media(max-width:768px){
+  .ob-card{padding:28px 24px;max-width:95vw}
+  .ob-title{font-size:22px}
+  .ob-desc{font-size:13px}
+  .ob-table{width:220px;height:170px}
+  .ob-btn{padding:10px 28px;font-size:14px}
+  .ob-card-mini{width:36px;height:52px}
+  .ob-card-mini .r{font-size:12px}
+  .ob-card-mini .s{font-size:11px}
+}
+
+/* ============ LEARNING OVERLAY ============ */
+#learn-container{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:160;
+  display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:90vw;max-width:480px}
+.learn-toast{pointer-events:auto;padding:12px 20px;border-radius:14px;font-size:13px;line-height:1.6;
+  text-align:center;color:rgba(255,255,255,.92);position:relative;
+  background:rgba(10,20,10,.72);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 8px 32px rgba(0,0,0,.45);
+  animation:toastIn .35s cubic-bezier(.4,0,.2,1);
+  transition:opacity .4s ease,transform .4s ease}
+.learn-toast.fade-out{opacity:0;transform:translateY(10px)}
+.learn-toast .lt-main{font-weight:700;margin-bottom:4px;color:#ffd54f;font-size:14px}
+.learn-toast .lt-analysis{font-size:12px;color:rgba(255,255,255,.7)}
+.learn-toast .lt-analysis::before{content:'💡 '}
+.learn-toast .lt-close{position:absolute;top:6px;right:10px;cursor:pointer;
+  color:rgba(255,255,255,.35);font-size:14px;line-height:1;padding:2px 4px;transition:all .2s}
+.learn-toast .lt-close:hover{color:#fff}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+#learn-tip{position:fixed;top:50%;right:14px;transform:translateY(-50%);z-index:160;
+  padding:10px 16px;border-radius:12px;font-size:12px;line-height:1.6;
+  color:rgba(255,255,255,.88);max-width:220px;
+  background:rgba(10,20,10,.68);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,193,7,.18);
+  box-shadow:0 6px 24px rgba(0,0,0,.4);
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease,transform .4s ease}
+#learn-tip.show{opacity:1;pointer-events:auto}
+#learn-tip .tip-icon{font-size:14px;margin-right:4px}
+#learn-tip .tip-close{position:absolute;top:4px;right:8px;cursor:pointer;
+  color:rgba(255,255,255,.3);font-size:12px;padding:2px 4px;transition:all .2s}
+#learn-tip .tip-close:hover{color:#fff}
+#learn-review-section{display:none;margin-top:12px;padding:14px 16px;
+  background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.18);border-radius:12px;
+  text-align:left;font-size:12px;line-height:1.7;color:rgba(255,255,255,.85)}
+#learn-review-section.show{display:block;animation:toastIn .3s ease}
+#learn-review-section .lr-title{font-weight:700;font-size:14px;color:#64b5f6;margin-bottom:8px}
+#learn-review-section .lr-moment{padding:4px 0;font-size:12px;color:rgba(255,255,255,.7)}
+#learn-review-section .lr-moment::before{content:'• '}
+#learn-review-section .lr-advice{margin-top:10px;padding:8px 12px;
+  background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.2);border-radius:8px;
+  color:#81c784;font-size:12px}
+#learn-review-section .lr-advice::before{content:'💡 '}
+#btn-review{margin-top:10px;padding:7px 20px;border:none;border-radius:8px;cursor:pointer;
+  font-size:12px;font-weight:600;
+  background:linear-gradient(135deg,#1976d2,#1565c0);color:#fff;
+  transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#btn-review:hover{background:linear-gradient(135deg,#42a5f5,#1e88e5);
+  box-shadow:0 4px 14px rgba(25,118,210,.4);transform:translateY(-1px)}
+@media(max-width:768px){
+  #learn-container{bottom:60px;max-width:92vw}
+  #learn-tip{right:6px;font-size:11px;max-width:170px;padding:8px 12px}
+}
 </style>
 </head>
 <body>
@@ -642,8 +1064,13 @@ body.card-lg .card.sm .s{font-size:14px}
     <span class="learn-btn" id="btn-tutorial" onclick="openTutorial()" title="学习模式">🎓 学习模式</span>
     <span class="learn-btn" id="btn-cheat" onclick="openCheatSheet()" title="叫牌速查表">📋 叫牌表</span>
     <span class="learn-btn" id="btn-practice" onclick="openPractice()" title="练习模式">🎯 练习模式</span>
-    <span class="learn-btn" id="btn-stats" onclick="openStats()" title="学习统计">📊 学习统计</span>
+    <span class="learn-btn" id="btn-scenario" onclick="openScenarioLib()" title="叫牌场景库">📚 场景库</span>
+    <span class="learn-btn" id="btn-stats" onclick="openStats()" title="学习统计">📊 学习分析</span>
     <span class="learn-btn" id="btn-daily" onclick="openDailyChallenge()" title="每日挑战">🏆 每日挑战</span>
+    <span class="learn-btn" id="btn-hint-level" onclick="cycleHintLevel()" title="提示详细程度">
+      <span class="hint-bulb">💡</span> 提示: <span id="hint-level-label">标准</span>
+    </span>
+    <span id="btn-help" onclick="replayOnboarding()" title="新手引导">❓</span>
   </div>
   <div id="table">
     <div id="hand-N" class="hand"></div>
@@ -671,6 +1098,8 @@ body.card-lg .card.sm .s{font-size:14px}
     <div id="score-popup">
       <h3>本副计分</h3>
       <div id="score-body"></div>
+      <div id="learn-review-section"><div class="lr-title">📊 打牌回顾</div><div id="lr-content"></div></div>
+      <button id="btn-review" onclick="toggleReview()" style="display:none">📊 本副回顾</button>
       <button onclick="nextDeal()">下一副</button>
     </div>
     <div id="overlay"></div>
@@ -752,6 +1181,9 @@ body.card-lg .card.sm .s{font-size:14px}
   <div id="practice-overlay">
     <div id="practice-modal"></div>
   </div>
+  <!-- Learning Overlay Containers -->
+  <div id="learn-container"></div>
+  <div id="learn-tip"><span class="tip-close" onclick="dismissLearnTip()">✕</span><span class="tip-icon">💡</span><span class="tip-text"></span></div>
   <!-- Error Notification -->
   <div id="error-notify">
     <span class="en-close" onclick="dismissErrorNotify()">✕</span>
@@ -770,9 +1202,84 @@ body.card-lg .card.sm .s{font-size:14px}
   <div id="daily-overlay">
     <div id="daily-modal"></div>
   </div>
+  <!-- Scenario Library Overlay -->
+  <div id="scenario-overlay" onclick="closeScenarioLib()">
+    <div id="scenario-modal" onclick="event.stopPropagation()"></div>
+  </div>
+  <!-- Scenario Detail Overlay -->
+  <div id="scenario-detail" onclick="closeScenarioDetail()">
+    <div id="sc-detail-modal" onclick="event.stopPropagation()"></div>
+  </div>
   <div id="status">
     <span id="stxt"></span>
     <button id="btn-go" onclick="startGame()">开始游戏</button>
+  </div>
+  <div id="onboarding">
+    <div class="ob-card">
+      <button class="ob-skip" onclick="closeOnboarding()">跳过 ×</button>
+      <!-- Step 1: Welcome -->
+      <div class="ob-step active" data-step="0">
+        <div class="ob-title">🎮 欢迎来到桥牌世界！</div>
+        <div class="ob-desc">
+          桥牌是世界最受欢迎的智力运动之一。<br>
+          两人搭档，通过<em>叫牌</em>和<em>打牌</em>较量。
+        </div>
+      </div>
+      <!-- Step 2: The Table -->
+      <div class="ob-step" data-step="1">
+        <div class="ob-title">🃏 认识牌桌</div>
+        <div class="ob-table">
+          <div class="ob-pos n">北<span class="arrow">你的搭档 🤝</span></div>
+          <div class="ob-pos s">南<span class="arrow">你 👤</span></div>
+          <div class="ob-pos e">东<span class="arrow">对手 🆚</span></div>
+          <div class="ob-pos w">西<span class="arrow">对手 🆚</span></div>
+        </div>
+        <div class="ob-desc">
+          桥牌是<em>2v2</em>的游戏，<em>南北一队</em>，<em>东西一队</em>
+        </div>
+      </div>
+      <!-- Step 3: Bidding Explained -->
+      <div class="ob-step" data-step="2">
+        <div class="ob-title">📢 认识叫牌</div>
+        <div class="ob-desc">
+          叫牌是和搭档<em>沟通牌力</em>的过程。<br><br>
+          你叫出一个<em>数字 + 花色</em>，表示你认为能赢多少墩。<br><br>
+          最终叫价最高的成为<em>定约方</em>。
+        </div>
+      </div>
+      <!-- Step 4: Try Bidding -->
+      <div class="ob-step" data-step="3">
+        <div class="ob-title">✋ 试试叫牌</div>
+        <div class="ob-desc" style="margin-bottom:8px">看看这手牌，你会怎么叫？</div>
+        <div class="ob-hand" id="ob-sample-hand"></div>
+        <div class="ob-desc" style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px">
+          💡 提示：你有5张红心，大牌点12点，建议叫1♥
+        </div>
+        <div class="ob-bid-btns" id="ob-bid-btns">
+          <button class="ob-bid-btn recommended" onclick="obBid(this,'1♥','很好！你叫了<em>1♥</em>，表示你有5张红心，开叫实力。')">1♥</button>
+          <button class="ob-bid-btn" onclick="obBid(this,'1♠','1♠表示你有5张黑桃，但你黑桃不多哦。')">1♠</button>
+          <button class="ob-bid-btn" onclick="obBid(this,'Pass','Pass表示你觉得牌力不够开叫。你的牌其实可以开叫！')">Pass</button>
+          <button class="ob-bid-btn" onclick="obBid(this,'1NT','1NT表示均型牌15-17点，你的牌型不太适合。')">1NT</button>
+        </div>
+        <div class="ob-feedback" id="ob-feedback"></div>
+      </div>
+      <!-- Step 5: Start Playing -->
+      <div class="ob-step" data-step="4">
+        <div class="ob-title">🚀 准备好了！</div>
+        <div class="ob-desc">
+          你已经了解了桥牌的基础知识！<br>
+          开始你的<em>第一局桥牌</em>吧！
+        </div>
+      </div>
+      <!-- Navigation -->
+      <div class="ob-btns">
+        <button class="ob-btn secondary" id="ob-prev" onclick="obNav(-1)" style="display:none">← 上一步</button>
+        <button class="ob-btn primary" id="ob-next" onclick="obNav(1)">下一步 →</button>
+      </div>
+      <div class="ob-dots" id="ob-dots">
+        <div class="ob-dot active"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2948,10 +3455,20 @@ function startPlay(){
   G.phase='play';
   G.trick=[];
   G.current=G.declarer;
+  learnTrickLog=[]; // Reset trick log for new hand
   clearTrick();
   renderHands();
   updateDummyDisplay();
   updateLabels();
+  // Learning overlay: show initial strategy tips
+  try{
+    let hs=G.humanSeat||'S';
+    let humanIsDeclarer=(G.declarer===hs);
+    if(humanIsDeclarer){
+      setTimeout(function(){showPlayTip('dummy-reveal')},1200);
+      if(G.trump){setTimeout(function(){showPlayTip('trump-relevant')},5000)}
+    }
+  }catch(e){}
   autoPlayIfNeeded();
 }
 
@@ -2976,6 +3493,8 @@ function autoPlayIfNeeded(){
     if(G.current===hs){
       renderHumanHand();
       setS('请出牌');
+      // Learning overlay: show your-turn tip (only occasionally to avoid spam)
+      try{if(G.trickNum%3===0||G.trick.length===0)showPlayTip('your-turn')}catch(e){}
     } else if(G.current===G.dummy){
       // Human plays dummy's cards
       renderDummy();
@@ -3213,6 +3732,10 @@ function resolveTrick(){
   let winEl=document.getElementById('ts-'+win.pos).querySelector('.card');
   if(winEl)winEl.classList.add('card-win');
 
+  // Learning overlay: show trick analysis toast and record for review
+  try{showTrickAnalysisToast(trick,win.pos)}catch(e){}
+  try{recordTrickForReview(trick,win.pos)}catch(e){}
+
   setTimeout(()=>{
     G.trick=[];
     clearTrick();
@@ -3356,6 +3879,14 @@ function finishPlay(){
   document.getElementById('overlay').classList.add('show');
   playSound('game');
 
+  // Learning overlay: populate review content and show button
+  try{
+    let reviewHtml=generateReviewContent(G.contract,resultText,made,dt,need);
+    document.getElementById('lr-content').innerHTML=reviewHtml;
+    document.getElementById('btn-review').style.display='';
+    document.getElementById('learn-review-section').classList.remove('show');
+  }catch(e){}
+
   // Record to history
   G.scoreHistory.push({
     round:G.round,
@@ -3375,6 +3906,13 @@ function finishPlay(){
 function nextDeal(){
   document.getElementById('score-popup').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
+  // Learning overlay: clean up review section
+  try{
+    document.getElementById('learn-review-section').classList.remove('show');
+    document.getElementById('btn-review').style.display='none';
+    document.getElementById('learn-container').innerHTML='';
+    dismissLearnTip();
+  }catch(e){}
 
   G.round++;
   resetPlayedCards();
@@ -3522,11 +4060,195 @@ function resetPlayedCards(){playedCards=[]}
 function spd(ms){return ms*(G?G.speed:1)}
 
 // =========================================================================
-// FEATURE 1: SMART BIDDING HINT SYSTEM
+// FEATURE 1: SMART BIDDING HINT SYSTEM (Enhanced Real-time Coach)
 // =========================================================================
 
 let hintVisible=true;
 let currentHintData=null;
+let hintLevel='standard'; // 'brief', 'standard', 'detailed'
+
+const HINT_LEVELS=['brief','standard','detailed'];
+const HINT_LEVEL_LABELS={'brief':'简短','standard':'标准','detailed':'详细'};
+
+function cycleHintLevel(){
+  let idx=HINT_LEVELS.indexOf(hintLevel);
+  hintLevel=HINT_LEVELS[(idx+1)%HINT_LEVELS.length];
+  document.getElementById('hint-level-label').textContent=HINT_LEVEL_LABELS[hintLevel];
+  localStorage.setItem('bridge-hint-level',hintLevel);
+  if(hintVisible)renderHintPanel();
+}
+
+// Load saved hint level
+(function(){
+  let saved=localStorage.getItem('bridge-hint-level');
+  if(saved&&HINT_LEVELS.includes(saved)){
+    hintLevel=saved;
+    let el=document.getElementById('hint-level-label');
+    if(el)el.textContent=HINT_LEVEL_LABELS[hintLevel];
+  }
+})();
+
+// ---- Bidding Phase Detection ----
+function detectBiddingPhase(){
+  let hs=G.humanSeat||'S';
+  let partner=getPartner(hs);
+  let myBids=getMyBids(hs);
+  let partnerBids=getPartnerBids(hs);
+  let oppBids=getOpponentBids(hs);
+  let realBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+
+  let ourSideFirstBid=null;
+  for(let b of G.bids){
+    if((b.pos===hs||b.pos===partner)&&(b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX')){
+      ourSideFirstBid=b;break;
+    }
+  }
+  let iAmOpener=ourSideFirstBid&&ourSideFirstBid.pos===hs;
+  let partnerIsOpener=ourSideFirstBid&&ourSideFirstBid.pos===partner;
+  let hasBidBefore=myBids.length>0;
+  let oppsHaveBid=oppBids.length>0;
+
+  if(realBids.length===0) return 'opening';
+  if(partnerIsOpener&&!hasBidBefore) return 'response';
+  if(oppsHaveBid&&(iAmOpener||partnerIsOpener)) return 'competitive';
+  if(hasBidBefore) return 'rebid';
+  return 'opening';
+}
+
+function getPhaseLabel(phase){
+  switch(phase){
+    case 'opening':return'开叫阶段';
+    case 'response':return'应叫阶段';
+    case 'competitive':return'竞叫阶段';
+    case 'rebid':return'再叫阶段';
+    default:return'叫牌中';
+  }
+}
+
+// ---- Partner Bid Explanation ----
+function explainPartnerBid(){
+  let hs=G.humanSeat||'S';
+  let partner=getPartner(hs);
+  let partnerBids=getPartnerBids(hs);
+  if(partnerBids.length===0)return null;
+
+  let lastPB=partnerBids[partnerBids.length-1];
+  if(lastPB.bid==='Pass'||lastPB.bid==='X'||lastPB.bid==='XX')return null;
+
+  let parsed=parseBid(lastPB.bid);
+  if(!parsed)return null;
+
+  let explanation='';
+  if(parsed.suit==='NT'){
+    if(parsed.level===1)explanation='搭档开叫1NT = 15-17HCP均型牌';
+    else if(parsed.level===2)explanation='搭档开叫2NT = 20-21HCP均型牌';
+    else if(parsed.level===3)explanation='搭档叫3NT = 25-27HCP均型牌或已找到定约';
+  }else{
+    let sn=SN[parsed.suit]||parsed.suit;
+    if(partnerBids.length===1){
+      explanation='搭档开叫'+lastPB.bid+' = 12+HCP, 5+张'+sn;
+    }else{
+      explanation='搭档叫'+lastPB.bid;
+    }
+  }
+  return explanation;
+}
+
+// ---- Competitive Options Explanation ----
+function explainCompetitiveOptions(){
+  let hs=G.humanSeat||'S';
+  let oppBids=getOpponentBids(hs);
+  if(oppBids.length===0)return null;
+
+  let lastOpp=oppBids[oppBids.length-1];
+  if(lastOpp.bid==='Pass')return null;
+
+  let explanations=[];
+  explanations.push('对手叫了'+lastOpp.bid);
+  if(lastOpp.bid!=='X'&&lastOpp.bid!=='XX'){
+    explanations.push('你可以：争叫（10+HCP,5+张套）、技术性加倍（12+HCP,支持未叫花色）或Pass');
+  }
+  return explanations.join('。');
+}
+
+// ---- Hand Analysis for Display ----
+function analyzeHand(hand){
+  let hcp=evalHCP(hand);
+  let suits=evalSuits(hand);
+  let dist=S4.map(s=>suits[s]);
+
+  // Quality rating
+  let quality,qualityClass;
+  if(hcp>=17){quality='强牌';qualityClass='strong';}
+  else if(hcp>=12){quality='中等牌力';qualityClass='medium';}
+  else if(hcp>=8){quality='低限牌力';qualityClass='medium';}
+  else{quality='弱牌';qualityClass='weak';}
+
+  // Suit quality with honors
+  let suitDisplay=S4.map(s=>{
+    let cards=hand.filter(c=>c.suit===s).map(c=>c.rank);
+    let honorHtml='';
+    cards.forEach(r=>{
+      if(['A','K','Q','J'].includes(r)){
+        honorHtml+='<span class="honor">'+r+'</span>';
+      }else{
+        honorHtml+='<span class="normal">'+r+'</span>';
+      }
+    });
+    return{suit:s,display:honorHtml,count:cards.length};
+  });
+
+  // Assessment
+  let assess,assessClass;
+  if(hcp>=12&&G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX').length===0){
+    assess='适合开叫';assessClass='opening';
+  }else if(hcp>=6){
+    assess='应叫牌力';assessClass='response';
+  }else{
+    assess='弱牌，建议Pass';assessClass='weak';
+  }
+
+  return{hcp,quality,qualityClass,dist,suitDisplay,assess,assessClass};
+}
+
+// ---- Context-Aware Tips ----
+function getContextualTip(phase,data){
+  let tips=[];
+
+  // Phase-specific tips
+  if(phase==='opening'){
+    if(data.hcp>=12&&data.hcp<=14){
+      tips.push('开叫提示：低限开叫（12-14HCP），后续叫牌要谨慎');
+    }else if(data.hcp>=15&&data.hcp<=17){
+      tips.push('开叫提示：中等开叫牌力，有机会进局');
+    }else if(data.hcp>=18){
+      tips.push('开叫提示：强牌！考虑逆叫或跳叫来显示额外牌力');
+    }else{
+      tips.push('开叫提示：12+HCP才能开叫');
+    }
+  }else if(phase==='response'){
+    tips.push('应叫提示：有3张支持时加叫同伴');
+    let hs=G.humanSeat||'S';
+    let partnerBids=getPartnerBids(hs);
+    if(partnerBids.length>0){
+      let pb=partnerBids[partnerBids.length-1].bid;
+      if(pb==='1NT')tips.push('对1NT开叫：斯台曼(2♣)和转移叫(2♦/2♥)是常用约定');
+    }
+  }else if(phase==='competitive'){
+    tips.push('竞叫提示：技术性加倍表示对未叫花色有支持');
+    tips.push('竞叫原则：不要为了竞叫而竞叫，确保叫品有建设性');
+  }else if(phase==='rebid'){
+    tips.push('再叫提示：描述你的牌型和牌力范围，帮助搭档做决定');
+  }
+
+  // HCP-based tips
+  if(data.hcp>=13&&data.hcp<=15){
+    tips.push('牌力提示：13-15HCP是一阶开叫到二阶应叫的关键范围');
+  }
+
+  // Return a random tip from available ones
+  return tips.length>0?tips[Math.floor(Math.random()*tips.length)]:'参考标准叫牌体系做出你的选择。';
+}
 
 function generateHint(){
   let hs=G.humanSeat||'S';
@@ -3562,75 +4284,79 @@ function generateHint(){
   let lastNP=getLastNonPass();
 
   let recommended=null,reason='',alternatives=[],tip='';
+  let recColor='yellow'; // 'green','yellow','red'
+
+  // Detect bidding phase
+  let phase=detectBiddingPhase();
 
   // Determine recommended bid and reasoning
   if(noRealBids){
     // Opening bid
     if(hcp>=22){
       recommended='2♣';reason='你有'+hcp+'点大牌点（22+），属于强牌，应开叫2♣（强开叫）。';
-      tip='2♣是人工叫品，表示22+HCP或9+赢墩的强牌。';
+      tip='2♣是人工叫品，表示22+HCP或9+赢墩的强牌。';recColor='green';
     }else if(hcp>=20&&hcp<=21&&balanced){
       recommended='2NT';reason='你有'+hcp+'点大牌点，均型牌，适合开叫2NT。';
-      tip='2NT开叫表示20-21HCP的均型牌。';
+      tip='2NT开叫表示20-21HCP的均型牌。';recColor='green';
     }else if(hcp>=15&&hcp<=17&&balanced){
       recommended='1NT';reason='你有'+hcp+'点大牌点，均型牌，适合开叫1NT。';
       alternatives=['1♣/1♦（如果不想暴露牌型）'];
-      tip='1NT开叫（15-17HCP）是最常见的均型开叫。';
+      tip='1NT开叫（15-17HCP）是最常见的均型开叫。';recColor='green';
     }else if(hcp>=12){
       if(suits['♠']>=5){
         recommended='1♠';reason='你有'+hcp+'点，5+张黑桃套，应先叫最长的高花。';
         if(suits['♥']>=5)alternatives=['1♥（5-5高花也可选红心，但惯例优先♠）'];
-        tip='5张高花开叫是标准美式体系的核心原则。';
+        tip='5张高花开叫是标准美式体系的核心原则。';recColor='green';
       }else if(suits['♥']>=5){
         recommended='1♥';reason='你有'+hcp+'点，5+张红心套，应先叫最长的高花。';
-        tip='高花（♠♥）比低花（♦♣）更容易进局。';
+        tip='高花（♠♥）比低花（♦♣）更容易进局。';recColor='green';
       }else if(suits['♦']>suits['♣']){
         recommended='1♦';reason='你有'+hcp+'点，没有5张高花，低花中♦较长。';
         alternatives=['1♣（如果♣更长或等长）'];
-        tip='没有5张高花时，开叫较长的低花。';
+        tip='没有5张高花时，开叫较长的低花。';recColor='green';
       }else{
         recommended='1♣';reason='你有'+hcp+'点，没有5张高花，开叫1♣。';
         alternatives=['1♦（如果♦更长）'];
-        tip='1♣也可以是3张套（均型牌时的"准备叫"）。';
+        tip='1♣也可以是3张套（均型牌时的"准备叫"）。';recColor='green';
       }
     }else if(hcp>=5&&hcp<=10){
-      for(let s of S4){if(suits[s]>=7){recommended='3'+s;reason='你有'+hcp+'点，7张'+SN[s]+'，可以阻击叫。';break}}
+      for(let s of S4){if(suits[s]>=7){recommended='3'+s;reason='你有'+hcp+'点，7张'+SN[s]+'，可以阻击叫。';recColor='yellow';break}}
       if(!recommended){
-        for(let s of['♦','♥','♠']){if(suits[s]===6){recommended='2'+s;reason='你有'+hcp+'点，6张'+SN[s]+'，弱二开叫。';break}}
+        for(let s of['♦','♥','♠']){if(suits[s]===6){recommended='2'+s;reason='你有'+hcp+'点，6张'+SN[s]+'，弱二开叫。';recColor='yellow';break}}
       }
-      if(!recommended){recommended='Pass';reason='你只有'+hcp+'点，且没有长套，不够开叫。';tip='通常需要12+HCP才能开叫。'}
+      if(!recommended){recommended='Pass';reason='你只有'+hcp+'点，且没有长套，不够开叫。';tip='通常需要12+HCP才能开叫。';recColor='red';}
     }else{
       recommended='Pass';reason='你只有'+hcp+'点，不够开叫（通常需要12+HCP）。';
-      tip='牌力不足时，Pass是最明智的选择。耐心等待好牌！';
+      tip='牌力不足时，Pass是最明智的选择。耐心等待好牌！';recColor='red';
     }
   }else if(partnerIsOpener&&!hasBidBefore){
     // Responding to partner's opening
     if(partnerOpenParsed&&partnerOpenParsed.suit==='NT'&&partnerOpenParsed.level===1){
       // Responding to 1NT
-      if(suits['♥']>=5){recommended='2♦';reason='你有5+张红心，用雅可比转移叫2♦让搭档叫2♥。';tip='转移叫让你成为庄家，保护了你的长套。';}
-      else if(suits['♠']>=5){recommended='2♥';reason='你有5+张黑桃，用雅可比转移叫2♥让搭档叫2♠。';}
-      else if(hcp>=8&&has4CardMajor(suits)){recommended='2♣';reason='你有'+hcp+'点和4张高花，用斯台曼问高花。';tip='斯台曼2♣用来寻找4-4高花配合。';}
-      else if(hcp>=10){recommended='3NT';reason='你有'+hcp+'点，直接叫3NT进局。';}
-      else if(hcp>=8&&hcp<=9&&balanced){recommended='2NT';reason='你有'+hcp+'点均型牌，邀请搭档选择2NT或3NT。';}
-      else{recommended='Pass';reason='你只有'+hcp+'点，牌力不足以应叫。';tip='对1NT开叫，通常需要8+HCP才能应叫。';}
+      if(suits['♥']>=5){recommended='2♦';reason='你有5+张红心，用雅可比转移叫2♦让搭档叫2♥。';tip='转移叫让你成为庄家，保护了你的长套。';recColor='green';}
+      else if(suits['♠']>=5){recommended='2♥';reason='你有5+张黑桃，用雅可比转移叫2♥让搭档叫2♠。';recColor='green';}
+      else if(hcp>=8&&has4CardMajor(suits)){recommended='2♣';reason='你有'+hcp+'点和4张高花，用斯台曼问高花。';tip='斯台曼2♣用来寻找4-4高花配合。';recColor='green';}
+      else if(hcp>=10){recommended='3NT';reason='你有'+hcp+'点，直接叫3NT进局。';recColor='green';}
+      else if(hcp>=8&&hcp<=9&&balanced){recommended='2NT';reason='你有'+hcp+'点均型牌，邀请搭档选择2NT或3NT。';recColor='yellow';}
+      else{recommended='Pass';reason='你只有'+hcp+'点，牌力不足以应叫。';tip='对1NT开叫，通常需要8+HCP才能应叫。';recColor='red';}
     }else if(partnerOpenParsed&&(partnerOpenParsed.suit==='♥'||partnerOpenParsed.suit==='♠')){
       let pSuit=partnerOpenParsed.suit;
       let support=suits[pSuit];
-      if(hcp>=13&&support>=4){recommended='2NT';reason='你有'+hcp+'点和4张'+SN[pSuit]+'支持，雅可比2NT逼叫到局。';tip='雅可比2NT表示13+HCP、4+支持、无单缺。';}
-      else if(hcp>=10&&hcp<=12&&support>=3){recommended='3'+pSuit;reason='你有'+hcp+'点和'+support+'张支持，限制性加叫。';tip='限制性加叫（10-12HCP, 3+支持）让开叫人决定是否进局。';}
-      else if(hcp>=6&&hcp<=9&&support>=3){recommended='2'+pSuit;reason='你有'+hcp+'点和'+support+'张支持，简单加叫。';tip='简单加叫是弱应叫，告诉搭档你有部分配合。';}
-      else if(pSuit==='♥'&&suits['♠']>=4&&hcp>=6){recommended='1♠';reason='你有'+hcp+'点和4+张黑桃，先应叫1♠。';tip='应叫新花色是逼叫一轮的。';}
-      else if(hcp>=6&&hcp<=10){recommended='1NT';reason='你有'+hcp+'点，没有好的加叫或新花色可叫，1NT逼叫。';}
-      else if(hcp>=12&&longSuits.length>0&&longSuits[0].suit!==pSuit){recommended='2'+longSuits[0].suit;reason='你有'+hcp+'点和5+'+SN[longSuits[0].suit]+'，二盖一逼叫到局。';tip='二盖一（2/1）响应是逼叫到局的。';}
-      else{recommended='Pass';reason='你只有'+hcp+'点，没有好的应叫选择。';}
+      if(hcp>=13&&support>=4){recommended='2NT';reason='你有'+hcp+'点和4张'+SN[pSuit]+'支持，雅可比2NT逼叫到局。';tip='雅可比2NT表示13+HCP、4+支持、无单缺。';recColor='green';}
+      else if(hcp>=10&&hcp<=12&&support>=3){recommended='3'+pSuit;reason='你有'+hcp+'点和'+support+'张支持，限制性加叫。';tip='限制性加叫（10-12HCP, 3+支持）让开叫人决定是否进局。';recColor='green';}
+      else if(hcp>=6&&hcp<=9&&support>=3){recommended='2'+pSuit;reason='你有'+hcp+'点和'+support+'张支持，简单加叫。';tip='简单加叫是弱应叫，告诉搭档你有部分配合。';recColor='green';}
+      else if(pSuit==='♥'&&suits['♠']>=4&&hcp>=6){recommended='1♠';reason='你有'+hcp+'点和4+张黑桃，先应叫1♠。';tip='应叫新花色是逼叫一轮的。';recColor='green';}
+      else if(hcp>=6&&hcp<=10){recommended='1NT';reason='你有'+hcp+'点，没有好的加叫或新花色可叫，1NT逼叫。';recColor='yellow';}
+      else if(hcp>=12&&longSuits.length>0&&longSuits[0].suit!==pSuit){recommended='2'+longSuits[0].suit;reason='你有'+hcp+'点和5+'+SN[longSuits[0].suit]+'，二盖一逼叫到局。';tip='二盖一（2/1）响应是逼叫到局的。';recColor='green';}
+      else{recommended='Pass';reason='你只有'+hcp+'点，没有好的应叫选择。';recColor='red';}
     }else if(partnerOpenParsed&&(partnerOpenParsed.suit==='♣'||partnerOpenParsed.suit==='♦')){
       let pSuit=partnerOpenParsed.suit;
-      if(hcp>=6&&suits['♠']>=4){recommended='1♠';reason='你有'+hcp+'点和4+张黑桃，先叫高花。';tip='对低花开叫，优先应叫高花寻找4-4配合。';}
-      else if(hcp>=6&&suits['♥']>=4){recommended='1♥';reason='你有'+hcp+'点和4+张红心，先叫高花。';}
-      else if(hcp>=6&&hcp<=10){recommended='1NT';reason='你有'+hcp+'点，没有4张高花，1NT应叫。';}
-      else{recommended='Pass';reason='你只有'+hcp+'点，不够应叫。';}
+      if(hcp>=6&&suits['♠']>=4){recommended='1♠';reason='你有'+hcp+'点和4+张黑桃，先叫高花。';tip='对低花开叫，优先应叫高花寻找4-4配合。';recColor='green';}
+      else if(hcp>=6&&suits['♥']>=4){recommended='1♥';reason='你有'+hcp+'点和4+张红心，先叫高花。';recColor='green';}
+      else if(hcp>=6&&hcp<=10){recommended='1NT';reason='你有'+hcp+'点，没有4张高花，1NT应叫。';recColor='yellow';}
+      else{recommended='Pass';reason='你只有'+hcp+'点，不够应叫。';recColor='red';}
     }else{
-      recommended='Pass';reason='你只有'+hcp+'点，牌力不足。';
+      recommended='Pass';reason='你只有'+hcp+'点，牌力不足。';recColor='red';
     }
   }else{
     // General: use AI logic
@@ -3647,14 +4373,73 @@ function generateHint(){
       recommended=capturedBid;
       reason='基于你的牌力('+hcp+'HCP)和当前叫牌进程，AI建议叫'+capturedBid+'。';
       tip=getBidExplanation(capturedBid,hs)||'参考标准叫牌体系。';
+      recColor='green';
     }else{
       recommended='Pass';reason='基于当前局势，Pass是合理的选择。';
-      tip='有时不叫也是一种策略。';
+      tip='有时不叫也是一种策略。';recColor='yellow';
     }
   }
 
   if(!recommended)recommended='Pass';
-  return{recommended,reason,alternatives,tip,hcp,suits,longSuits};
+
+  // Get contextual tip (supplement the base tip)
+  let contextTip=getContextualTip(phase,{hcp,suits,longSuits});
+  if(!tip)tip=contextTip;
+
+  // Partner explanation
+  let partnerExplanation=explainPartnerBid();
+  let competitiveExplanation=explainCompetitiveOptions();
+
+  // Pros/cons for detailed mode
+  let pros=[],cons=[];
+  if(recommended!=='Pass'){
+    pros.push('描述了你的牌力和牌型');
+    if(hcp>=12)pros.push('你有足够的牌力支撑这个叫品');
+    if(phase==='opening')pros.push('主动叫牌掌握叫牌主动权');
+  }else{
+    pros.push('避免在牌力不足时过度叫牌');
+    if(hcp<10)pros.push('等待更好的机会');
+  }
+  if(recommended!=='Pass'&&hcp<12)cons.push('牌力偏低，后续叫牌需谨慎');
+  if(phase==='competitive')cons.push('竞叫可能给对手提供信息');
+
+  // Strategy advice
+  let strategy='';
+  if(phase==='opening'){
+    strategy='开叫时要准确描述牌力范围，让搭档能做出正确的应叫决定。';
+  }else if(phase==='response'){
+    strategy='应叫时优先寻找高花配合，4-4配合优于低花。有足够牌力时积极应叫。';
+  }else if(phase==='competitive'){
+    strategy='竞叫时注意安全，不要为了竞叫而过度叫牌。技术性加倍是最灵活的竞叫工具。';
+  }else{
+    strategy='再叫时要前后一致，准确描述牌力范围和牌型。';
+  }
+
+  return{recommended,reason,alternatives,tip,hcp,suits,longSuits,recColor,phase,
+    partnerExplanation,competitiveExplanation,pros,cons,strategy,balanced};
+}
+
+// ---- Render Hand Analysis Panel ----
+function renderHandAnalysis(hand){
+  if(!hand||hand.length===0)return '';
+  let a=analyzeHand(hand);
+  let distStr=a.dist.join('-');
+  let suitsHtml=a.suitDisplay.map(s=>{
+    if(s.count===0)return '';
+    return '<span class="ha-suit">'+s.suit+s.display+'</span>';
+  }).join('');
+
+  return `
+    <div class="hand-analysis">
+      <div class="ha-header">
+        <span class="ha-hcp">${a.hcp} HCP</span>
+        <span class="ha-quality ${a.qualityClass}">${a.quality}</span>
+      </div>
+      <div class="ha-dist">牌型分布: ${distStr}</div>
+      <div class="ha-suits">${suitsHtml}</div>
+      <div class="ha-assess ${a.assessClass}">${a.assess}</div>
+    </div>
+  `;
 }
 
 function renderHintPanel(){
@@ -3667,47 +4452,110 @@ function renderHintPanel(){
   if(!data){panel.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.4)">无法生成提示</div>';panel.classList.add('show');return;}
   currentHintData=data;
 
-  let handStr='';
   let hs=G.humanSeat||'S';
   let hand=G.hands[hs];
-  if(hand&&hand.length>0){
-    let grouped={};
-    S4.forEach(s=>grouped[s]=[]);
-    hand.forEach(c=>grouped[c.suit].push(c.rank));
-    S4.forEach(s=>{
-      let ranks=grouped[s];
-      if(ranks.length>0){
-        handStr+=s+ranks.join('')+' ';
-      }
-    });
+
+  // Apply mode class
+  panel.className='show';
+  if(hintLevel==='brief')panel.classList.add('brief-mode');
+
+  // ---- Hand analysis (standard + detailed) ----
+  let analysisHtml=(hintLevel!=='brief')?renderHandAnalysis(hand):'';
+
+  // ---- Phase badge ----
+  let phaseLabel=getPhaseLabel(data.phase);
+  let phaseHtml='<span class="hint-phase '+data.phase+'">'+phaseLabel+'</span>';
+
+  // ---- Partner explanation ----
+  let partnerHtml='';
+  if(data.partnerExplanation&&hintLevel!=='brief'){
+    partnerHtml='<div class="hint-partner-info"><div class="pi-label">搭档叫品含义</div>'+data.partnerExplanation+'</div>';
   }
 
-  let altHtml='';
-  if(data.alternatives&&data.alternatives.length>0){
-    altHtml='<div class="hint-alt"><div class="hint-alt-title">其他选择：</div>'+
-      data.alternatives.map(a=>'<span class="hint-alt-item">'+a+'</span>').join('')+'</div>';
+  // ---- Competitive explanation ----
+  let compHtml='';
+  if(data.competitiveExplanation&&hintLevel==='detailed'){
+    compHtml='<div class="hint-partner-info"><div class="pi-label">竞叫分析</div>'+data.competitiveExplanation+'</div>';
   }
 
-  let tipHtml=data.tip?'<div class="hint-tip">'+data.tip+'</div>':'';
-
-  panel.innerHTML=`
-    <div class="hint-title">
-      <span>💡 智能提示</span>
-      <span style="font-size:11px;color:rgba(255,255,255,.4)">${data.hcp} HCP</span>
-    </div>
-    ${handStr?'<div style="font-size:12px;margin-bottom:8px;color:rgba(255,255,255,.6)">'+handStr+'</div>':''}
-    <div class="hint-rec">
+  // ---- Recommendation with color coding ----
+  let recColorClass=data.recColor||'yellow';
+  let recHtml=`
+    <div class="hint-rec ${recColorClass}">
       <div class="bid-name">推荐：${data.recommended}</div>
       <div class="bid-why">${data.reason}</div>
     </div>
+  `;
+
+  // ---- Alternatives (standard + detailed) ----
+  let altHtml='';
+  if(data.alternatives&&data.alternatives.length>0&&hintLevel!=='brief'){
+    altHtml='<div class="hint-alt"><div class="hint-alt-title">其他选择：</div>'+
+      data.alternatives.map(a=>'<span class="hint-alt-item acceptable">'+a+'</span>').join('')+'</div>';
+  }
+
+  // ---- Pros/Cons (detailed only) ----
+  let prosConsHtml='';
+  if(hintLevel==='detailed'){
+    let prosHtml=data.pros.map(p=>'<div class="hint-pros">'+p+'</div>').join('');
+    let consHtml=data.cons.map(c=>'<div class="hint-cons">'+c+'</div>').join('');
+    prosConsHtml=`
+      <div class="hint-detail-section">
+        <h4>优劣分析</h4>
+        ${prosHtml}
+        ${consHtml}
+      </div>
+    `;
+  }
+
+  // ---- Strategy (detailed only) ----
+  let strategyHtml='';
+  if(hintLevel==='detailed'&&data.strategy){
+    strategyHtml='<div class="hint-strategy">'+data.strategy+'</div>';
+  }
+
+  // ---- Learning tip ----
+  let tipHtml=data.tip?'<div class="hint-tip">'+data.tip+'</div>':'';
+
+  // ---- Assemble panel ----
+  let levelSelectorHtml=`
+    <div class="hint-level-selector">
+      <span class="hint-level-btn ${hintLevel==='brief'?'active':''}" onclick="setHintLevel('brief')">简短</span>
+      <span class="hint-level-btn ${hintLevel==='standard'?'active':''}" onclick="setHintLevel('standard')">标准</span>
+      <span class="hint-level-btn ${hintLevel==='detailed'?'active':''}" onclick="setHintLevel('detailed')">详细</span>
+    </div>
+  `;
+
+  panel.innerHTML=`
+    <div class="hint-title">
+      <span><span class="hint-bulb">💡</span> 叫牌教练</span>
+      ${phaseHtml}
+    </div>
+    ${levelSelectorHtml}
+    ${analysisHtml}
+    ${partnerHtml}
+    ${compHtml}
+    ${recHtml}
     ${altHtml}
+    ${prosConsHtml}
+    ${strategyHtml}
     ${tipHtml}
   `;
   panel.classList.add('show');
 }
 
+function setHintLevel(level){
+  if(HINT_LEVELS.includes(level)){
+    hintLevel=level;
+    document.getElementById('hint-level-label').textContent=HINT_LEVEL_LABELS[hintLevel];
+    localStorage.setItem('bridge-hint-level',hintLevel);
+    renderHintPanel();
+  }
+}
+
 function toggleHint(){
   hintVisible=!hintVisible;
+  if(hintVisible)try{trackHintUsed()}catch(e){}
   renderHintPanel();
 }
 
@@ -3723,89 +4571,111 @@ showBidUI=function(){
 // FEATURE 2: INTERACTIVE TUTORIAL MODE
 // =========================================================================
 
+const TOTAL_LESSONS = 6;
+
 let tutorialLessons=[
   {
-    id:'opening',title:'开叫基础',
-    explanation:`<p><strong>什么是开叫？</strong> 当你是第一个做出非Pass叫品的玩家时，你的叫牌称为"开叫"。开叫的目的是告诉搭档你的牌力和牌型。</p>
-<p><strong>基本规则：</strong> 通常需要<strong>12+HCP</strong>（大牌点）才能开叫。A=4点，K=3点，Q=2点，J=1点。</p>
-<p><strong>高花优先：</strong> 如果有5张或更长的高花套（♠或♥），优先叫高花。5张黑桃开叫1♠，5张红心开叫1♥。</p>
-<p><strong>无将开叫：</strong> 如果是均型牌（4333、4432、5332且5张低花）且有15-17HCP，开叫1NT。</p>
-<p><strong>低花开叫：</strong> 没有5张高花时，开叫较长的低花。等长时开叫1♣。</p>`,
+    id:'basics',title:'桥牌入门',
+    explanation:'<p><strong>桥牌是什么？</strong> 桥牌是4人参与的2v2卡牌游戏。南北一队，东西一队。每人发13张牌。</p><p><strong>两个阶段：</strong> 游戏分<strong>叫牌</strong>和<strong>打牌</strong>两个阶段。叫牌阶段，玩家轮流叫出数字+花色（如1♥），表示能赢多少墩。最终叫价最高的成为定约方（<strong>庄家</strong>），其搭档成为<strong>明手</strong>。</p><p><strong>打牌阶段：</strong> 每人每轮出一张牌（一墩），共13墩。打牌时必须跟出首引花色。如果有<strong>将牌</strong>，将牌最大——即使是一张很小的将牌，也能赢过其他花色的大牌。最后获得6+叫牌墩数的一方得分。</p>',
     quizzes:[
-      {hand:'♠AQ753 ♥K84 ♦K32 ♣97',answer:'1♠',options:['1♠','1NT','Pass','1♣'],explain:'有5张黑桃和13HCP，标准的1♠开叫。'},
-      {hand:'♠KQ84 ♥A975 ♦K3 ♣J98',answer:'1NT',options:['1♥','1NT','1♣','Pass'],explain:'16HCP均型牌（4432），开叫1NT。没有5张高花时，15-17均型开1NT。'},
-      {hand:'♠8 ♥AQ964 ♦KQ73 ♣A85',answer:'1♥',options:['1♥','1♦','1NT','Pass'],explain:'5张红心和14HCP，优先开叫高花1♥。'},
-      {hand:'♠974 ♥KQ853 ♦A7 ♣KJ9',answer:'1♥',options:['1♥','1NT','1♣','Pass'],explain:'5张红心和14HCP，开叫1♥。即使其他花色也不错，5张高花仍优先。'},
-      {hand:'♠KQ8 ♥J75 ♦A96 ♣K873',answer:'1♣',options:['1♣','1NT','1♦','Pass'],explain:'14HCP，无5张高花，均型但不在1NT范围（需要15-17），开叫最长低花1♣。'}
+      {hand:'概念题：什么是将牌（trump）？',answer:'叫牌中约定的王牌花色，比其他花色大',options:['叫牌中约定的王牌花色，比其他花色大','所有花色中最大的A','第一轮出的花色','黑桃永远是将牌'],explain:'将牌是在叫牌中确定的花色，在该花色中出的牌比其他花色都大。'},
+      {hand:'概念题：每人发多少张牌？',answer:'13张',options:['10张','12张','13张','15张'],explain:'一副52张牌平均分给4位玩家，每人13张。'},
+      {hand:'概念题：谁是"庄家"（Declarer）？',answer:'叫牌最高的人，负责主打',options:['叫牌最高的人，负责主打','坐在南边的玩家','发牌的人','牌点最多的人'],explain:'庄家是叫牌中最终叫价最高的那个玩家，其搭档成为明手，摊牌给大家看。'}
     ]
   },
   {
-    id:'response',title:'应叫基础',
-    explanation:`<p><strong>什么是应叫？</strong> 当搭档开叫后，你的叫牌称为"应叫"。应叫的目的是告诉搭档你的牌力范围和牌型。</p>
-<p><strong>简单加叫：</strong> 搭档开叫高花（如1♥），你有<strong>6-9HCP</strong>和<strong>3+张支持</strong>，简单加叫到2♥。这告诉搭档你有部分配合和有限的牌力。</p>
-<p><strong>限制性加叫：</strong> 有<strong>10-12HCP</strong>和3+张支持时，跳加叫（如1♥→3♥）。这是邀请搭档在高限时进局。</p>
-<p><strong>应叫新花色：</strong> 有<strong>6+HCP</strong>时可以应叫新花色（如1♥→1♠）。1阶新花色是逼叫一轮的。二盖一（如1♥→2♣）需要12+HCP，逼叫到局。</p>
-<p><strong>1NT逼叫：</strong> 6-10HCP，没有3张支持，没有好的新花色可叫时，应叫1NT。</p>`,
+    id:'evaluation',title:'手牌评估',
+    explanation:'<p><strong>HCP（大牌点）：</strong> 是评估牌力的标准方法：<strong>A=4点</strong>，<strong>K=3点</strong>，<strong>Q=2点</strong>，<strong>J=1点</strong>。一副牌共40点，平均每家10点。</p><p><strong>开叫门槛：</strong> 通常需要<strong>12+HCP</strong>才能开叫。8-11点通常应叫。少于6点通常Pass。</p><p><strong>牌型分布点：</strong> 除了HCP，牌型也很重要：长套（5+张）更有价值。<strong>缺门=3点</strong>，<strong>单张=2点</strong>，<strong>双张=1点</strong>。将牌配合时，总点力=HCP+分布点。</p><p><strong>示例：</strong> 持♠AQ7 ♥K953 ♦8 ♣KJ874，HCP=4+3+2+3+1=13点，加上单张♦8的2个分布点=15总点力。</p>',
     quizzes:[
-      {hand:'搭档开叫1♥，你持♠K874 ♥973 ♦AJ65 ♣84',answer:'1♠',options:['1♠','2♥','1NT','Pass'],explain:'你有4张黑桃和8HCP，应叫1♠（逼叫一轮），先寻找4-4黑桃配合。'},
-      {hand:'搭档开叫1♠，你持♠Q974 ♥K83 ♦965 ♣J73',answer:'2♠',options:['2♠','1NT','Pass','3♠'],explain:'你有8HCP和3张黑桃支持，简单加叫到2♠。'},
-      {hand:'搭档开叫1♠，你持♠KJ74 ♥A8 ♦Q965 ♣K83',answer:'3♠',options:['2♠','3♠','1NT','2NT'],explain:'你有13HCP和3张支持，跳加叫3♠（限制性加叫，邀请进局）。'},
-      {hand:'搭档开叫1♥，你持♠874 ♥K3 ♦AQ974 ♣K85',answer:'2♦',options:['2♦','2♥','1NT','Pass'],explain:'你有12HCP和5张方块，二盖一2♦逼叫到局。'},
-      {hand:'搭档开叫1♦，你持♠K87 ♥Q964 ♦97 ♣J853',answer:'1♥',options:['1♥','1NT','2♦','Pass'],explain:'你有4张红心和7HCP，应叫1♥（逼叫一轮）。'}
+      {hand:'计算HCP：♠AK53 ♥QJ7 ♦984 ♣A62',answer:'14点',options:['11点','13点','14点','17点'],explain:'A(4)+K(3)=7点，Q(2)+J(1)=3点，A(4)=4点，总共14HCP。'},
+      {hand:'评估：持♠AQ975 ♥KJ84 ♦A3 ♣97，能否开叫？',answer:'可以开叫（14HCP）',options:['可以开叫（14HCP）','不能开叫（不够12点）','必须Pass','只能叫1NT'],explain:'A(4)+Q(2)+K(3)+J(1)+A(4)=14HCP，超过12点开叫线，应该开叫1♠。'},
+      {hand:'分布点：持♠KQ ♥AJ97 ♦— ♣KQJ8753，♦缺门值几点？',answer:'3点',options:['0点','1点','2点','3点'],explain:'缺门=3点分布点。该手有KQ(5)+AJ(5)+KQJ(6)=16HCP+3分布点=19总点力，是强牌。'}
+    ]
+  },
+  {
+    id:'opening',title:'开叫',
+    explanation:'<p><strong>开叫条件：</strong> <strong>12+HCP</strong>才能开叫。开叫是向搭档描述牌力和牌型的第一步。</p><p><strong>高花优先：</strong> 优先叫5张以上的高花（♠♥）。5-5高花选♠（黑桃级别更高）。如持♠AQ975 ♥K84，开叫1♠。</p><p><strong>无将开叫：</strong> 均型牌（4333、4432、5332且5张低花）<strong>15-17HCP</strong>开1NT。这告诉搭档你是均型中等实力。</p><p><strong>低花开叫：</strong> 没有5张高花时，叫较长的低花（♣♦）。等长时开叫1♣。</p><p><strong>阻击叫：</strong> 弱二开叫（5-11HCP+6张套）和3阶阻击叫（7张套，5-10HCP）可干扰对手。</p>',
+    quizzes:[
+      {hand:'♠AQ753 ♥K84 ♦K32 ♣97（13HCP）',answer:'1♠',options:['1♠','1NT','Pass','1♣'],explain:'有5张黑桃和13HCP，标准的1♠开叫。高花优先。'},
+      {hand:'♠KQ84 ♥A975 ♦K3 ♣J98（16HCP，均型）',answer:'1NT',options:['1♥','1NT','1♣','Pass'],explain:'16HCP均型牌（4432），开叫1NT。没有5张高花时，15-17均型开1NT。'},
+      {hand:'♠8 ♥AQ964 ♦KQ73 ♣A85（14HCP）',answer:'1♥',options:['1♥','1♦','1NT','Pass'],explain:'5张红心和14HCP，优先开叫高花1♥。'},
+      {hand:'♠KQ8 ♥J75 ♦A96 ♣K873（14HCP，均型）',answer:'1♣',options:['1♣','1NT','1♦','Pass'],explain:'14HCP，无5张高花，均型但不在1NT范围（需要15-17），开叫最长低花1♣。'}
+    ]
+  },
+  {
+    id:'response',title:'应叫',
+    explanation:'<p><strong>简单加叫（2♥/2♠）：</strong> 搭档开叫高花后，持<strong>6-9HCP</strong>和<strong>3张支持</strong>，简单加叫。告诉搭档有部分配合和有限牌力。</p><p><strong>限制性加叫（3♥/3♠）：</strong> 持<strong>10-12HCP</strong>和3张支持时，跳加叫。邀请搭档在高限时进局（4♥/4♠）。</p><p><strong>新花色应叫：</strong> 持<strong>6+HCP</strong>可应叫新花色（如1♥→1♠），逼叫一轮，寻找4-4配合。</p><p><strong>1NT应叫：</strong> 持<strong>6-10HCP</strong>，没有3张支持，没有好新花色时，应叫1NT，逼叫。</p><p><strong>二盖一应叫：</strong> 如1♥后叫2♣，需要<strong>12+HCP</strong>，<strong>逼叫到局</strong>。表示强牌。</p>',
+    quizzes:[
+      {hand:'搭档开叫1♥，你持♠K874 ♥973 ♦AJ65 ♣84（8HCP）',answer:'1♠',options:['1♠','2♥','1NT','Pass'],explain:'你有4张黑桃和8HCP，应叫1♠（逼叫一轮），先寻找4-4黑桃配合。'},
+      {hand:'搭档开叫1♠，你持♠Q974 ♥K83 ♦965 ♣J73（8HCP）',answer:'2♠',options:['2♠','1NT','Pass','3♠'],explain:'你有8HCP和3张黑桃支持，简单加叫到2♠。'},
+      {hand:'搭档开叫1♠，你持♠KJ74 ♥A8 ♦Q965 ♣K83（13HCP）',answer:'3♠',options:['2♠','3♠','1NT','2NT'],explain:'你有13HCP和3张支持，跳加叫3♠（限制性加叫，邀请进局）。'},
+      {hand:'搭档开叫1♥，你持♠874 ♥K3 ♦AQ974 ♣K85（12HCP）',answer:'2♦',options:['2♦','2♥','1NT','Pass'],explain:'你有12HCP和5张方块，二盖一2♦逼叫到局。'}
     ]
   },
   {
     id:'conventions',title:'约定叫',
-    explanation:`<p><strong>斯台曼（Stayman）：</strong> 搭档开叫1NT后，你叫2♣是"斯台曼"，用来询问搭档是否有4张高花。需要8+HCP和至少一个4张高花。搭档回答：2♦=无4张高花，2♥=4张红心，2♠=4张黑桃。</p>
-<p><strong>雅可比转移叫（Jacoby Transfer）：</strong> 搭档开叫1NT后，你叫2♦表示5+张红心（搭档必须叫2♥），叫2♥表示5+张黑桃（搭档必须叫2♠）。这样你成为庄家，保护了你的长套大牌。</p>
-<p><strong>布莱克伍德（Blackwood）：</strong> 4NT是"布莱克伍德"问A。搭档回答：5♣=0或4个A，5♦=1个A，5♥=2个A，5♠=3个A。用于判断是否能打满贯。</p>
-<p><strong>使用时机：</strong> 斯台曼和转移叫在搭档开叫1NT或2NT后使用。布莱克伍德在已经确定将牌花色后、考虑满贯时使用。</p>`,
+    explanation:'<p><strong>斯台曼（Stayman 2♣）：</strong> 搭档开1NT后，你叫2♣询问是否有4张高花。需要8+HCP。搭档回答：2♦=无4张高花，2♥=4张红心，2♠=4张黑桃。</p><p><strong>雅可比转移（Jacoby Transfer）：</strong> 搭档开1NT后，叫2♦表示5+张♥（搭档必须叫2♥），叫2♥表示5+张♠（搭档必须叫2♠）。这样你成为庄家，保护长套大牌。</p><p><strong>布莱克伍德（Blackwood 4NT）：</strong> 确定将牌后，4NT问A数量。回答：5♣=<strong>0或3个A</strong>，5♦=<strong>1或4个A</strong>，5♥=<strong>2个A无将牌Q</strong>，5♠=<strong>2个A有将牌Q</strong>。用于判断能否打满贯。</p>',
     quizzes:[
-      {hand:'搭档开叫1NT，你持♠KQ87 ♥AJ64 ♦975 ♣83',answer:'2♣',options:['2♣','2♦','2♥','3NT'],explain:'你有4张黑桃和4张红心，8HCP，先用斯台曼2♣问高花。如果搭档答2♥或2♠，你可以加叫。'},
-      {hand:'搭档开叫1NT，你持♠AQ9765 ♥84 ♦K73 ♣95',answer:'2♥',options:['2♣','2♦','2♥','2♠'],explain:'你有6张黑桃，用雅可比转移叫2♥让搭档叫2♠，这样你成为庄家。'},
-      {hand:'搭档开叫1NT，你持♠KQ7 ♥AQ9643 ♦K5 ♣83',answer:'2♦',options:['2♣','2♦','3♦','4♥'],explain:'你有5张红心，先用转移叫2♦让搭档叫2♥。之后你可以再叫4♥进局。'},
-      {hand:'已确定♠为将牌，你持♠AQ7 ♥K8 ♦A965 ♣AQ74',answer:'4NT',options:['4NT','4♠','5♠','Pass'],explain:'你有4个A中的3个，且有满贯兴趣。叫4NT（布莱克伍德）问搭档A的数量。'},
-      {hand:'搭档开叫1NT，你持♠KQ874 ♥AJ76 ♦85 ♣93',answer:'2♣',options:['2♣','2♥','2♠','3NT'],explain:'你有两个4张高花，先用斯台曼2♣问搭档的高花。'}
+      {hand:'搭档开叫1NT，你持♠KQ87 ♥AJ64 ♦975 ♣83（8HCP）',answer:'2♣',options:['2♣','2♦','2♥','3NT'],explain:'有4张黑桃和4张红心，8HCP，先用斯台曼2♣问高花。'},
+      {hand:'搭档开叫1NT，你持♠AQ9765 ♥84 ♦K73 ♣95',answer:'2♥',options:['2♣','2♦','2♥','2♠'],explain:'有6张黑桃，用雅可比转移叫2♥，让搭档叫2♠，这样你成为庄家。'},
+      {hand:'已确定♠为将牌，你持♠AQ7 ♥K8 ♦A965 ♣AQ74',answer:'4NT',options:['4NT','4♠','5♠','Pass'],explain:'有3个A且有满贯兴趣，叫4NT（布莱克伍德）问搭档A的数量。'},
+      {hand:'搭档4NT问A，你持♠KQ7 ♥AQ9643 ♦K5 ♣83',answer:'5♦',options:['5♣','5♦','5♥','5♠'],explain:'你有1个A（♣A），按布莱克伍德回答5♦=1个A。'}
     ]
   },
   {
     id:'competitive',title:'竞叫',
-    explanation:`<p><strong>争叫（Overcall）：</strong> 对手开叫后，你可以用5+张套和10+HCP进行争叫。例如对手开叫1♣，你持5张红心和11HCP，可以争叫1♥。争叫可以帮助搭档找到首攻。</p>
-<p><strong>技术性加倍（Takeout Double）：</strong> 对手开叫后，加倍是"技术性"的，表示12+HCP且对未叫花色有支持。要求搭档选一个未叫花色。通常对开叫花色是短套（0-2张）。</p>
-<p><strong>负加倍（Negative Double）：</strong> 搭档开叫、对手争叫后，你的加倍是"负加倍"，表示有未叫高花的4张套和一定牌力。</p>
-<p><strong>竞叫原则：</strong> 不要为了竞叫而竞叫。确保你的叫牌有建设性意义，要么描述你的牌，要么帮助搭档做决定。</p>`,
+    explanation:'<p><strong>技术性加倍：</strong> 对手开叫后，加倍是"技术性"的，表示<strong>12+HCP</strong>，对手花色短（0-2张），对其他花色有支持。要求搭档选一个花色。</p><p><strong>争叫（Overcall）：</strong> 对手开叫后，持<strong>10+HCP</strong>和<strong>5张套</strong>可争叫。帮助搭档找到首攻，也可能找到配合。</p><p><strong>Michaels扣叫：</strong> 扣对手的开叫花色，表示<strong>5-5两套</strong>（两个未叫花色中取两个）。如对手开1♥，你扣2♥=♠+♦（或♣）5-5。</p><p><strong>负加倍：</strong> 搭档开叫后对手争叫，你的加倍是"负加倍"，表示有<strong>未叫花色的长度</strong>（尤其高花），而非惩罚。</p>',
     quizzes:[
-      {hand:'对手开叫1♣，你持♠AQ975 ♥K84 ♦973 ♣J5',answer:'1♠',options:['1♠','X','Pass','1NT'],explain:'你有5张黑桃和11HCP，标准的1阶争叫。'},
-      {hand:'对手开叫1♦，你持♠AQ84 ♥KJ75 ♦83 ♣AQ7',answer:'X',options:['X','1♥','1♠','1NT'],explain:'你有14HCP且对未叫花色都有支持，方块短（2张），技术性加倍最合适。'},
-      {hand:'对手开叫1♥，你持♠97 ♥863 ♦AQ874 ♣KJ5',answer:'Pass',options:['Pass','1♦','X','1NT'],explain:'你只有10HCP和5张方块，但方块质量不够好（缺少K），且没有好的争叫选择。Pass是明智的。'},
-      {hand:'对手开叫1♥，你持♠AQ975 ♥K ♦K874 ♣Q95',answer:'1♠',options:['1♠','X','1NT','Pass'],explain:'你有5张好黑桃和13HCP，1阶争叫1♠是合适的。'},
-      {hand:'搭档开叫1♣，对手争叫1♥，你持♠AQ97 ♥85 ♦K964 ♣J73',answer:'X',options:['X','1♠','1NT','Pass'],explain:'这是负加倍的情况：你有4张黑桃和10HCP，加倍表示有未叫高花（♠）的4张套。'}
+      {hand:'对手开叫1♣，你持♠AQ975 ♥K84 ♦973 ♣J5（11HCP）',answer:'1♠',options:['1♠','X','Pass','1NT'],explain:'有5张黑桃和11HCP，标准的1阶争叫。'},
+      {hand:'对手开叫1♦，你持♠AQ84 ♥KJ75 ♦83 ♣AQ7（14HCP）',answer:'X',options:['X','1♥','1♠','1NT'],explain:'14HCP且对未叫花色都有支持，方块短（2张），技术性加倍最合适。'},
+      {hand:'搭档开叫1♣，对手争叫1♥，你持♠AQ97 ♥85 ♦K964 ♣J73（10HCP）',answer:'X（负加倍）',options:['X（负加倍）','1♠','1NT','Pass'],explain:'这是负加倍：你有4张黑桃和10HCP，加倍表示有未叫高花♠的4张套。'},
+      {hand:'对手开叫1♥，你持♠A7 ♦— ♥KQJ9754 ♣AQ85',answer:'2♥（Michaels）',options:['2♥（Michaels）','1NT','X','Pass'],explain:'扣叫2♥表示5-5两套（这里是♠+♣），干扰对手的叫牌。'}
     ]
   }
 ];
 
-let tutorialState={currentLesson:0,scores:[0,0,0,0],answered:[[],[],[],[]],completed:[]};
+let finalAssessmentQuiz=[
+  {q:'一副牌共有多少张？',answer:'52张',options:['48张','50张','52张','54张'],explain:'标准扑克牌52张，4花色×13张。'},
+  {q:'A的HCP值是多少？',answer:'4点',options:['1点','2点','3点','4点'],explain:'A=4点，K=3点，Q=2点，J=1点。'},
+  {q:'开叫通常需要多少HCP？',answer:'12+HCP',options:['10+HCP','12+HCP','15+HCP','18+HCP'],explain:'标准开叫门槛是12+HCP。'},
+  {q:'搭档开叫1♠，你持3张♠支持+8HCP，应叫什么？',answer:'2♠',options:['1NT','2♠','3♠','Pass'],explain:'6-9HCP+3张支持=简单加叫2♠。'},
+  {q:'1NT后2♣是什么约定叫？',answer:'斯台曼',options:['斯台曼','雅可比转移','布莱克伍德','负加倍'],explain:'2♣是斯台曼，询问开叫方是否有4张高花。'},
+  {q:'4NT问A后，搭档回答5♥表示什么？',answer:'2个A无将牌Q',options:['0个A','1个A','2个A无将牌Q','3个A'],explain:'5♥=2个A且没有将牌Q。'},
+  {q:'对手开叫后，你的"技术性加倍"需要多少HCP？',answer:'12+HCP',options:['8+HCP','10+HCP','12+HCP','15+HCP'],explain:'技术性加倍通常需要12+HCP，且对手花色短。'},
+  {q:'什么是"逼叫到局"？',answer:'叫牌必须到达成局定约才能Pass',options:['必须叫到满贯','叫牌必须到达成局定约才能Pass','搭档必须回应','不能Pass也不能加倍'],explain:'二盖一应叫逼叫到局，双方不能在未成局前Pass。'},
+  {q:'持♠AKJ75 ♥Q93 ♦A82 ♣84（13HCP），最佳开叫？',answer:'1♠',options:['1♣','1♦','1♥','1♠'],explain:'有5张黑桃和13HCP，优先开叫高花1♠。'},
+  {q:'Jacoby转移叫2♦后，搭档应该叫什么？',answer:'2♥',options:['2♥','2♠','Pass','2NT'],explain:'2♦是转移叫，要求搭档必须叫2♥（你有5+张红心）。'}
+];
+
+let tutorialState={currentLesson:0,scores:Array(TOTAL_LESSONS).fill(0),answered:Array.from({length:TOTAL_LESSONS},()=>[]),completed:[],finalScore:0,finalAnswered:[]};
 
 function loadTutorialProgress(){
   try{
-    let saved=localStorage.getItem('bridge-tutorial');
+    let saved=localStorage.getItem('bridge-tutorial-v2');
     if(saved){
       let data=JSON.parse(saved);
       if(data.completed)tutorialState.completed=data.completed;
+      if(typeof data.finalScore==='number')tutorialState.finalScore=data.finalScore;
+      if(data.finalAnswered)tutorialState.finalAnswered=data.finalAnswered;
     }
   }catch(e){}
 }
 
 function saveTutorialProgress(){
   try{
-    localStorage.setItem('bridge-tutorial',JSON.stringify({completed:tutorialState.completed}));
+    localStorage.setItem('bridge-tutorial-v2',JSON.stringify({
+      completed:tutorialState.completed,
+      finalScore:tutorialState.finalScore,
+      finalAnswered:tutorialState.finalAnswered
+    }));
   }catch(e){}
 }
 
 function openTutorial(){
   loadTutorialProgress();
   renderTutorialTabs();
-  showTutorialLesson(tutorialState.currentLesson);
+  if(tutorialState.currentLesson<TOTAL_LESSONS)showTutorialLesson(tutorialState.currentLesson);
+  else showFinalAssessment();
   document.getElementById('tutorial-overlay').classList.add('show');
   document.getElementById('tutorial-panel').classList.add('open');
 }
@@ -3826,6 +4696,23 @@ function renderTutorialTabs(){
     tab.onclick=()=>{tutorialState.currentLesson=i;showTutorialLesson(i);renderTutorialTabs()};
     tabs.appendChild(tab);
   });
+  // Add final assessment tab
+  let allDone=tutorialState.completed.length>=TOTAL_LESSONS;
+  let ftab=document.createElement('div');
+  ftab.className='tut-tab'+(tutorialState.currentLesson===TOTAL_LESSONS?' active':'');
+  ftab.textContent='🏆 综合测验';
+  if(!allDone)ftab.style.opacity='.4';
+  ftab.onclick=()=>{if(allDone){tutorialState.currentLesson=TOTAL_LESSONS;showFinalAssessment();renderTutorialTabs()}};
+  tabs.appendChild(ftab);
+}
+
+function getProgressBar(){
+  let doneCount=tutorialState.completed.length;
+  let pct=Math.round(doneCount/TOTAL_LESSONS*100);
+  return `<div class="tut-progress-bar-wrap">
+    <div class="tut-progress-label">学习进度：${doneCount}/${TOTAL_LESSONS} 课程完成（${pct}%）</div>
+    <div class="tut-progress-bar-track"><div class="tut-progress-bar-fill" style="width:${pct}%"></div></div>
+  </div>`;
 }
 
 function showTutorialLesson(idx){
@@ -3833,7 +4720,6 @@ function showTutorialLesson(idx){
   tutorialState.currentLesson=idx;
   let body=document.getElementById('tut-body');
 
-  // Reset state for this lesson
   if(!tutorialState.scores[idx])tutorialState.scores[idx]=0;
   if(!tutorialState.answered[idx])tutorialState.answered[idx]=[];
 
@@ -3852,7 +4738,8 @@ function showTutorialLesson(idx){
         else if(opt===alreadyAnswered.chosen&&opt!==q.answer)btnClass+=' wrong';
         disabled='disabled';
       }
-      quizHtml+=`<button class="${btnClass}" ${disabled} onclick="answerQuiz(${idx},${qi},'${opt}','${q.answer}')">${opt}</button>`;
+      let safeOpt=opt.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      quizHtml+=`<button class="${btnClass}" ${disabled} onclick="answerQuiz(${idx},${qi},'${safeOpt}')">${opt}</button>`;
     });
     quizHtml+=`</div>
       <div class="tut-feedback ${alreadyAnswered?(alreadyAnswered.correct?'correct-fb show':'wrong-fb show'):''}" id="quiz-fb-${idx}-${qi}">`;
@@ -3862,7 +4749,6 @@ function showTutorialLesson(idx){
     quizHtml+=`</div></div>`;
   });
 
-  // Score
   let total=lesson.quizzes.length;
   let correct=tutorialState.answered[idx].filter(a=>a.correct).length;
   let scoreHtml='';
@@ -3879,13 +4765,13 @@ function showTutorialLesson(idx){
     }
   }
 
-  // Next lesson button
   let nextHtml='';
-  if(idx<tutorialLessons.length-1){
+  if(idx<TOTAL_LESSONS-1){
     nextHtml=`<button class="tut-next-btn" onclick="showTutorialLesson(${idx+1});renderTutorialTabs()">下一课 →</button>`;
+  }else if(tutorialState.completed.length>=TOTAL_LESSONS){
+    nextHtml=`<button class="tut-final-btn" onclick="tutorialState.currentLesson=TOTAL_LESSONS;showFinalAssessment();renderTutorialTabs()">🏆 进入综合测验</button>`;
   }
 
-  // Progress dots
   let dotsHtml='<div class="tut-progress">';
   tutorialLessons.forEach((_,i)=>{
     dotsHtml+=`<div class="tut-progress-dot${tutorialState.completed.includes(tutorialLessons[i].id)?' done':''}${i===idx?' current':''}"></div>`;
@@ -3894,6 +4780,7 @@ function showTutorialLesson(idx){
 
   body.innerHTML=`
     <div class="tut-section active">
+      ${getProgressBar()}
       <div class="tut-lesson-title">${lesson.title}</div>
       <div class="tut-text">${lesson.explanation}</div>
       <h4 style="font-size:14px;font-weight:700;color:#ffd54f;margin:16px 0 10px">🎯 互动练习</h4>
@@ -3906,18 +4793,114 @@ function showTutorialLesson(idx){
   body.scrollTop=0;
 }
 
-function answerQuiz(lessonIdx,quizIdx,chosen,correct){
+function showFinalAssessment(){
+  tutorialState.currentLesson=TOTAL_LESSONS;
+  let body=document.getElementById('tut-body');
+
+  if(!tutorialState.finalAnswered)tutorialState.finalAnswered=[];
+
+  let quizHtml='';
+  finalAssessmentQuiz.forEach((q,qi)=>{
+    let alreadyAnswered=tutorialState.finalAnswered.find(a=>a.qi===qi);
+    quizHtml+=`<div class="tut-example">
+      <div class="tut-example-title">综合题 ${qi+1}/${finalAssessmentQuiz.length}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.85);margin-bottom:8px">${q.q}</div>
+      <div class="tut-quiz-btns" id="final-btns-${qi}">`;
+    q.options.forEach(opt=>{
+      let btnClass='tut-quiz-btn';
+      let disabled='';
+      if(alreadyAnswered){
+        if(opt===q.answer)btnClass+=' correct';
+        else if(opt===alreadyAnswered.chosen&&opt!==q.answer)btnClass+=' wrong';
+        disabled='disabled';
+      }
+      let safeOpt=opt.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      quizHtml+=`<button class="${btnClass}" ${disabled} onclick="answerFinal(${qi},'${safeOpt}')">${opt}</button>`;
+    });
+    quizHtml+=`</div>
+      <div class="tut-feedback ${alreadyAnswered?(alreadyAnswered.correct?'correct-fb show':'wrong-fb show'):''}" id="final-fb-${qi}">`;
+    if(alreadyAnswered){
+      quizHtml+=(alreadyAnswered.correct?'✓ 正确！':'✗ 正确答案：'+q.answer)+'<br>'+q.explain;
+    }
+    quizHtml+=`</div></div>`;
+  });
+
+  let scoreHtml='';
+  let allAnswered=tutorialState.finalAnswered.length===finalAssessmentQuiz.length;
+  if(allAnswered){
+    let correct=tutorialState.finalAnswered.filter(a=>a.correct).length;
+    let total=finalAssessmentQuiz.length;
+    let pct=Math.round(correct/total*100);
+    tutorialState.finalScore=pct;
+    saveTutorialProgress();
+    if(pct>=70){
+      scoreHtml=`<div class="tut-cert">
+        <div class="cert-icon">🎓</div>
+        <div class="cert-title">桥牌叫牌初级证书</div>
+        <div class="cert-sub">综合得分：${correct}/${total}（${pct}%）</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px">恭喜你掌握了桥牌叫牌的基础知识！</div>
+      </div>`;
+    }else{
+      scoreHtml=`<div class="tut-score">
+        <div class="score-label">综合测验得分</div>
+        <div class="score-num">${correct}/${total}（${pct}%）</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">需要70%以上才能获得证书，继续学习吧！</div>
+        <button class="tut-next-btn" onclick="tutorialState.finalAnswered=[];tutorialState.finalScore=0;saveTutorialProgress();showFinalAssessment()">重新测验</button>
+      </div>`;
+    }
+  }
+
+  body.innerHTML=`
+    <div class="tut-section active">
+      ${getProgressBar()}
+      <div class="tut-lesson-title">🏆 综合测验</div>
+      <div class="tut-text"><p>完成所有${TOTAL_LESSONS}课程后的最终测验。共${finalAssessmentQuiz.length}题，得分<strong>70%以上</strong>可获得桥牌叫牌初级证书。</p></div>
+      ${quizHtml}
+      ${scoreHtml}
+      <div class="tut-progress">
+        ${tutorialLessons.map((l,i)=>`<div class="tut-progress-dot${tutorialState.completed.includes(l.id)?' done':''}"></div>`).join('')}
+        <div class="tut-progress-dot current"></div>
+      </div>
+    </div>
+  `;
+  body.scrollTop=0;
+}
+
+function answerFinal(qi,chosen){
+  let q=finalAssessmentQuiz[qi];
+  let isCorrect=chosen===q.answer;
+  if(tutorialState.finalAnswered.find(a=>a.qi===qi))return;
+
+  tutorialState.finalAnswered.push({qi,chosen,correct:isCorrect});
+
+  let btnsContainer=document.getElementById('final-btns-'+qi);
+  let btns=btnsContainer.querySelectorAll('.tut-quiz-btn');
+  btns.forEach(btn=>{
+    btn.disabled=true;
+    if(btn.textContent===q.answer)btn.classList.add('correct');
+    else if(btn.textContent===chosen&&!isCorrect)btn.classList.add('wrong');
+  });
+
+  let fb=document.getElementById('final-fb-'+qi);
+  fb.className='tut-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.innerHTML=(isCorrect?'✓ 正确！':'✗ 正确答案：'+q.answer)+'<br>'+q.explain;
+
+  if(tutorialState.finalAnswered.length===finalAssessmentQuiz.length){
+    setTimeout(()=>showFinalAssessment(),400);
+  }
+}
+
+function answerQuiz(lessonIdx,quizIdx,chosen){
   let lesson=tutorialLessons[lessonIdx];
   let q=lesson.quizzes[quizIdx];
+  let correct=q.answer;
   let isCorrect=chosen===correct;
 
-  // Record answer
   let existing=tutorialState.answered[lessonIdx].find(a=>a.qi===quizIdx);
-  if(existing)return; // already answered
+  if(existing)return;
 
   tutorialState.answered[lessonIdx].push({qi:quizIdx,chosen,correct:isCorrect});
 
-  // Update buttons
   let btnsContainer=document.getElementById('quiz-btns-'+lessonIdx+'-'+quizIdx);
   let btns=btnsContainer.querySelectorAll('.tut-quiz-btn');
   btns.forEach(btn=>{
@@ -3926,14 +4909,11 @@ function answerQuiz(lessonIdx,quizIdx,chosen,correct){
     else if(btn.textContent===chosen&&!isCorrect)btn.classList.add('wrong');
   });
 
-  // Show feedback
   let fb=document.getElementById('quiz-fb-'+lessonIdx+'-'+quizIdx);
   fb.className='tut-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
   fb.innerHTML=(isCorrect?'✓ 正确！':'✗ 正确答案：'+correct)+'<br>'+q.explain;
 
-  // Check if all quizzes answered
   if(tutorialState.answered[lessonIdx].length===lesson.quizzes.length){
-    // Re-render to show score
     setTimeout(()=>showTutorialLesson(lessonIdx),300);
   }
 }
@@ -4087,6 +5067,613 @@ function getCorrectBid(scenario,hand){
 }
 
 // ---- Scenario definitions (15+) ----
+// ============ SCENARIO LIBRARY ============
+const SCENARIO_CATS = [
+  {id:'all', label:'全部'},
+  {id:'opening', label:'开叫'},
+  {id:'response', label:'应叫'},
+  {id:'competitive', label:'竞叫'},
+  {id:'slam', label:'满贯'},
+  {id:'mixed', label:'综合'}
+];
+const SCENARIO_DIFFS = [
+  {id:0, label:'全部'},
+  {id:1, label:'⭐ 初级'},
+  {id:2, label:'⭐⭐ 中级'},
+  {id:3, label:'⭐⭐⭐ 高级'}
+];
+const catColorClass = {opening:'opening',response:'response',competitive:'competitive',slam:'slam',mixed:'mixed'};
+
+const SCENARIO_DEFS = [
+  // ===== 开叫 (5) =====
+  {id:'sc1', cat:'opening', diff:1, title:'12HCP, 5张♠',
+   desc:'正常一阶高花开叫',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'K'},{s:'♠',r:'J'},{s:'♠',r:'8'},{s:'♠',r:'5'},
+         {s:'♥',r:'K'},{s:'♥',r:'Q'},{s:'♥',r:'7'},{s:'♦',r:'J'},{s:'♦',r:'9'},{s:'♦',r:'3'},
+         {s:'♣',r:'10'},{s:'♣',r:'6'}],
+   hcp:12, dist:'5-3-3-2', ctx:[], correct:'1♠',
+   options:['Pass','1♣','1♦','1♥','1♠','1NT'],
+   explain:'你有12HCP和5张黑桃，满足开叫条件。一阶高花开叫是标准叫品，表示5+张♠和12+HCP。',
+   why:'桥牌基本规则：有5张高花时优先开叫高花。12HCP是最低开叫实力，5张套保证了足够的将牌长度。1♠告诉搭档你有黑桃长套和开叫实力。'},
+
+  {id:'sc2', cat:'opening', diff:1, title:'15HCP, 均型',
+   desc:'1NT开叫',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'Q'},{s:'♠',r:'9'},{s:'♥',r:'K'},{s:'♥',r:'J'},{s:'♥',r:'8'},
+         {s:'♦',r:'A'},{s:'♦',r:'10'},{s:'♦',r:'7'},{s:'♣',r:'K'},{s:'♣',r:'J'},{s:'♣',r:'4'},{s:'♣',r:'2'}],
+   hcp:15, dist:'3-3-3-4', ctx:[], correct:'1NT',
+   options:['Pass','1♣','1♦','1NT','2NT'],
+   explain:'均型牌15HCP，标准1NT开叫。1NT开叫显示15-17HCP的均型牌(4333/4432/5332其中5张为低花)。',
+   why:'1NT开叫让搭档立即知道你的精确牌力(15-17点)和均型，便于使用Stayman和Jacoby Transfer等约定叫。这比开叫1♣更精确地传达了信息。'},
+
+  {id:'sc3', cat:'opening', diff:2, title:'8HCP, 7张♥',
+   desc:'阻击叫3♥',
+   hand:[{s:'♠',r:'6'},{s:'♥',r:'A'},{s:'♥',r:'Q'},{s:'♥',r:'J'},{s:'♥',r:'9'},{s:'♥',r:'7'},{s:'♥',r:'5'},{s:'♥',r:'3'},
+         {s:'♦',r:'10'},{s:'♦',r:'8'},{s:'♣',r:'K'},{s:'♣',r:'6'},{s:'♣',r:'4'}],
+   hcp:8, dist:'1-7-3-2', ctx:[], correct:'3♥',
+   options:['Pass','1♥','2♥','3♥','3♠'],
+   explain:'8HCP和7张红心，适合阻击叫3♥。阻击叫的标准是"二三法则"：局况有利时最多宕3，不利时最多宕2。',
+   why:'阻击叫的目的：(1)占据对手叫牌空间，干扰对手找到最佳定约；(2)告诉搭档你的牌型是7+张弱牌，不要期望太多大牌点。7张套+8HCP正好符合3阶阻击的条件。'},
+
+  {id:'sc4', cat:'opening', diff:3, title:'22HCP, 强牌',
+   desc:'强2♣开叫',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'K'},{s:'♠',r:'Q'},{s:'♥',r:'A'},{s:'♥',r:'K'},{s:'♥',r:'Q'},{s:'♥',r:'J'},
+         {s:'♦',r:'A'},{s:'♦',r:'K'},{s:'♦',r:'Q'},{s:'♣',r:'A'},{s:'♣',r:'K'},{s:'♣',r:'3'}],
+   hcp:22, dist:'3-4-3-3', ctx:[], correct:'2♣',
+   options:['1♥','1♠','1NT','2♣','2NT'],
+   explain:'22HCP的超强牌，必须开叫2♣。2♣是人为强开叫，表示22+HCP或能独立做成的牌。',
+   why:'2♣开叫是逼叫性的，搭档必须应叫。这给了你足够的空间来逐步描述你强大的牌力。如果开叫1♥或1NT，可能无法充分展现你的实力，导致错失满贯甚至大满贯。'},
+
+  {id:'sc5', cat:'opening', diff:2, title:'10HCP, 6张♦, 无4张高花',
+   desc:'弱二开叫2♦',
+   hand:[{s:'♠',r:'9'},{s:'♠',r:'7'},{s:'♥',r:'J'},{s:'♥',r:'8'},
+         {s:'♦',r:'A'},{s:'♦',r:'Q'},{s:'♦',r:'J'},{s:'♦',r:'9'},{s:'♦',r:'7'},{s:'♦',r:'5'},
+         {s:'♣',r:'K'},{s:'♣',r:'10'},{s:'♣',r:'4'}],
+   hcp:10, dist:'2-2-6-3', ctx:[], correct:'2♦',
+   options:['Pass','1♦','1NT','2♦','2NT'],
+   explain:'10HCP, 6张方块，无4张高花，适合弱二开叫2♦。弱二开叫表示5-10HCP的6张套。',
+   why:'弱二开叫2♦告诉搭档你有6张方块和有限牌力(5-10HCP)。这比开叫1♦更精确：1♦可能是3-4张的过渡叫，而2♦保证6张。同时占据对手的叫牌空间。'},
+
+  // ===== 应叫 (5) =====
+  {id:'sc6', cat:'response', diff:1, title:'同伴1NT, 有4张♥',
+   desc:'Stayman 2♣',
+   hand:[{s:'♠',r:'K'},{s:'♠',r:'9'},{s:'♥',r:'A'},{s:'♥',r:'J'},{s:'♥',r:'8'},{s:'♥',r:'5'},
+         {s:'♦',r:'Q'},{s:'♦',r:'10'},{s:'♦',r:'7'},{s:'♣',r:'J'},{s:'♣',r:'9'},{s:'♣',r:'6'},{s:'♣',r:'3'}],
+   hcp:10, dist:'2-4-3-4', ctx:[{pos:'N',bid:'1NT'}], correct:'2♣',
+   options:['Pass','2♣','2♦','2♥','2♠','2NT'],
+   explain:'同伴开叫1NT(15-17点)，你有10HCP和4张红心，用Stayman 2♣问搭档是否有4张高花。',
+   why:'Stayman 2♣是一个人工叫品，不表示草花套，而是询问1NT开叫者是否有4张高花。如果有4张♥，开叫者会叫2♥；如果有4张♠，叫2♠；如果没有4张高花，叫2♦。这样你可以找到4-4高花配合。'},
+
+  {id:'sc7', cat:'response', diff:2, title:'同伴1NT, 5张♠',
+   desc:'Jacoby Transfer 2♥',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'J'},{s:'♠',r:'9'},{s:'♠',r:'7'},{s:'♠',r:'5'},
+         {s:'♥',r:'K'},{s:'♥',r:'8'},{s:'♦',r:'Q'},{s:'♦',r:'10'},{s:'♦',r:'6'},
+         {s:'♣',r:'J'},{s:'♣',r:'9'},{s:'♣',r:'4'}],
+   hcp:10, dist:'5-2-3-3', ctx:[{pos:'N',bid:'1NT'}], correct:'2♥',
+   options:['Pass','2♣','2♦','2♥','2♠','2NT'],
+   explain:'同伴开叫1NT，你有5张黑桃。用Jacoby Transfer 2♥让同伴叫2♠，这样你成为庄家。',
+   why:'Jacoby Transfer是最重要的1NT后续约定之一。叫2♥不是表示红心套，而是让同伴叫2♠。好处：(1)你成为庄家，隐藏了你的长套；(2)同伴作为明手暴露较弱的牌。5张高花时一定要用转移叫。'},
+
+  {id:'sc8', cat:'response', diff:1, title:'同伴1♥, 3张支持, 8HCP',
+   desc:'简单加叫2♥',
+   hand:[{s:'♠',r:'K'},{s:'♠',r:'10'},{s:'♠',r:'7'},
+         {s:'♥',r:'Q'},{s:'♥',r:'J'},{s:'♥',r:'8'},
+         {s:'♦',r:'A'},{s:'♦',r:'9'},{s:'♦',r:'5'},
+         {s:'♣',r:'J'},{s:'♣',r:'10'},{s:'♣',r:'6'},{s:'♣',r:'3'}],
+   hcp:8, dist:'3-3-3-4', ctx:[{pos:'N',bid:'1♥'}], correct:'2♥',
+   options:['Pass','1♠','1NT','2♥','2♣','3♥'],
+   explain:'同伴开叫1♥，你有3张红心支持和8HCP，简单加叫2♥。简单加叫需要6-10HCP和3+张将牌支持。',
+   why:'简单加叫2♥是支持同伴高花最常用的叫品。它告诉搭档：(1)我有3+张红心支持；(2)我有6-10点的实力；(3)不逼叫，搭档可以Pass。如果只有6-7点且无特殊牌型，Pass也可能是对的，但8点已有足够理由加叫。'},
+
+  {id:'sc9', cat:'response', diff:3, title:'同伴1♠, 4张支持, 14HCP',
+   desc:'Jacoby 2NT',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'Q'},{s:'♠',r:'J'},{s:'♠',r:'9'},
+         {s:'♥',r:'K'},{s:'♥',r:'Q'},{s:'♥',r:'7'},
+         {s:'♦',r:'A'},{s:'♦',r:'J'},{s:'♦',r:'8'},
+         {s:'♣',r:'K'},{s:'♣',r:'10'},{s:'♣',r:'5'}],
+   hcp:14, dist:'4-3-3-3', ctx:[{pos:'N',bid:'1♠'}], correct:'2NT',
+   options:['1NT','2♠','3♠','4♠','2NT'],
+   explain:'同伴开叫1♠，你有4张黑桃支持和14HCP，用Jacoby 2NT表示至少4张支持的逼叫到局的强加叫。',
+   why:'Jacoby 2NT是一个约定叫，表示：(1)4+张将牌支持；(2)13+HCP(逼叫到局)。开叫者随后可以用短套(缺门/单张)来试探满贯。这比直接叫4♠更精确地传达了你的牌力，为满贯试探留下了空间。'},
+
+  {id:'sc10', cat:'response', diff:2, title:'同伴1♥, 5张♣, 13HCP',
+   desc:'二盖一2♣',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'9'},
+         {s:'♥',r:'Q'},{s:'♥',r:'8'},
+         {s:'♦',r:'K'},{s:'♦',r:'J'},{s:'♦',r:'7'},
+         {s:'♣',r:'A'},{s:'♣',r:'Q'},{s:'♣',r:'J'},{s:'♣',r:'9'},{s:'♣',r:'5'},{s:'♣',r:'3'}],
+   hcp:13, dist:'2-2-3-6', ctx:[{pos:'N',bid:'1♥'}], correct:'2♣',
+   options:['Pass','1♠','1NT','2♣','2♥','3♣'],
+   explain:'同伴开叫1♥，你有13HCP和5张草花。应叫二盖一2♣，逼叫一轮且表示13+HCP。',
+   why:'二盖一(2/1)应叫是现代桥牌的基石。在1♥开叫后叫2♣表示：(1)13+HCP；(2)逼叫到2NT或更高。这和简单应叫(如1♠)有本质区别——二盖一后搭档不能Pass在2阶。13HCP+5张套，二盖一是标准选择。'},
+
+  // ===== 竞叫 (5) =====
+  {id:'sc11', cat:'competitive', diff:2, title:'对手1♣, 13HCP, ♠短',
+   desc:'技术性加倍',
+   hand:[{s:'♠',r:'3'},
+         {s:'♥',r:'A'},{s:'♥',r:'K'},{s:'♥',r:'J'},{s:'♥',r:'9'},{s:'♥',r:'7'},
+         {s:'♦',r:'K'},{s:'♦',r:'Q'},{s:'♦',r:'10'},{s:'♦',r:'8'},
+         {s:'♣',r:'A'},{s:'♣',r:'J'},{s:'♣',r:'6'}],
+   hcp:13, dist:'1-5-4-3', ctx:[{pos:'W',bid:'1♣'}], correct:'X',
+   options:['Pass','1♥','1♠','1NT','X','2♥'],
+   explain:'右手对手开叫1♣，你有13HCP且黑桃短(1张)。技术性加倍X表示对未叫花色均有支持的强牌。',
+   why:'技术性加倍是竞叫最重要的武器。它表示：(1)开叫以上的实力(12+HCP)；(2)对手所叫花色短(最好单张或缺门)；(3)其余花色有支持。这里♠短但其他三门都好，完美适合技术性加倍。搭档可以叫任何花色或Pass转为惩罚性。'},
+
+  {id:'sc12', cat:'competitive', diff:1, title:'对手1♥, 11HCP, 5张♠',
+   desc:'一阶争叫1♠',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'Q'},{s:'♠',r:'J'},{s:'♠',r:'9'},{s:'♠',r:'7'},
+         {s:'♥',r:'8'},
+         {s:'♦',r:'K'},{s:'♦',r:'10'},{s:'♦',r:'6'},
+         {s:'♣',r:'J'},{s:'♣',r:'9'},{s:'♣',r:'5'},{s:'♣',r:'3'}],
+   hcp:11, dist:'5-1-3-4', ctx:[{pos:'W',bid:'1♥'}], correct:'1♠',
+   options:['Pass','1♠','1NT','X','2♠'],
+   explain:'右手对手开叫1♥，你有11HCP和5张黑桃好套。一阶争叫1♠是标准选择。',
+   why:'一阶争叫的要求比二阶低：8+HCP和5+张好套。争叫的目的：(1)告诉搭档你的长套花色；(2)抢占叫牌空间；(3)为可能的防守首攻做标记。5张♠+11HCP+好的套质量(三个顶张中的两个)，完美适合1♠争叫。'},
+
+  {id:'sc13', cat:'competitive', diff:3, title:'对手1♦, 5-5高花',
+   desc:'Michaels扣叫2♦',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'Q'},{s:'♠',r:'J'},{s:'♠',r:'9'},{s:'♠',r:'7'},
+         {s:'♥',r:'K'},{s:'♥',r:'Q'},{s:'♥',r:'J'},{s:'♥',r:'8'},{s:'♥',r:'5'},
+         {s:'♦',r:'3'},
+         {s:'♣',r:'10'},{s:'♣',r:'6'}],
+   hcp:12, dist:'5-5-1-2', ctx:[{pos:'W',bid:'1♦'}], correct:'2♦',
+   options:['Pass','1♥','1♠','2♦','X','2NT'],
+   explain:'右手对手开叫1♦，你有5-5高花。Michaels扣叫2♦表示双高花(至少5-5)。',
+   why:'Michaels扣叫是一种约定争叫。在对手开叫低花后，扣叫该花色表示双高花(5-5+)。这比单独争叫一个高花更有效，因为搭档可以根据自己高花的长度选择最佳花色。对手开叫高花时，扣叫则表示另一高花+一个未知低花。'},
+
+  {id:'sc14', cat:'competitive', diff:2, title:'同伴开叫1♥, 右手1♠',
+   desc:'负加倍',
+   hand:[{s:'♠',r:'K'},{s:'♠',r:'Q'},
+         {s:'♥',r:'J'},{s:'♥',r:'9'},{s:'♥',r:'7'},
+         {s:'♦',r:'A'},{s:'♦',r:'K'},{s:'♦',r:'J'},{s:'♦',r:'10'},
+         {s:'♣',r:'Q'},{s:'♣',r:'9'},{s:'♣',r:'6'},{s:'♣',r:'3'}],
+   hcp:11, dist:'2-3-4-4', ctx:[{pos:'N',bid:'1♥'},{pos:'E',bid:'1♠'}], correct:'X',
+   options:['Pass','2♣','2♦','2♥','X'],
+   explain:'同伴开叫1♥，右手对手争叫1♠。你有11HCP但只有2张♠——适合负加倍，表示未叫花色(♦和♣)有好支持。',
+   why:'负加倍是应叫者对对手争叫的特殊加倍。它不是惩罚性的！在1♥-1♠后，负加倍X表示：(1)约6+HCP；(2)对未叫花色(♦和♣)至少4-4支持；(3)通常♠较短。这和惩罚性加倍完全不同。你有♦4张+♣4张，完美适合负加倍。'},
+
+  {id:'sc15', cat:'competitive', diff:2, title:'对手1♠, 6张♣, 7HCP',
+   desc:'弱跳争叫3♣',
+   hand:[{s:'♠',r:'9'},
+         {s:'♥',r:'7'},{s:'♥',r:'5'},
+         {s:'♦',r:'J'},{s:'♦',r:'8'},
+         {s:'♣',r:'A'},{s:'♣',r:'Q'},{s:'♣',r:'J'},{s:'♣',r:'10'},{s:'♣',r:'7'},{s:'♣',r:'4'},
+         {s:'♠',r:'8'},{s:'♠',r:'6'}],
+   hcp:7, dist:'3-2-2-6', ctx:[{pos:'W',bid:'1♠'}], correct:'3♣',
+   options:['Pass','2♣','3♣','X','2NT'],
+   explain:'右手对手开叫1♠，你有6张草花但只有7HCP。弱跳争叫3♣，表示长套弱牌。',
+   why:'弱跳争叫(WJS)在竞叫中表示：(1)6+张好套；(2)5-10HCP(局况有利时可更宽)；(3)不适合正常一阶争叫。3♣占据对手大量叫牌空间，让他们很难在3阶寻找配合。与直接争叫2♣不同，3♣一次性展示了你的意图。'},
+
+  // ===== 满贯 (3) =====
+  {id:'sc16', cat:'slam', diff:2, title:'已配合♠, 16HCP, 2个A',
+   desc:'Blackwood 4NT',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'K'},{s:'♠',r:'Q'},{s:'♠',r:'9'},
+         {s:'♥',r:'A'},{s:'♥',r:'K'},{s:'♥',r:'8'},
+         {s:'♦',r:'K'},{s:'♦',r:'J'},{s:'♦',r:'7'},
+         {s:'♣',r:'Q'},{s:'♣',r:'9'},{s:'♣',r:'5'}],
+   hcp:16, dist:'4-3-3-3', ctx:[{pos:'S',bid:'1♠'},{pos:'N',bid:'3♠'}], correct:'4NT',
+   options:['4♠','4NT','5♠','5NT','6♠'],
+   explain:'已确认♠配合，你有16HCP和2个A。用Blackwood 4NT问搭档A的数量，评估满贯前景。',
+   why:'Blackwood 4NT是最著名的满贯约定叫。问A后：搭档答5♣=0或4个A，5♦=1个A，5♥=2个A，5♠=3个A。你有2个A，如果搭档也有2个A(共4个A)，就可以安全地叫6♠甚至7♠。直接叫4♠太保守了。'},
+
+  {id:'sc17', cat:'slam', diff:3, title:'同伴4NT问A, 有1个A',
+   desc:'回答5♦',
+   hand:[{s:'♠',r:'K'},{s:'♠',r:'J'},{s:'♠',r:'9'},{s:'♠',r:'7'},{s:'♠',r:'5'},
+         {s:'♥',r:'Q'},{s:'♥',r:'J'},{s:'♥',r:'8'},
+         {s:'♦',r:'A'},{s:'♦',r:'K'},{s:'♦',r:'10'},
+         {s:'♣',r:'J'},{s:'♣',r:'6'}],
+   hcp:10, dist:'5-3-3-2', ctx:[{pos:'N',bid:'4NT'}], correct:'5♦',
+   options:['5♣','5♦','5♥','5♠','Pass'],
+   explain:'同伴4NT问A，你有1个A(♦A)。按Blackwood回答：5♦表示有1个A。',
+   why:'Blackwood回答系统：5♣=0或4个A，5♦=1个A，5♥=2个A，5♠=3个A。你只有♦A一个A，所以回答5♦。搭档拿到回答后会计算总A数，决定是否继续问K(5NT)或直接叫满贯。注意：如果你有缺门，需要修改回答(特殊Blackwood)。'},
+
+  {id:'sc18', cat:'slam', diff:3, title:'均型, 17HCP',
+   desc:'量性满贯邀叫4NT',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'K'},{s:'♠',r:'J'},
+         {s:'♥',r:'A'},{s:'♥',r:'Q'},{s:'♥',r:'10'},
+         {s:'♦',r:'K'},{s:'♦',r:'J'},{s:'♦',r:'9'},
+         {s:'♣',r:'K'},{s:'♣',r:'10'},{s:'♣',r:'7'},{s:'♣',r:'3'}],
+   hcp:17, dist:'3-3-3-4', ctx:[{pos:'N',bid:'1NT'}], correct:'4NT',
+   options:['2NT','3NT','4NT','5NT','6NT'],
+   explain:'同伴开叫1NT(15-17点)，你有17HCP均型牌。量性4NT邀叫：同伴高限(17点)叫6NT，低限(15点)Pass。',
+   why:'这是量性4NT(Quantitative 4NT)，不是Blackwood问A！区别在于：在1NT后直接叫4NT是邀请，不问A。你17点+搭档15-17点=32-34点。33+HCP均型可以做6NT。如果搭档15点(共32点)可以Pass，17点(共34点)则叫6NT。这是精确评估满贯的优雅方式。'},
+
+  // ===== 综合 (2) =====
+  {id:'sc19', cat:'mixed', diff:3, title:'1♥-1♠-2NT-?',
+   desc:'应叫人再叫',
+   hand:[{s:'♠',r:'A'},{s:'♠',r:'Q'},{s:'♠',r:'J'},{s:'♠',r:'9'},
+         {s:'♥',r:'K'},{s:'♥',r:'8'},
+         {s:'♦',r:'Q'},{s:'♦',r:'10'},{s:'♦',r:'7'},
+         {s:'♣',r:'K'},{s:'♣',r:'J'},{s:'♣',r:'6'},{s:'♣',r:'3'}],
+   hcp:12, dist:'4-2-3-4', ctx:[{pos:'N',bid:'1♥'},{pos:'S',bid:'1♠'},{pos:'N',bid:'2NT'}], correct:'3NT',
+   options:['2♠','3♣','3♦','3♥','3NT','4♠'],
+   explain:'叫牌过程：搭档1♥→你1♠→搭档2NT(18-19HCP均型，不支持♠)。你有12HCP，联手30-31点，叫3NT进局。',
+   why:'搭档2NT再叫表示18-19HCP的均型牌，且没有4张♠支持(否则应加叫)。你有12点，联手30-31点，够成局。3NT是最佳选择——你的4张♠在搭档均型牌中无法建立长套赢张，NT更安全。不需要再叫自己的花色，因为搭档已经描述了牌情。'},
+
+  {id:'sc20', cat:'mixed', diff:3, title:'1NT-2♣-2♥-?',
+   desc:'Stayman后续',
+   hand:[{s:'♠',r:'K'},{s:'♠',r:'J'},{s:'♠',r:'9'},
+         {s:'♥',r:'A'},{s:'♥',r:'Q'},{s:'♥',r:'J'},{s:'♥',r:'8'},
+         {s:'♦',r:'K'},{s:'♦',r:'10'},{s:'♦',r:'7'},
+         {s:'♣',r:'Q'},{s:'♣',r:'9'},{s:'♣',r:'4'}],
+   hcp:13, dist:'3-4-3-3', ctx:[{pos:'N',bid:'1NT'},{pos:'S',bid:'2♣'},{pos:'N',bid:'2♥'}], correct:'4♥',
+   options:['2NT','3♥','3NT','4♥','4NT'],
+   explain:'1NT→2♣(Stayman)→2♥(有4张♥)。你有13HCP+4张♥支持，联手28-30点，直接叫4♥进局。',
+   why:'搭档回答2♥表示有4张红心。你有4张支持+13HCP，联手28-30点(15-17+13)。26点够4♥进局，所以你有充足的牌力。直接叫4♥而非3♥邀请，因为13点已超过邀请的上限(通常邀请需要10-12点)。3NT也是可能的，但4-4配合的4♥通常比3NT更安全。'}
+];
+
+let scLibState = {catFilter:'all', diffFilter:0, completed: new Set()};
+
+function loadScCompleted(){
+  try{let d=localStorage.getItem('bridge-scenario-completed');if(d)scLibState.completed=new Set(JSON.parse(d))}catch(e){}
+}
+function saveScCompleted(){
+  try{localStorage.setItem('bridge-scenario-completed',JSON.stringify([...scLibState.completed]))}catch(e){}
+}
+loadScCompleted();
+
+function openScenarioLib(){
+  scLibState.catFilter='all';
+  scLibState.diffFilter=0;
+  document.getElementById('scenario-overlay').classList.add('show');
+  renderScenarioLib();
+}
+function closeScenarioLib(){
+  document.getElementById('scenario-overlay').classList.remove('show');
+}
+
+function renderScenarioLib(){
+  let modal=document.getElementById('scenario-modal');
+  let filtered=SCENARIO_DEFS.filter(sc=>{
+    if(scLibState.catFilter!=='all'&&sc.cat!==scLibState.catFilter)return false;
+    if(scLibState.diffFilter>0&&sc.diff!==scLibState.diffFilter)return false;
+    return true;
+  });
+
+  let tabsHtml='<div class="sc-tabs">'+SCENARIO_CATS.map(c=>
+    '<div class="sc-tab'+(scLibState.catFilter===c.id?' active':'')+'" onclick="scFilterCat(\''+c.id+'\')">'+c.label+'</div>'
+  ).join('')+'</div>';
+
+  let diffHtml='<div class="sc-diff-filters">'+SCENARIO_DIFFS.map(d=>
+    '<div class="sc-df'+(scLibState.diffFilter===d.id?' active':'')+'" onclick="scFilterDiff('+d.id+')">'+d.label+'</div>'
+  ).join('')+'</div>';
+
+  let listHtml='<div class="sc-list">';
+  if(filtered.length===0){
+    listHtml+='<div style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">暂无匹配的场景</div>';
+  }
+  filtered.forEach(sc=>{
+    let done=scLibState.completed.has(sc.id);
+    let catLabel={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯',mixed:'综合'};
+    let diffStars='⭐'.repeat(sc.diff);
+    listHtml+=`<div class="sc-card cat-${catColorClass[sc.cat]}" onclick="openScenarioDetail('${sc.id}')">
+      ${done?'<div class="sc-done-badge">✅</div>':''}
+      <div class="sc-card-head">
+        <div class="sc-card-title">${sc.title}</div>
+        <div class="sc-card-diff">${diffStars}</div>
+      </div>
+      <div class="sc-card-desc">${sc.desc}</div>
+      <span class="sc-card-cat ${catColorClass[sc.cat]}">${catLabel[sc.cat]}</span>
+    </div>`;
+  });
+  listHtml+='</div>';
+
+  modal.innerHTML=`<button class="sc-close" onclick="closeScenarioLib()">✕</button>
+    <h2>📚 叫牌场景库</h2>
+    ${tabsHtml}${diffHtml}${listHtml}`;
+}
+
+function scFilterCat(cat){scLibState.catFilter=cat;renderScenarioLib()}
+function scFilterDiff(d){scLibState.diffFilter=d;renderScenarioLib()}
+
+function openScenarioDetail(id){
+  let sc=SCENARIO_DEFS.find(s=>s.id===id);
+  if(!sc)return;
+  let modal=document.getElementById('sc-detail-modal');
+  let hcp=sc.hcp;
+  let dist=sc.dist;
+
+  // Build hand display
+  let handHtml='<div class="sc-hand">';
+  sc.hand.forEach(c=>{
+    let isRed=(c.s==='♥'||c.s==='♦');
+    handHtml+='<div class="sc-hand-card '+(isRed?'red':'black')+'"><span class="r">'+c.r+'</span><span class="s">'+c.s+'</span></div>';
+  });
+  handHtml+='</div>';
+
+  // Context
+  let ctxHtml='';
+  if(sc.ctx&&sc.ctx.length){
+    ctxHtml='<div class="sc-context">'+sc.ctx.map(b=>'<span class="sc-ctx-chip">'+PN[b.pos]+': '+b.bid+'</span>').join('')+'</div>';
+  }
+
+  // Options
+  let optsHtml='<div class="sc-opts" id="sc-opts-'+id+'">';
+  sc.options.forEach(opt=>{
+    optsHtml+='<button class="sc-opt" onclick="answerScenario(\''+id+'\',\''+opt.replace(/'/g,"\\'")+'\')">'+opt+'</button>';
+  });
+  optsHtml+='</div>';
+
+  modal.innerHTML=`<button class="sc-close" onclick="closeScenarioDetail()">✕</button>
+    <h3>${sc.title}</h3>
+    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px">${sc.desc}</div>
+    ${handHtml}
+    <div class="sc-info-row">
+      <span class="sc-info-tag">HCP: ${hcp}</span>
+      <span class="sc-info-tag">牌型: ${dist}</span>
+      <span class="sc-info-tag">${'⭐'.repeat(sc.diff)}</span>
+    </div>
+    ${ctxHtml}
+    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.5);margin:10px 0">请选出正确的叫品：</div>
+    ${optsHtml}
+    <div class="sc-feedback" id="sc-fb-${id}"></div>
+    <div class="sc-why-panel" id="sc-why-${id}"></div>`;
+
+  document.getElementById('scenario-detail').classList.add('show');
+}
+
+function closeScenarioDetail(){
+  document.getElementById('scenario-detail').classList.remove('show');
+}
+
+function answerScenario(id, chosen){
+  let sc=SCENARIO_DEFS.find(s=>s.id===id);
+  if(!sc)return;
+  let correct=sc.correct;
+  let isCorrect=(chosen===correct);
+
+  // Track analytics
+  trackScenarioAnswer(sc.cat, isCorrect);
+  if(isCorrect){
+    scLibState.completed.add(id);
+    saveScCompleted();
+  }
+
+  // Disable buttons
+  let optsEl=document.getElementById('sc-opts-'+id);
+  let btns=optsEl.querySelectorAll('.sc-opt');
+  btns.forEach(btn=>{
+    btn.classList.add('disabled');
+    if(btn.textContent===correct)btn.classList.add(isCorrect?'correct':'show-correct');
+    else if(btn.textContent===chosen&&!isCorrect)btn.classList.add('wrong');
+  });
+
+  // Feedback
+  let fb=document.getElementById('sc-fb-'+id);
+  fb.className='sc-feedback show '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.innerHTML=(isCorrect?'✓ 正确！':'✗ 不正确。正确答案：<strong>'+correct+'</strong><br>')+sc.explain;
+
+  // "Why" button
+  let whyPanel=document.getElementById('sc-why-'+id);
+  whyPanel.innerHTML=`<button class="sc-why-btn" onclick="showScWhy('${id}')">🤔 为什么？深入分析</button>
+    <div class="sc-why-text" style="display:none;margin-top:10px;line-height:1.7;color:rgba(255,255,255,.8)">${sc.why}</div>`;
+}
+
+function showScWhy(id){
+  let panel=document.getElementById('sc-why-'+id);
+  let text=panel.querySelector('.sc-why-text');
+  let btn=panel.querySelector('.sc-why-btn');
+  if(text.style.display==='none'){
+    text.style.display='block';
+    btn.textContent='收起分析';
+    panel.classList.add('show');
+  }else{
+    text.style.display='none';
+    btn.textContent='🤔 为什么？深入分析';
+    if(!panel.querySelector('.sc-why-text[style*="block"]'))panel.classList.remove('show');
+  }
+}
+
+// ============ ENHANCED ANALYTICS ============
+const ANALYTICS_KEY = 'bridge-analytics';
+
+function getAnalytics(){
+  try{
+    let d=localStorage.getItem(ANALYTICS_KEY);
+    if(d)return JSON.parse(d);
+  }catch(e){}
+  return {
+    totalBids:0, correctBids:0,
+    catScores:{opening:{t:0,m:0},response:{t:0,m:0},competitive:{t:0,m:0},slam:{t:0,m:0},mixed:{t:0,m:0}},
+    sessions:[], scenarioHistory:[],
+    hintCount:0, streakDays:[]
+  };
+}
+function saveAnalytics(d){try{localStorage.setItem(ANALYTICS_KEY,JSON.stringify(d))}catch(e){}}
+
+function trackScenarioAnswer(cat, correct){
+  let d=getAnalytics();
+  d.totalBids++;
+  if(correct)d.correctBids++;
+  if(!d.catScores[cat])d.catScores[cat]={t:0,m:0};
+  d.catScores[cat].t++;
+  if(correct)d.catScores[cat].m++;
+  // Session tracking
+  let today=new Date().toISOString().slice(0,10);
+  let last=d.sessions.length>0?d.sessions[d.sessions.length-1]:null;
+  if(!last||last.date!==today){d.sessions.push({date:today,total:1,match:correct?1:0})}
+  else{last.total++;if(correct)last.match++}
+  if(d.sessions.length>30)d.sessions=d.sessions.slice(-30);
+  // Streak tracking
+  if(correct){
+    if(!d.streakDays.includes(today))d.streakDays.push(today);
+    d.streakDays=d.streakDays.slice(-30);
+  }
+  // Scenario history
+  d.scenarioHistory.push({cat,correct,time:Date.now()});
+  if(d.scenarioHistory.length>200)d.scenarioHistory=d.scenarioHistory.slice(-200);
+  saveAnalytics(d);
+}
+
+// Also enhance existing stats functions
+function openStats(){
+  renderEnhancedStats();
+  document.getElementById('stats-overlay').classList.add('show');
+}
+
+function renderEnhancedStats(){
+  let body=document.getElementById('stats-body');
+  let a=getAnalytics();
+  let d=getErrorData();
+
+  // Merge data from both sources
+  let totalBids=a.totalBids+d.total;
+  let correctBids=a.correctBids+d.match;
+  let accuracy=totalBids>0?Math.round(correctBids/totalBids*100):0;
+
+  // Category scores
+  let catNames={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯',mixed:'综合'};
+  let catClasses={opening:'cat-open',response:'cat-resp',competitive:'cat-comp',slam:'cat-slam',mixed:'cat-mix'};
+  let cats={};
+  for(let c in a.catScores){cats[c]={t:a.catScores[c].t,m:a.catScores[c].m}}
+  // Add from error data
+  d.errors.forEach(e=>{
+    let c=e.cat||'unknown';
+    if(c.startsWith('practice_'))c=c.replace('practice_','');
+    if(!cats[c])cats[c]={t:0,m:0};
+  });
+
+  // Accuracy bars
+  let barsHtml='<div class="analytics-cat-bars">';
+  ['opening','response','competitive','slam','mixed'].forEach(c=>{
+    let t=cats[c]?cats[c].t:0,m=cats[c]?cats[c].m:0;
+    let pct=t>0?Math.round(m/t*100):0;
+    barsHtml+=`<div class="analytics-bar-row">
+      <div class="analytics-bar-label">${catNames[c]}</div>
+      <div class="analytics-bar-track"><div class="analytics-bar-fill ${catClasses[c]}" style="width:${Math.max(pct,2)}%">${pct}%</div></div>
+      <div class="analytics-bar-pct">${m}/${t}</div>
+    </div>`;
+  });
+  barsHtml+='</div>';
+
+  // Recent trend
+  let trendHtml='';
+  let sessions=[...d.sessions.slice(-5),...a.sessions.slice(-5)];
+  // Deduplicate by date
+  let seen={};
+  let merged=[];
+  sessions.forEach(s=>{if(!seen[s.date])seen[s.date]={date:s.date,total:0,match:0};seen[s.date].total+=s.total;seen[s.date].match+=s.match});
+  merged=Object.values(seen).sort((a,b)=>a.date.localeCompare(b.date)).slice(-10);
+
+  if(merged.length>1){
+    trendHtml='<div class="analytics-trend">';
+    merged.forEach(s=>{
+      let pct=s.total>0?s.match/s.total:0;
+      let h=Math.max(4,Math.round(pct*60));
+      let cls=pct>=0.7?'good':pct>=0.4?'mid':'low';
+      trendHtml+='<div class="analytics-trend-bar '+cls+'" style="height:'+h+'px" title="'+s.date+' '+Math.round(pct*100)+'%"></div>';
+    });
+    trendHtml+='</div><div class="analytics-trend-label">最近'+merged.length+'次游戏正确率趋势</div>';
+  }
+
+  // Common mistakes
+  let mistakeCounts={};
+  d.errors.forEach(e=>{
+    let key=e.chosen+'→'+e.rec;
+    if(!mistakeCounts[key])mistakeCounts[key]={chosen:e.chosen,rec:e.rec,count:0,cat:e.cat};
+    mistakeCounts[key].count++;
+  });
+  let topMistakes=Object.values(mistakeCounts).sort((a,b)=>b.count-a.count).slice(0,5);
+
+  let mistakesHtml='<div class="analytics-mistakes">';
+  if(topMistakes.length>0){
+    topMistakes.forEach(m=>{
+      mistakesHtml+=`<div class="analytics-mistake">
+        <div class="am-icon">⚠️</div>
+        <div class="am-text">
+          <div class="am-bid">你叫 ${m.chosen}，应叫 ${m.rec} <span style="color:rgba(255,255,255,.3)">(${m.count}次)</span></div>
+          <div class="am-explain">${catNames[m.cat.replace('practice_','')]||m.cat}</div>
+        </div>
+      </div>`;
+    });
+  }else{
+    mistakesHtml+='<div style="text-align:center;padding:20px;color:rgba(255,255,255,.3)">暂无错误记录，继续加油！</div>';
+  }
+  mistakesHtml+='</div>';
+
+  // Recommendation
+  let worstCat='',worstPct=100;
+  for(let c in cats){
+    if(cats[c].t>=2){
+      let pct=cats[c].t>0?cats[c].m/cats[c].t*100:0;
+      if(pct<worstPct){worstPct=pct;worstCat=c}
+    }
+  }
+  let recHtml=`<div class="analytics-recommend">
+    <div class="ar-title">🎯 建议练习: ${worstCat?(catNames[worstCat]||worstCat):'全部'}</div>
+    <div class="ar-text">${worstCat?
+      (catNames[worstCat]||worstCat)+'的正确率最低('+Math.round(worstPct)+'%)，建议使用场景库或练习模式重点练习此分类。':
+      '多玩几局游戏或使用场景库练习，系统会自动分析你的叫牌并提供建议。'
+    }</div>
+  </div>`;
+
+  // Achievement badges
+  let has100=accuracy===100&&totalBids>=5;
+  let has20=scLibState.completed.size>=20;
+  let streakDays=calcStreakDays();
+  let has3Streak=streakDays>=3;
+  let has50Hints=(a.hintCount||0)>=50;
+
+  let badgesHtml='<div class="analytics-badges">';
+  badgesHtml+=`<div class="analytics-badge ${has100?'earned':'locked'}"><span class="ab-icon">🏆</span><div class="ab-name">完美叫牌<br>100%准确率</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${has20?'earned':'locked'}"><span class="ab-icon">📚</span><div class="ab-name">场景大师<br>完成20场景</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${has3Streak?'earned':'locked'}"><span class="ab-icon">🔥</span><div class="ab-name">连续${has3Streak?streakDays:3}天<br>持续练习</div></div>`;
+  badgesHtml+=`<div class="analytics-badge ${has50Hints?'earned':'locked'}"><span class="ab-icon">💡</span><div class="ab-name">提示专家<br>使用50次</div></div>`;
+  badgesHtml+='</div>';
+
+  body.innerHTML=`
+    <div class="analytics-score">
+      <div class="as-label">综合准确率</div>
+      <div class="as-num">${accuracy}%</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4)">${correctBids}/${totalBids} 次正确</div>
+    </div>
+    <div class="st-section">
+      <h4>📊 分类准确率</h4>
+      ${barsHtml}
+    </div>
+    ${trendHtml?`<div class="st-section"><h4>📈 进步趋势</h4>${trendHtml}</div>`:''}
+    <div class="st-section">
+      <h4>📝 常见错误</h4>
+      ${mistakesHtml}
+    </div>
+    ${recHtml}
+    <div class="st-section">
+      <h4>🏅 成就徽章</h4>
+      ${badgesHtml}
+    </div>
+    <div class="pr-btns" style="margin-top:16px">
+      <button class="pr-btn primary" onclick="closeStats();openScenarioLib()">场景库</button>
+      <button class="pr-btn secondary" onclick="closeStats()">关闭</button>
+    </div>`;
+}
+
+function calcStreakDays(){
+  try{
+    let days=new Set();
+    let a=getAnalytics();
+    a.streakDays.forEach(d=>days.add(d));
+    let e=getErrorData();
+    e.sessions.forEach(s=>days.add(s.date));
+    let sorted=[...days].sort().reverse();
+    if(sorted.length===0)return 0;
+    let streak=1;
+    let today=new Date();
+    for(let i=0;i<sorted.length;i++){
+      let d=new Date(sorted[i]);
+      let diff=Math.floor((today-d)/(1000*60*60*24));
+      if(diff===i){if(i>0)streak++}
+      else break;
+    }
+    return streak;
+  }catch(e){return 0}
+}
+
+// Track hint usage
+function trackHintUsed(){
+  let a=getAnalytics();
+  a.hintCount=(a.hintCount||0)+1;
+  saveAnalytics(a);
+}
+
 const PRACTICE_DEFS=[
   // OPENING (4)
   {id:'open_1s',cat:'opening',title:'开叫决策',desc:'第一家开叫，你持这手牌：',
@@ -4297,6 +5884,9 @@ function answerPractice(chosen,correct,sc){
   if(isCorrect)practiceState.score++;
   practiceState.answers.push({chosen,correct:isCorrect,scenario:sc});
 
+  // Track enhanced analytics
+  try{trackScenarioAnswer(sc.cat||'opening',isCorrect)}catch(e){}
+
   // Disable all options, highlight
   let optsEl=document.getElementById('pr-opts');
   let btns=optsEl.querySelectorAll('.pr-opt');
@@ -4428,98 +6018,9 @@ function dismissErrorNotify(){
   clearTimeout(errorNotifyTimer);
 }
 
-// ---- Stats Panel ----
-function openStats(){
-  renderStats();
-  document.getElementById('stats-overlay').classList.add('show');
-}
+// ---- Stats Panel (enhanced version above) ----
 function closeStats(){
   document.getElementById('stats-overlay').classList.remove('show');
-}
-
-function renderStats(){
-  let body=document.getElementById('stats-body');
-  let d=getErrorData();
-  let accuracy=d.total>0?Math.round(d.match/d.total*100):0;
-
-  // Category breakdown
-  let cats={opening:{t:0,m:0},response:{t:0,m:0},competitive:{t:0,m:0},slam:{t:0,m:0}};
-  d.errors.forEach(e=>{
-    let c=e.cat||'unknown';
-    if(c.startsWith('practice_'))c=c.replace('practice_','');
-    if(!cats[c])cats[c]={t:0,m:0};
-  });
-  // Count from sessions for more accurate data
-  // Use errors as proxy
-  let errByCat={};
-  d.errors.forEach(e=>{
-    let c=e.cat||'unknown';if(c.startsWith('practice_'))c=c.replace('practice_','');
-    if(!errByCat[c])errByCat[c]=0;errByCat[c]++;
-  });
-
-  let catNames={opening:'开叫',response:'应叫',competitive:'竞叫',slam:'满贯'};
-  let maxErr=Math.max(1,...Object.values(errByCat));
-
-  // Bar chart
-  let barsHtml='';
-  for(let c of['opening','response','competitive','slam']){
-    let count=errByCat[c]||0;
-    let pct=Math.round(count/maxErr*100);
-    barsHtml+=`<div class="st-bar-row">
-      <div class="st-bar-label">${catNames[c]}</div>
-      <div class="st-bar-track"><div class="st-bar-fill" style="width:${pct}%"></div></div>
-      <div class="st-bar-value">${count}次</div>
-    </div>`;
-  }
-
-  // Recent mistakes
-  let recentMistakes=d.errors.slice(-8).reverse();
-  let mistakesHtml=recentMistakes.length
-    ?recentMistakes.map(e=>'<div class="st-mistake">你叫 <strong>'+e.chosen+'</strong>，推荐 <strong>'+e.rec+'</strong> <span style="color:rgba(255,255,255,.3)">('+(catNames[e.cat]||e.cat)+')</span></div>').join('')
-    :'<div style="color:rgba(255,255,255,.4);text-align:center;padding:16px">暂无记录</div>';
-
-  // Trend chart (last 10 sessions)
-  let trendHtml='';
-  let sessions=d.sessions.slice(-10);
-  if(sessions.length>1){
-    let maxT=Math.max(1,...sessions.map(s=>s.total));
-    trendHtml='<div class="st-trend">';
-    sessions.forEach(s=>{
-      let pct=s.total>0?s.match/s.total:0;
-      let h=Math.max(4,Math.round(pct*56));
-      trendHtml+='<div class="st-trend-bar" style="height:'+h+'px" title="'+s.date+' '+Math.round(pct*100)+'%"></div>';
-    });
-    trendHtml+='</div><div style="text-align:center;font-size:11px;color:rgba(255,255,255,.3)">最近'+sessions.length+'次游戏正确率趋势</div>';
-  }
-
-  // Recommendation
-  let worstCat='',worstCount=0;
-  for(let c in errByCat){if(errByCat[c]>worstCount){worstCount=errByCat[c];worstCat=c}}
-  let recHtml=worstCat
-    ?'<div class="st-recommend"><div class="sr-title">🎯 最需要练习的领域</div><div>'+(catNames[worstCat]||worstCat)+'（'+worstCount+'次偏差）— 建议使用练习模式重点练习此分类。</div></div>'
-    :'<div class="st-recommend"><div class="sr-title">🎯 开始学习</div><div>多玩几局游戏或使用练习模式，系统会自动分析你的叫牌并提供建议。</div></div>';
-
-  body.innerHTML=`
-    <div class="st-accuracy">
-      <div class="sa-label">叫牌准确率</div>
-      <div class="sa-num">${accuracy}%</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.4)">${d.match}/${d.total} 次与推荐一致</div>
-    </div>
-    <div class="st-section">
-      <h4>📊 错误分布</h4>
-      <div class="st-bars">${barsHtml}</div>
-    </div>
-    ${trendHtml?`<div class="st-section"><h4>📈 进步趋势</h4>${trendHtml}</div>`:''}
-    <div class="st-section">
-      <h4>📝 最近偏差</h4>
-      ${mistakesHtml}
-    </div>
-    ${recHtml}
-    <div class="pr-btns" style="margin-top:16px">
-      <button class="pr-btn primary" onclick="closeStats();openPractice()">去练习</button>
-      <button class="pr-btn secondary" onclick="closeStats()">关闭</button>
-    </div>
-  `;
 }
 
 function savePracticeResult(score,total){
@@ -4642,6 +6143,9 @@ function answerDaily(chosen,correct,sc){
   if(isCorrect)dailyState.score++;
   dailyState.answers.push({chosen,correct:isCorrect});
 
+  // Track enhanced analytics
+  try{trackScenarioAnswer(sc.cat||'mixed',isCorrect)}catch(e){}
+
   let optsEl=document.getElementById('dy-opts');
   optsEl.querySelectorAll('.pr-opt').forEach(btn=>{
     btn.classList.add('disabled');
@@ -4695,8 +6199,280 @@ function renderDailyScore(){
   `;
 }
 
+// ============ ONBOARDING ============
+const OB_SAMPLE_HAND = [
+  {suit:'♠',rank:'K'}, {suit:'♠',rank:'J'}, {suit:'♠',rank:'9'},
+  {suit:'♥',rank:'A'}, {suit:'♥',rank:'K'}, {suit:'♥',rank:'Q'}, {suit:'♥',rank:'8'}, {suit:'♥',rank:'4'},
+  {suit:'♦',rank:'J'}, {suit:'♦',rank:'7'}, {suit:'♦',rank:'3'},
+  {suit:'♣',rank:'10'}, {suit:'♣',rank:'6'}
+];
+let obStep = 0;
+const OB_TOTAL = 5;
+
+function renderObHand(){
+  const el = document.getElementById('ob-sample-hand');
+  if(!el || el.children.length > 0) return;
+  OB_SAMPLE_HAND.forEach(c=>{
+    const d = document.createElement('div');
+    d.className = 'ob-card-mini ' + (SC[c.suit]==='red'?'red':'black');
+    if(c.suit==='♥') d.classList.add('highlight');
+    d.innerHTML = `<span class="r">${c.rank}</span><span class="s">${c.suit}</span>`;
+    el.appendChild(d);
+  });
+}
+
+function showOnboarding(){
+  obStep = 0;
+  const ov = document.getElementById('onboarding');
+  ov.classList.add('show');
+  document.querySelectorAll('.ob-step').forEach((s,i)=>{s.classList.toggle('active',i===0);s.classList.remove('reverse')});
+  document.querySelectorAll('.ob-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
+  document.getElementById('ob-prev').style.display='none';
+  const nextBtn = document.getElementById('ob-next');
+  nextBtn.textContent='下一步 →';
+  nextBtn.className='ob-btn primary';
+  document.getElementById('ob-feedback').classList.remove('show');
+  renderObHand();
+}
+
+function closeOnboarding(){
+  document.getElementById('onboarding').classList.remove('show');
+  try{localStorage.setItem('bridge-onboarded','true')}catch(e){}
+}
+
+function obNav(dir){
+  const steps = document.querySelectorAll('.ob-step');
+  const dots = document.querySelectorAll('.ob-dot');
+  steps[obStep].classList.remove('active');
+  steps[obStep].classList.add(dir>0?'':'reverse');
+  obStep += dir;
+  if(obStep<0) obStep=0;
+  if(obStep>=OB_TOTAL){closeOnboarding();return}
+  steps[obStep].classList.remove('reverse');
+  steps[obStep].classList.add('active');
+  // re-trigger animation
+  steps[obStep].style.animation='none';
+  steps[obStep].offsetHeight;
+  steps[obStep].style.animation='';
+  dots.forEach((d,i)=>d.classList.toggle('active',i===obStep));
+  document.getElementById('ob-prev').style.display = obStep>0?'':'none';
+  const nextBtn = document.getElementById('ob-next');
+  if(obStep===OB_TOTAL-1){
+    nextBtn.textContent='🚀 开始游戏';
+    nextBtn.className='ob-btn primary';
+  } else {
+    nextBtn.textContent='下一步 →';
+    nextBtn.className='ob-btn primary';
+  }
+}
+
+function obBid(btn,bid,msg){
+  document.querySelectorAll('.ob-bid-btn').forEach(b=>{b.disabled=true;b.style.opacity='0.4'});
+  btn.style.opacity='1';btn.style.borderColor='#4caf50';btn.style.background='rgba(76,175,80,.3)';
+  const fb = document.getElementById('ob-feedback');
+  fb.innerHTML=msg;
+  fb.classList.add('show');
+}
+
+function replayOnboarding(){showOnboarding()}
+
+// ============ LEARNING OVERLAY SYSTEM ============
+let learnTipTimer=null;
+let learnTrickLog=[]; // Records each trick's data for end-of-hand review
+
+function showLearnToast(mainText,analysisText,duration){
+  duration=duration||3000;
+  let container=document.getElementById('learn-container');
+  let toast=document.createElement('div');
+  toast.className='learn-toast';
+  let closeBtn=document.createElement('span');
+  closeBtn.className='lt-close';
+  closeBtn.textContent='✕';
+  closeBtn.onclick=function(){dismissToast(toast)};
+  toast.appendChild(closeBtn);
+  let main=document.createElement('div');
+  main.className='lt-main';
+  main.textContent=mainText;
+  toast.appendChild(main);
+  if(analysisText){
+    let analysis=document.createElement('div');
+    analysis.className='lt-analysis';
+    analysis.textContent=analysisText;
+    toast.appendChild(analysis);
+  }
+  container.appendChild(toast);
+  // Auto-dismiss
+  setTimeout(function(){dismissToast(toast)},duration);
+}
+
+function dismissToast(toast){
+  if(!toast||!toast.parentNode)return;
+  toast.classList.add('fade-out');
+  setTimeout(function(){if(toast.parentNode)toast.parentNode.removeChild(toast)},450);
+}
+
+function showLearnTip(text){
+  let tip=document.getElementById('learn-tip');
+  tip.querySelector('.tip-text').textContent=text;
+  tip.classList.add('show');
+  // Auto-dismiss after 6 seconds
+  if(learnTipTimer)clearTimeout(learnTipTimer);
+  learnTipTimer=setTimeout(dismissLearnTip,6000);
+}
+
+function dismissLearnTip(){
+  let tip=document.getElementById('learn-tip');
+  tip.classList.remove('show');
+  if(learnTipTimer){clearTimeout(learnTipTimer);learnTipTimer=null}
+}
+
+function generateTrickAnalysis(trick,winnerPos){
+  // Build a descriptive string of what was played
+  let plays=[];
+  let winnerCard=null;
+  for(let i=0;i<trick.length;i++){
+    let t=trick[i];
+    let suitName=SN[t.card.suit]||t.card.suit;
+    let cardStr=suitName+t.card.rank;
+    plays.push(PN[t.pos]+'出'+cardStr);
+    if(t.pos===winnerPos)winnerCard=t.card;
+  }
+  let winnerSuitName=SN[winnerCard.suit]||winnerCard.suit;
+  let mainText=PN[winnerPos]+'出 '+winnerSuitName+winnerCard.rank+'，赢得此墩！';
+  // Strategy analysis
+  let analysis='';
+  let lead=trick[0].card.suit;
+  let trumpUsed=trick.some(t=>t.card.suit===G.trump&&lead!==G.trump);
+  if(trumpUsed){
+    analysis='将牌赢墩：有人缺门后用将牌将吃，获得此墩控制权';
+  } else if(RV[winnerCard.rank]>=12){
+    analysis='大牌赢墩：庄家用大牌(A/K)赢墩，是建立赢墩的基本策略';
+  } else if(RV[winnerCard.rank]<=5){
+    analysis='小牌意外赢墩：前面没有更大的牌跟出，低牌也能赢';
+  } else {
+    let trickNum=G.trickNum;
+    if(trickNum<=3){
+      analysis='开局阶段出牌：前几墩常用来试探各方牌力分布';
+    } else if(trickNum>=10){
+      analysis='残局阶段：牌已不多，注意计算剩余赢墩';
+    } else {
+      analysis='中局打牌：注意观察各方跟出的牌，推断牌型分布';
+    }
+  }
+  return {mainText:mainText,analysis:analysis};
+}
+
+function showTrickAnalysisToast(trick,winnerPos){
+  let info=generateTrickAnalysis(trick,winnerPos);
+  showLearnToast(info.mainText,info.analysis,3500);
+}
+
+function showPlayTip(context){
+  // context: 'your-turn','dummy-reveal','trump-relevant','opening-lead'
+  if(context==='your-turn'){
+    showLearnTip('现在是打牌阶段。跟随领出花色，尝试赢墩。');
+  } else if(context==='dummy-reveal'){
+    showLearnTip('明手的牌摊开了。你（庄家）需要指挥两手牌。');
+  } else if(context==='trump-relevant'){
+    let trumpName=G.trump?SN[G.trump]:'无';
+    showLearnTip('将牌是'+trumpName+'。用将牌可以赢其他花色的牌。');
+  } else if(context==='opening-lead'){
+    showLearnTip('你是首攻方。选择你的长套花色或攻对手定约花色。');
+  }
+}
+
+function toggleReview(){
+  let section=document.getElementById('learn-review-section');
+  section.classList.toggle('show');
+}
+
+function generateReviewContent(contract,result,made,dt,need){
+  let moments=[];
+  // Analyze trick log for key moments
+  if(learnTrickLog.length>0){
+    for(let i=0;i<learnTrickLog.length;i++){
+      let tl=learnTrickLog[i];
+      let trickNum=i+1;
+      // Detect trump ruff
+      if(tl.trumpUsed){
+        let ruffer=PN[tl.winnerPos];
+        moments.push('第'+trickNum+'墩: '+ruffer+'将吃赢墩');
+      }
+      // Detect high card capture
+      if(tl.highCardWin){
+        moments.push('第'+trickNum+'墩: 大牌('+tl.winningRank+')赢墩');
+      }
+      // Detect upset/defensive win
+      if(tl.defenseWin&&trickNum<=4){
+        moments.push('第'+trickNum+'墩: 防守方赢下开局墩');
+      }
+      // Detect endgame
+      if(trickNum>=11){
+        if(tl.winnerPos==='N'||tl.winnerPos==='S'){
+          moments.push('第'+trickNum+'墩: 南北方残局赢墩');
+        }
+      }
+    }
+  }
+  // Limit to 4 most interesting moments
+  if(moments.length>5)moments=moments.slice(0,5);
+  if(moments.length===0)moments.push('双方交替赢墩，无特别关键时刻');
+
+  // Advice based on result
+  let advice='';
+  if(made){
+    let over=dt-need;
+    if(over>=2){
+      advice='做得很好！超额'+over+'墩。下次可以挑战更高定约。';
+    } else if(over===1){
+      advice='刚好完成并多赢一墩。定约选择合理。';
+    } else {
+      advice='恰好完成定约。保持这种精准的定约选择！';
+    }
+  } else {
+    let under=need-dt;
+    if(under>=3){
+      advice='宕了'+under+'墩，差距较大。下次遇到类似牌型，考虑选择更低的定约或Pass。';
+    } else {
+      advice='仅差'+under+'墩。回顾关键墩的出牌，看看能否找到额外赢墩。';
+    }
+  }
+
+  // Build HTML
+  let html='';
+  for(let m of moments){
+    html+='<div class="lr-moment">'+m+'</div>';
+  }
+  html+='<div class="lr-advice">'+advice+'</div>';
+  return html;
+}
+
+function recordTrickForReview(trick,winnerPos){
+  let lead=trick[0].card.suit;
+  let trumpUsed=trick.some(t=>t.card.suit===G.trump&&lead!==G.trump);
+  let winCard=trick.find(t=>t.pos===winnerPos);
+  let highCardWin=winCard&&RV[winCard.card.rank]>=12;
+  let winningRank=winCard?winCard.card.rank:'';
+  let defenseWin=(winnerPos==='E'||winnerPos==='W');
+  learnTrickLog.push({
+    winnerPos:winnerPos,
+    trumpUsed:trumpUsed,
+    highCardWin:highCardWin,
+    winningRank:winningRank,
+    defenseWin:defenseWin
+  });
+}
+
 // ============ INIT ============
 init();
+// Show onboarding on first visit
+(function(){
+  try{
+    if(!localStorage.getItem('bridge-onboarded')){
+      showOnboarding();
+    }
+  }catch(e){showOnboarding()}
+})();
 </script>
 </body>
 </html>
