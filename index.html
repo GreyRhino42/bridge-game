@@ -453,6 +453,13 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 #btn-just-play:hover{background:linear-gradient(135deg,#ff6d00,#e65100);
   box-shadow:0 5px 18px rgba(230,81,0,.5);transform:translateY(-2px)}
 
+/* ============ DEFENSE MODE BUTTON ============ */
+#btn-defense{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#00838f,#006064);color:#fff;font-weight:700;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(0,96,100,.4)}
+#btn-defense:hover{background:linear-gradient(135deg,#00acc1,#00838f);
+  box-shadow:0 5px 16px rgba(0,132,143,.5);transform:translateY(-2px)}
+
 /* ============ POST-GAME ANALYSIS PANEL ============ */
 #post-analysis{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   background:rgba(10,20,10,.96);
@@ -1924,6 +1931,7 @@ body.card-lg .card.sm .s{font-size:14px}
     <button id="btn-go" onclick="startGame()">开始游戏</button>
     <button id="btn-story" class="story-btn" onclick="openLevelMap()">🎮 故事模式</button>
     <button id="btn-just-play" onclick="startJustPlay()">🎯 只打牌</button>
+    <button id="btn-defense" onclick="startDefenseMode()">🛡️ 防守模式</button>
   </div>
   <div id="onboarding">
     <div class="ob-card">
@@ -2182,7 +2190,8 @@ function init(){
     scoreHistory:[],
     humanSeat:'S',aiDifficulty:'normal',speed:1,speedName:'normal',
     cardSize:'md',soundEnabled:true,
-    justPlayMode:false,replayHands:null,trickHistoryFull:[]
+    justPlayMode:false,replayHands:null,trickHistoryFull:[],
+    defenseMode:false
   };
   loadSettings();
   initStoryState();
@@ -2190,6 +2199,7 @@ function init(){
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
   document.getElementById('btn-just-play').style.display='';
+  document.getElementById('btn-defense').style.display='';
   setS('点击"开始游戏"开始');
   clearTrick();
   hideDummy();
@@ -2260,6 +2270,7 @@ function deal(){
 function startGame(){
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
+  document.getElementById('btn-defense').style.display='none';
   resetPlayedCards();
   deal();
   G.justPlayMode=false;
@@ -2278,6 +2289,9 @@ function startGame(){
 function nextBid(){
   updateLabels();
   let hs=G.humanSeat||'S';
+  if(G.defenseMode && G.currentBidder===hs){
+    setS('🛡️ 你的叫牌 — 选择叫品');
+  }
   if(G.currentBidder===hs) showBidUI();
   else setTimeout(()=>aiBid(G.currentBidder),spd(500));
 }
@@ -4218,25 +4232,102 @@ function updateDummyDisplay(){
 function autoPlayIfNeeded(){
   if(G.phase!=='play'&&G.phase!=='dummy-play')return;
   let hs=G.humanSeat||'S';
-  let humanIsDeclarer=(G.declarer===hs);
-  if(!humanIsDeclarer){
-    // AI plays everything (declarer and dummy)
-    setTimeout(()=>aiPlay(G.current),spd(400));
-  } else {
-    // Human is declarer, plays both human and dummy cards
+  
+  if(G.defenseMode){
+    // Defense mode: human is a defender
     if(G.current===hs){
       renderHumanHand();
-      setS('请出牌');
-      // Learning overlay: show your-turn tip (only occasionally to avoid spam)
-      try{if(G.trickNum%3===0||G.trick.length===0)showPlayTip('your-turn')}catch(e){}
+      setS('🛡️ 你的防守 — 选择一张牌');
     } else if(G.current===G.dummy){
-      // Human plays dummy's cards
-      renderDummy();
-      setS('请为明手出牌');
+      // Dummy: AI declarer controls dummy's plays
+      aiPlayForDummy();
     } else {
+      // AI declarer or AI partner
       setTimeout(()=>aiPlay(G.current),spd(400));
     }
+  } else {
+    // Original logic (unchanged)
+    let humanIsDeclarer=(G.declarer===hs);
+    if(!humanIsDeclarer){
+      // AI plays everything (declarer and dummy)
+      setTimeout(()=>aiPlay(G.current),spd(400));
+    } else {
+      // Human is declarer, plays both human and dummy cards
+      if(G.current===hs){
+        renderHumanHand();
+        setS('请出牌');
+        // Learning overlay: show your-turn tip (only occasionally to avoid spam)
+        try{if(G.trickNum%3===0||G.trick.length===0)showPlayTip('your-turn')}catch(e){}
+      } else if(G.current===G.dummy){
+        // Human plays dummy's cards
+        renderDummy();
+        setS('请为明手出牌');
+      } else {
+        setTimeout(()=>aiPlay(G.current),spd(400));
+      }
+    }
   }
+}
+
+function aiPlayForDummy(){
+  if(G.phase!=='play')return;
+  let pos=G.dummy;
+  let hand=G.hands[pos];
+  if(!hand||hand.length===0)return;
+  let playable=hand.filter(c=>canPlayCard(c,pos));
+  if(!playable.length)playable=hand;
+  let lead=G.trick.length>0?G.trick[0].card.suit:null;
+  let trump=G.trump;
+  let lo=cards=>cards.reduce((a,b)=>RV[a.rank]<RV[b.rank]?a:b);
+  let card;
+  
+  if(G.trick.length===0){
+    let suits={};S4.forEach(s=>suits[s]=playable.filter(c=>c.suit===s));
+    let best=S4.filter(s=>suits[s].length>0).reduce((a,b)=>suits[a].length>=suits[b].length?a:b);
+    card=lo(suits[best]);
+  } else if(playable.some(c=>c.suit===lead)){
+    let inSuit=playable.filter(c=>c.suit===lead);
+    if(G.trick.length<=2){
+      card=lo(inSuit);
+    } else {
+      let wv=0;
+      for(let t of G.trick){
+        let v=(trump&&t.card.suit===trump)?100+RV[t.card.rank]:(t.card.suit===lead)?RV[t.card.rank]:0;
+        if(v>wv)wv=v;
+      }
+      let winners=inSuit.filter(c=>RV[c.rank]>wv);
+      card=winners.length?lo(winners):lo(inSuit);
+    }
+  } else {
+    let trumps=trump?playable.filter(c=>c.suit===trump):[];
+    if(trumps.length){card=lo(trumps)}
+    else{let suits={};S4.forEach(s=>suits[s]=playable.filter(c=>c.suit===s));let shortest=S4.filter(s=>suits[s].length>0).reduce((a,b)=>suits[a].length<=suits[b].length?a:b);card=lo(suits[shortest])}
+  }
+  playCard(pos,card);
+}
+
+function showDefenseFeedback(card){
+  let lead=G.trick.length>0?G.trick[0].card.suit:null;
+  let trump=G.trump;
+  let msg='';
+  if(G.trick.length===1){
+    msg='你首攻了 '+card.suit+card.rank;
+    if(card.rank==='A'||card.rank==='K')msg+=' — 攻大牌，快速赢墩';
+    else msg+=' — 攻小牌，建立长套';
+  } else if(card.suit===lead){
+    if(G.trick.length===2){
+      msg=RV[card.rank]<=5?'跟小牌(2nd hand low) ✓ 正确！':'跟大牌 — 注意2nd hand尽量出小牌';
+    } else {
+      let maxV=0;
+      G.trick.forEach(t=>{if(t.card.suit===lead&&RV[t.card.rank]>maxV)maxV=RV[t.card.rank]});
+      msg=RV[card.rank]>maxV?'出大牌盖过 — 好的防守！':'跟小牌，保留实力';
+    }
+  } else if(trump&&card.suit===trump){
+    msg='将吃 '+card.suit+card.rank+' — 好的防守手段！';
+  } else {
+    msg='垫牌 '+card.suit+card.rank+' — 从短套垫牌';
+  }
+  if(msg)try{showLearnToast('🛡️ 防守提示',msg,3000)}catch(e){}
 }
 
 function playCard(pos,card){
@@ -4256,6 +4347,9 @@ function playCard(pos,card){
   renderTrickCard(pos,card);
   playSound('card');
   trackPlayedCard(card);
+  if(G.defenseMode&&pos==='S'){
+    try{showDefenseFeedback(card)}catch(e){}
+  }
 
   // Update displays
   renderHands();
@@ -7816,6 +7910,7 @@ function completeStoryLevel(){
   G.storyMode=false;
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
+  document.getElementById('btn-defense').style.display='';
   G.humanSeat='S';
 
   // Check level up
@@ -7879,6 +7974,7 @@ function exitStoryMode(){
   document.getElementById('level-complete-overlay').classList.remove('show');
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
+  document.getElementById('btn-defense').style.display='';
   G.humanSeat='S';
   init();
   setS('点击"开始游戏"开始');
@@ -8546,6 +8642,7 @@ function startJustPlay(){
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-story').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
+  document.getElementById('btn-defense').style.display='none';
 
   // Clean up any existing state
   document.getElementById('score-popup').classList.remove('show');
@@ -8592,6 +8689,33 @@ function startJustPlay(){
   updateLabels();
   renderHands();
   setTimeout(startPlay,spd(1000));
+}
+
+function startDefenseMode(){
+  document.getElementById('btn-go').style.display='none';
+  document.getElementById('btn-story').style.display='none';
+  document.getElementById('btn-just-play').style.display='none';
+  document.getElementById('btn-defense').style.display='none';
+  document.getElementById('score-popup').classList.remove('show');
+  document.getElementById('post-analysis').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+  init();
+  G.defenseMode=true;
+  G.round=1;
+  resetPlayedCards();
+  deal();
+  G.replayHands={N:G.hands['N'].slice(),S:G.hands['S'].slice(),E:G.hands['E'].slice(),W:G.hands['W'].slice()};
+  G.dealer='E';
+  G.currentBidder='E';
+  G.phase='bidding';
+  G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;G.doubled=0;
+  document.getElementById('i-contract').textContent='定约：--';
+  document.getElementById('i-trump').textContent='将牌：无';
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-round').textContent='防守模式';
+  setS('🛡️ 防守模式 — 等待叫牌');
+  updateLabels();renderHands();
+  setTimeout(function(){nextBid()},spd(800));
 }
 
 // ---- Post-Game Analysis ----
@@ -8670,6 +8794,22 @@ function showPostGameAnalysis(made,dt,need,bonus,team){
   html+='<div class="pa-section-title">📝 建议</div>';
   html+='<div class="pa-advice">'+generateAdvice(made,dt,need)+'</div>';
   html+='</div>';
+
+  if(G.defenseMode){
+    html+='<div class="pa-section">';
+    html+='<div class="pa-section-title">🛡️ 防守分析</div>';
+    let defTricks=G.nsTricks;
+    let declNeed=+G.contract[0]+6;
+    let defTook=defTricks;
+    let needed=13-declNeed+1;
+    if(defTook>=needed){
+      html+='<div class="pa-moment pa-moment-good"><span class="pa-moment-icon">✅</span>成功击败定约！防守方赢了'+defTook+'墩（需要'+needed+'墩）</div>';
+    } else {
+      html+='<div class="pa-moment pa-moment-bad"><span class="pa-moment-icon">💡</span>定约完成。防守方赢了'+defTook+'墩，需要'+needed+'墩才能击败。</div>';
+    }
+    html+='<div class="pa-advice">💡 防守建议：注意和搭档的配合信号，首攻选择很关键。2nd hand low, 3rd hand high是基本原则。</div>';
+    html+='</div>';
+  }
 
   contentEl.innerHTML=html;
   analysisEl.classList.add('show');
@@ -8815,6 +8955,7 @@ function replayHand(){
   };
 
   let wasJustPlay=G.justPlayMode;
+  let wasDefenseMode=G.defenseMode;
   let savedNS=G.totalNS, savedEW=G.totalEW, savedHist=G.scoreHistory.slice(), savedRound=G.round;
 
   // Reset game state
@@ -8852,6 +8993,23 @@ function replayHand(){
     document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
     document.getElementById('i-round').textContent='只打牌模式';
     setS('🔄 重打这副牌 — '+ac.reason);
+  } else if(wasDefenseMode){
+    // Replay in defense mode with same hands
+    G.defenseMode=true;
+    G.round=savedRound;
+    G.totalNS=savedNS;
+    G.totalEW=savedEW;
+    G.scoreHistory=savedHist;
+    G.dealer='E';
+    G.currentBidder='E';
+    G.phase='bidding';
+    G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;G.doubled=0;
+
+    document.getElementById('i-contract').textContent='定约：--';
+    document.getElementById('i-trump').textContent='将牌：无';
+    document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+    document.getElementById('i-round').textContent='防守模式';
+    setS('🛡️ 重打这副牌 — 防守模式');
   } else {
     // Replay with bidding
     G.justPlayMode=false;
@@ -8877,6 +9035,8 @@ function replayHand(){
 
   if(wasJustPlay){
     setTimeout(startPlay,spd(800));
+  } else if(wasDefenseMode){
+    setTimeout(function(){nextBid()},spd(500));
   } else {
     setTimeout(nextBid,spd(500));
   }
