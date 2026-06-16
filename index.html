@@ -1976,6 +1976,51 @@ body.reduce-motion *{animation-duration:0.01ms!important;transition-duration:0.0
 
 /* ============ FEATURE: Score Animation ============ */
 #animated-score{font-size:28px;font-weight:900;margin:8px 0;transition:color .3s}
+
+/* ============ FEATURE: Colorblind-Safe Suit Design ♿ ============ */
+body.colorblind-mode .card .r{position:relative}
+body.colorblind-mode .card.red{background:linear-gradient(135deg,#fff 0%,#e8e0f0 100%)}
+body.colorblind-mode .card.black{background:linear-gradient(135deg,#fff 0%,#e0e8f0 100%)}
+body.colorblind-mode .card[data-suit='♠']{border-left:4px solid #5c6bc0}
+body.colorblind-mode .card[data-suit='♥']{border-left:4px solid #ef5350}
+body.colorblind-mode .card[data-suit='♦']{border-left:4px solid #ffa726}
+body.colorblind-mode .card[data-suit='♣']{border-left:4px solid #66bb6a}
+body.colorblind-mode .card[data-suit='♠']::after{content:'♠';font-size:10px;position:absolute;top:2px;right:3px;opacity:.35;color:#5c6bc0}
+body.colorblind-mode .card[data-suit='♥']::after{content:'♥';font-size:10px;position:absolute;top:2px;right:3px;opacity:.35;color:#ef5350}
+body.colorblind-mode .card[data-suit='♦']::after{content:'♦';font-size:10px;position:absolute;top:2px;right:3px;opacity:.35;color:#ffa726}
+body.colorblind-mode .card[data-suit='♣']::after{content:'♣';font-size:10px;position:absolute;top:2px;right:3px;opacity:.35;color:#66bb6a}
+
+/* ============ FEATURE: Trick History Popup 🃏 ============ */
+#trick-log{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(10,20,10,.96);border:1px solid rgba(255,255,255,.12);border-radius:16px;
+  padding:18px 22px;z-index:220;min-width:300px;max-width:85vw;max-height:70vh;overflow-y:auto;
+  box-shadow:0 16px 48px rgba(0,0,0,.6)}
+#trick-log.show{display:block}
+#trick-log h4{font-size:15px;font-weight:700;color:#ffd54f;margin-bottom:12px}
+.tl-row{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:12px;
+  border-bottom:1px solid rgba(255,255,255,.04)}
+.tl-row:last-child{border:none}
+.tl-num{width:24px;font-weight:700;color:rgba(255,255,255,.4)}
+.tl-cards{display:flex;gap:6px}
+.tl-card{padding:2px 6px;border-radius:4px;font-size:11px;background:rgba(255,255,255,.06)}
+.tl-winner{font-weight:600;margin-left:auto}
+.tl-close{display:block;margin:12px auto 0;padding:4px 16px;border:none;border-radius:8px;
+  cursor:pointer;background:rgba(255,255,255,.1);color:#fff;font-size:12px}
+.tl-close:hover{background:rgba(255,255,255,.2)}
+
+/* ============ FEATURE: Quick Stats Summary 📈 ============ */
+#quick-stats{position:fixed;bottom:8px;left:8px;padding:6px 12px;border-radius:12px;
+  font-size:11px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.6);z-index:40;display:none;backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);letter-spacing:.3px}
+#quick-stats.show{display:block}
+
+/* ============ Keyboard hint in card badges ============ */
+.card.kb-hint{position:relative}
+.card.kb-hint::before{content:attr(data-kb);position:absolute;top:-6px;left:-6px;
+  width:16px;height:16px;border-radius:50%;background:rgba(255,193,7,.85);color:#000;
+  font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;
+  z-index:10;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -2039,6 +2084,8 @@ body.reduce-motion *{animation-duration:0.01ms!important;transition-duration:0.0
   <button class="btn-share" onclick="shareResult()">📋 分享</button>
     </div>
     <div id="overlay"></div>
+    <div id="trick-log" onclick="event.stopPropagation()"></div>
+    <div id="quick-stats"></div>
     <div id="post-analysis">
       <div class="pa-header">
         <h3>📊 赛后分析</h3>
@@ -2121,6 +2168,13 @@ body.reduce-motion *{animation-duration:0.01ms!important;transition-duration:0.0
         <div class="setting-opt" id="opt-reduce-motion" onclick="toggleReducedMotion()">点击切换</div>
       </div>
       <div class="setting-note">减少动画效果，适合对动画敏感的用户</div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">♿ 色盲友好模式</div>
+      <div class="setting-options">
+        <div class="setting-opt" id="opt-colorblind" onclick="toggleColorblind()">点击切换</div>
+      </div>
+      <div class="setting-note">为花色添加彩色边框和图案区分，便于色觉障碍用户识别</div>
     </div>
   </div>
   <div id="score-history-panel">
@@ -2433,6 +2487,7 @@ function cid(c){return c.suit+c.rank}
 function mkCard(c,extra=''){
   let el=document.createElement('div');
   el.className='card '+SC[c.suit]+' '+extra;
+  el.setAttribute('data-suit',c.suit);
   el.innerHTML=`<span class="r">${c.rank}</span><span class="s">${c.suit}</span><span class="cs">${c.suit}</span>`;
   return el;
 }
@@ -2479,6 +2534,8 @@ function renderHumanHand(){
     }
     h.appendChild(el);
   });
+  // Add keyboard shortcut badges
+  try{addKeyboardHints()}catch(e){}
 }
 function renderS(){renderHumanHand()}
 
@@ -2604,6 +2661,18 @@ function init(){
   try{updatePlayStreak();showStreakBadge()}catch(e){}
   // Apply reduced motion preference
   try{updateReduceMotionBtn()}catch(e){}
+  // Apply colorblind mode preference
+  try{initColorblindMode()}catch(e){}
+  // Update quick stats display
+  try{updateQuickStats()}catch(e){}
+  // Setup trick log click handler
+  try{document.getElementById('i-tricks').onclick=showTrickLog}catch(e){}
+  // Check for saved progress and offer resume
+  try{
+    if(hasSavedProgress()&&!G.justPlayMode&&!G.replayHands){
+      resumeSavedProgress();
+    }
+  }catch(e){}
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
   document.getElementById('btn-just-play').style.display='';
@@ -5235,6 +5304,11 @@ function finishPlay(){
     vulnEW:G.vulnEW
   });
   renderScoreHistory();
+
+  // Auto-save progress, record stats, update quick stats
+  try{recordPlayStats(made)}catch(e){}
+  try{saveGameProgress()}catch(e){}
+  try{updateQuickStats()}catch(e){}
 
   // Show post-game analysis after a short delay
   setTimeout(function(){
@@ -11457,6 +11531,202 @@ function showTutorialTip(targetId,text){
 }
 function dismissAllTutorial(){document.querySelectorAll('.tutorial-tip').forEach(function(t){t.remove()})}
 function finishTutorial(){localStorage.setItem('bridge-tutorial-done','true');dismissAllTutorial()}
+
+// =========================================================================
+// FEATURE: Colorblind-Safe Suit Design (♿ 色盲友好)
+// =========================================================================
+function toggleColorblind(){
+  let current=localStorage.getItem('bridge-colorblind')==='true';
+  let next=!current;
+  localStorage.setItem('bridge-colorblind',next.toString());
+  document.body.classList.toggle('colorblind-mode',next);
+  updateColorblindBtn();
+  showLearnToast(next?'♿ 色盲模式已开启':'🎨 标准模式已恢复','',2000);
+}
+function updateColorblindBtn(){
+  let btn=document.getElementById('opt-colorblind');
+  if(!btn)return;
+  let on=localStorage.getItem('bridge-colorblind')==='true';
+  btn.textContent=on?'已开启':'点击切换';
+  btn.classList.toggle('selected',on);
+}
+function initColorblindMode(){
+  if(localStorage.getItem('bridge-colorblind')==='true'){
+    document.body.classList.add('colorblind-mode');
+  }
+  updateColorblindBtn();
+}
+
+// =========================================================================
+// FEATURE: Keyboard Navigation (⌨️ 键盘操作)
+// =========================================================================
+document.addEventListener('keydown',function(e){
+  if(!G)return;
+  // During play phase: number keys and space
+  if(G.phase==='play'||G.phase==='dummy-play'){
+    let hs=G.humanSeat||'S';
+    let hand=G.hands[hs];
+    if(!hand||hand.length===0)return;
+    let humanIsDeclarer=(G.declarer===hs);
+    let myTurn=G.current===hs;
+    if(!myTurn)return;
+
+    // Number keys 1-9 to select card by position
+    if(e.key>='1'&&e.key<='9'){
+      let idx=parseInt(e.key)-1;
+      if(idx<hand.length){
+        let card=hand[idx];
+        if(canPlayCard(card,hs)){
+          playCard(hs,card);
+        }
+      }
+    }
+    // 0 = 10th card
+    if(e.key==='0'&&hand.length>=10){
+      let card=hand[9];
+      if(canPlayCard(card,hs))playCard(hs,card);
+    }
+    // Space = play first valid card
+    if(e.key===' '){
+      e.preventDefault();
+      let valid=hand.filter(c=>canPlayCard(c,hs));
+      if(valid.length)playCard(hs,valid[0]);
+    }
+  }
+  // H = toggle hint (in any phase)
+  if(e.key==='h'||e.key==='H'){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+    try{toggleSmartHint()}catch(ex){}
+  }
+  // T = show trick log
+  if(e.key==='t'||e.key==='T'){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+    let log=document.getElementById('trick-log');
+    if(log.classList.contains('show'))hideTrickLog();
+    else showTrickLog();
+  }
+  // Escape = close popups
+  if(e.key==='Escape'){
+    hideTrickLog();
+  }
+});
+
+// Add keyboard hint badges to human hand cards
+function addKeyboardHints(){
+  let hs=G.humanSeat||'S';
+  let hand=document.getElementById('hand-'+hs);
+  if(!hand)return;
+  let cards=hand.querySelectorAll('.card');
+  cards.forEach((el,i)=>{
+    if(i<9){
+      el.setAttribute('data-kb',String(i+1));
+      el.classList.add('kb-hint');
+    }else if(i===9){
+      el.setAttribute('data-kb','0');
+      el.classList.add('kb-hint');
+    }
+  });
+}
+
+// =========================================================================
+// FEATURE: Trick History Popup (🃏 墩记录弹窗)
+// =========================================================================
+function showTrickLog(){
+  let log=document.getElementById('trick-log');
+  if(!G.trickHistoryFull||G.trickHistoryFull.length===0){
+    log.innerHTML='<h4>🃏 墩记录</h4><div style="color:rgba(255,255,255,.4);padding:8px 0">暂无记录</div><button class="tl-close" onclick="hideTrickLog()">关闭</button>';
+  } else {
+    let html='<h4>🃏 墩记录 ('+G.trickHistoryFull.length+'/13)</h4>';
+    G.trickHistoryFull.forEach(function(t,i){
+      let winTeam=(t.winnerPos==='N'||t.winnerPos==='S')?'NS':'EW';
+      html+='<div class="tl-row"><span class="tl-num">'+(i+1)+'</span><div class="tl-cards">';
+      t.cards.forEach(function(c){
+        let color=SC[c.suit]==='red'?'#ef9a9a':'#bbb';
+        html+='<span class="tl-card" style="color:'+color+'">'+c.suit+c.rank+'</span>';
+      });
+      html+='</div><span class="tl-winner" style="color:'+(winTeam==='NS'?'#81c784':'#ef9a9a')+'">'+PN[t.winnerPos]+'</span></div>';
+    });
+    html+='<button class="tl-close" onclick="hideTrickLog()">关闭</button>';
+    log.innerHTML=html;
+  }
+  log.classList.add('show');
+}
+function hideTrickLog(){document.getElementById('trick-log').classList.remove('show')}
+
+// =========================================================================
+// FEATURE: Quick Stats Summary (📈 快速统计)
+// =========================================================================
+function updateQuickStats(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let el=document.getElementById('quick-stats');
+  if(!el)return;
+  let total=stats.totalHands||0;
+  let won=stats.totalWon||0;
+  let pct=total>0?Math.round(won/total*100):0;
+  el.textContent='\uD83C\uDCCF '+total+'手 | ✅ '+pct+'% | 🔥 '+(stats.streak||0)+'天';
+  if(total>0) el.classList.add('show');
+}
+function recordPlayStats(made){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  stats.totalHands=(stats.totalHands||0)+1;
+  if(made) stats.totalWon=(stats.totalWon||0)+1;
+  // Track daily streak
+  let today=new Date().toISOString().slice(0,10);
+  let last=stats.lastPlayDate||'';
+  if(last===today){
+    // same day, no streak change
+  } else if(new Date(today)-new Date(last)===86400000){
+    stats.streak=(stats.streak||0)+1;
+  } else if(last!==today){
+    stats.streak=1;
+  }
+  stats.lastPlayDate=today;
+  localStorage.setItem('bridge-play-stats',JSON.stringify(stats));
+}
+
+// =========================================================================
+// FEATURE: Auto-Save Progress (💾 自动保存)
+// =========================================================================
+function saveGameProgress(){
+  try{
+    let progress={
+      scoreHistory:G.scoreHistory||[],
+      totalNS:G.totalNS||0,
+      totalEW:G.totalEW||0,
+      round:G.round||1,
+      vulnNS:G.vulnNS||false,
+      vulnEW:G.vulnEW||false,
+      xp:parseInt(localStorage.getItem('bridge-xp')||'0'),
+      level:parseInt(localStorage.getItem('bridge-level')||'1'),
+      lastSaved:new Date().toISOString()
+    };
+    localStorage.setItem('bridge-save',JSON.stringify(progress));
+  }catch(e){}
+}
+function loadGameProgress(){
+  let saved=localStorage.getItem('bridge-save');
+  if(!saved)return null;
+  try{return JSON.parse(saved)}catch(e){return null}
+}
+function hasSavedProgress(){
+  let p=loadGameProgress();
+  if(!p)return false;
+  return p.scoreHistory&&p.scoreHistory.length>0;
+}
+function resumeSavedProgress(){
+  let p=loadGameProgress();
+  if(!p)return;
+  G.scoreHistory=p.scoreHistory||[];
+  G.totalNS=p.totalNS||0;
+  G.totalEW=p.totalEW||0;
+  G.round=p.round||1;
+  G.vulnNS=p.vulnNS||false;
+  G.vulnEW=p.vulnEW||false;
+  renderScoreHistory();
+  updateVuln();
+  document.getElementById('i-round').textContent='第 '+G.round+' 副';
+  showLearnToast('💾 已恢复上次进度','第 '+G.round+' 副 | NS: '+G.totalNS+' | EW: '+G.totalEW,3000);
+}
 
 </script>
 </body>
