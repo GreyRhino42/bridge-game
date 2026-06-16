@@ -800,6 +800,31 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
   font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
 #settings-close:hover{background:rgba(255,255,255,.1);color:#fff}
 
+/* ============ PRO SUBSCRIPTION SYSTEM ============ */
+.pro-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;
+  background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;letter-spacing:.5px;vertical-align:middle}
+.pro-lock{position:relative;opacity:0.5;pointer-events:none}
+.pro-lock::after{content:'🔒 Pro';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(0,0,0,.8);color:#ffd54f;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.free-tag{display:inline-block;padding:2px 6px;border-radius:6px;font-size:9px;font-weight:600;
+  background:rgba(76,175,80,.2);color:#81c784;letter-spacing:.3px}
+#pro-banner{display:none;position:fixed;bottom:0;left:0;right:0;padding:12px 20px;
+  background:linear-gradient(135deg,rgba(255,213,79,.15),rgba(255,109,0,.15));
+  border-top:1px solid rgba(255,213,79,.3);z-index:100;text-align:center;
+  backdrop-filter:blur(12px);font-size:13px;color:#ffd54f}
+#pro-banner.show{display:flex;align-items:center;justify-content:center;gap:12px}
+#pro-banner button{padding:6px 18px;border:none;border-radius:8px;font-size:12px;font-weight:700;
+  background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;cursor:pointer;transition:all .2s}
+#pro-banner button:hover{transform:scale(1.05)}
+#pro-banner .dismiss{background:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer}
+.lesson-card.pro-gated{position:relative;overflow:hidden}
+.lesson-card.pro-gated::after{content:'💎 Pro';position:absolute;top:6px;right:6px;
+  padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;
+  background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;letter-spacing:.3px}
+.pro-glow{box-shadow:0 0 16px rgba(255,213,79,.3)}
+.lesson-card.pro-gated{opacity:.55;filter:grayscale(.3)}
+.lesson-card.pro-gated:hover{opacity:.75;filter:none}
+
 /* ============ CARD SIZE CLASSES ============ */
 body.card-sm .card{width:38px;height:54px;border-radius:5px}
 body.card-sm .card .r{font-size:11px}
@@ -2176,6 +2201,16 @@ body.colorblind-mode .card[data-suit='♣']::after{content:'♣';font-size:10px;
       </div>
       <div class="setting-note">为花色添加彩色边框和图案区分，便于色觉障碍用户识别</div>
     </div>
+    <div class="setting-group">
+      <div class="setting-label">💎 Pro 版</div>
+      <div class="setting-options">
+        <div class="setting-opt" id="opt-pro-status" onclick="showProModal()"></div>
+      </div>
+      <div class="setting-note" style="margin-top:8px">
+        <button onclick="shareReferral()" style="padding:6px 14px;border:none;border-radius:8px;font-size:11px;font-weight:600;background:rgba(76,175,80,.2);color:#81c784;cursor:pointer;transition:all .2s">🎁 邀请好友得Pro</button>
+        <button onclick="getShareCardHTML();showLearnToast('📱 分享卡片','已生成分享卡片',2000)" style="padding:6px 14px;border:none;border-radius:8px;font-size:11px;font-weight:600;background:rgba(33,150,243,.2);color:#64b5f6;cursor:pointer;transition:all .2s;margin-left:6px">📱 生成分享卡片</button>
+      </div>
+    </div>
   </div>
   <div id="score-history-panel">
     <div class="sh-header">
@@ -2667,6 +2702,8 @@ function init(){
   try{updateQuickStats()}catch(e){}
   // Setup trick log click handler
   try{document.getElementById('i-tricks').onclick=showTrickLog}catch(e){}
+  // Initialize Pro subscription system
+  try{initProSystem()}catch(e){}
   // Check for saved progress and offer resume
   try{
     if(hasSavedProgress()&&!G.justPlayMode&&!G.replayHands){
@@ -2753,6 +2790,7 @@ function deal(){
 }
 
 function startGame(){
+  try{trackEvent('game','start','story')}catch(e){}
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
   document.getElementById('btn-defense').style.display='none';
@@ -4692,6 +4730,7 @@ function finishBidding(){
 
 // ---- Play ----
 function startPlay(){
+  try{trackEvent('game','start','')}catch(e){}
   G.phase='play';
   G.trick=[];
   G.current=G.declarer;
@@ -5118,6 +5157,7 @@ function resolveTrick(){
 }
 
 function finishPlay(){
+  try{trackEvent('game','complete',G.contract)}catch(e){}
   try{hideEvalBar()}catch(e){}
   try{hideHandGoal();clearGameCardHighlights()}catch(e){}
   try{hideSmartHint()}catch(e){}
@@ -5249,6 +5289,7 @@ function finishPlay(){
   document.getElementById('score-popup').classList.add('show');
   document.getElementById('overlay').classList.add('show');
   playSound('game');
+  try{trackEvent('game','game_complete','round_'+G.round)}catch(e){}
   // Score count-up animation
   try{animateScore(document.getElementById('animated-score'),bonus,1200)}catch(e){}
   // Win/lose sound enhancement
@@ -9245,6 +9286,7 @@ function autoSelectContract(){
 
 // ---- Start Just Declare Mode ----
 function startJustPlay(){
+  try{trackEvent('game','start','just_play')}catch(e){}
   // Hide buttons
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-story').style.display='none';
@@ -9307,6 +9349,7 @@ function startJustPlay(){
 }
 
 function startDefenseMode(){
+  try{trackEvent('game','start','defense')}catch(e){}
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-story').style.display='none';
   document.getElementById('btn-just-play').style.display='none';
@@ -10972,6 +11015,7 @@ function updateStreak(){
 }
 
 function openLessons(){
+  try{trackEvent('lesson','open_lessons','')}catch(e){}
   loadLessonProgress();
   renderLessonDashboard();
   renderLessonTabs();
@@ -11067,10 +11111,11 @@ function renderLessonGrid(phase){
     let L=LESSONS[i];
     let completed=lessonState.completed[L.id];
     let unlocked=isLessonUnlocked(L.id);
-    let isCurrent=!completed&&unlocked;
+    let proGated=!canAccessLesson(L.id);
+    let isCurrent=!completed&&unlocked&&!proGated;
     let stars='★'.repeat(L.d)+'☆'.repeat(5-L.d);
     let classes='lesson-card p'+phase;
-    if(!unlocked)classes+=' locked';
+    if(proGated){classes+=' pro-gated';}else if(!unlocked){classes+=' locked';}
     if(completed)classes+=' lc-done';
     if(isCurrent)classes+=' current';
 
@@ -11078,15 +11123,19 @@ function renderLessonGrid(phase){
     if(completed){
       let emoji=completed.score===3?'🏆':completed.score>=1?'✓':'✗';
       badge='<span class="lc-badge">'+emoji+'</span>';
+    }else if(proGated){
+      badge='<span class="lc-badge">💎</span>';
     }
 
-    gridHtml+=`<div class="${classes}" onclick="openLessonDetail(${L.id})">
-      ${badge}
-      <div class="lc-num">#${L.id}</div>
-      <div class="lc-title">${L.t}</div>
-      <div class="lc-diff">${stars}</div>
-      ${completed?'<div style="font-size:10px;color:rgba(255,255,255,.4)">'+completed.score+'/3</div>':''}
-    </div>`;
+    let onclickHandler=proGated?"showUpgradePrompt('全部108课')":"openLessonDetail("+L.id+")";
+
+    gridHtml+='<div class="'+classes+'" onclick="'+onclickHandler+'">'+
+      badge+
+      '<div class="lc-num">#'+L.id+'</div>'+
+      '<div class="lc-title">'+L.t+'</div>'+
+      '<div class="lc-diff">'+stars+'</div>'+
+      (completed?'<div style="font-size:10px;color:rgba(255,255,255,.4)">'+completed.score+'/3</div>':'')+
+    '</div>';
   }
   gridHtml+='</div>';
   document.getElementById('lesson-body').innerHTML=gridHtml;
@@ -11094,9 +11143,15 @@ function renderLessonGrid(phase){
 
 function openLessonDetail(id){
   let L=LESSONS[id-1];
+  if(!canAccessLesson(id)){
+    showUpgradePrompt('全部108课');
+    try{trackEvent('lesson','lesson_gated','id_'+id)}catch(e){}
+    return;
+  }
   if(!isLessonUnlocked(id)){
     return;
   }
+  try{trackEvent('lesson','lesson_view','id_'+id)}catch(e){}
   lessonState.viewingLesson=id;
   lessonState.quizIdx=0;
   lessonState.quizResults=[];
@@ -11728,6 +11783,216 @@ function resumeSavedProgress(){
   showLearnToast('💾 已恢复上次进度','第 '+G.round+' 副 | NS: '+G.totalNS+' | EW: '+G.totalEW,3000);
 }
 
+// ============ FEATURE 1: PRO SUBSCRIPTION SYSTEM (💎 Pro标识) ============
+var PRO_FEATURES=['convention_trainer','endgame_trainer','tournament_mode','advanced_analysis','unlimited_daily','spaced_repetition','custom_deals','export_history'];
+function isPro(){return localStorage.getItem('bridge-pro')==='true'}
+function checkProBanner(){
+  if(isPro())return;
+  let visits=parseInt(localStorage.getItem('bridge-visits')||'0')+1;
+  localStorage.setItem('bridge-visits',visits.toString());
+  if(visits>=5&&visits%10===0){
+    document.getElementById('pro-banner').classList.add('show');
+    try{trackEvent('monetization','pro_banner_show','visit_'+visits)}catch(e){}
+  }
+}
+function dismissProBanner(){document.getElementById('pro-banner').classList.remove('show')}
+function showProModal(){
+  if(document.getElementById('pro-modal-overlay'))return;
+  let overlay=document.createElement('div');
+  overlay.id='pro-modal-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  overlay.innerHTML='<div style="background:rgba(15,25,15,.97);border:1px solid rgba(255,213,79,.3);border-radius:20px;padding:32px;max-width:440px;width:90vw;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.7)">'+
+    '<div style="font-size:48px;margin-bottom:12px">💎</div>'+
+    '<h2 style="color:#ffd54f;font-size:24px;margin-bottom:8px">升级到 Pro 版</h2>'+
+    '<p style="color:rgba(255,255,255,.6);margin-bottom:20px">解锁全部功能，成为桥牌高手</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;text-align:left">'+
+      '<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:10px"><div style="font-size:14px">📚 108课全部解锁</div></div>'+
+      '<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:10px"><div style="font-size:14px">🤖 AI深度分析</div></div>'+
+      '<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:10px"><div style="font-size:14px">🏆 无限训练模式</div></div>'+
+      '<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:10px"><div style="font-size:14px">📊 高级数据统计</div></div>'+
+      '<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:10px"><div style="font-size:14px">📋 约定叫训练</div></div>'+
+      '<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:10px"><div style="font-size:14px">📤 牌局导出分享</div></div>'+
+    '</div>'+
+    '<div style="margin-bottom:20px">'+
+      '<div style="font-size:32px;font-weight:900;color:#ffd54f">¥29<span style="font-size:14px;font-weight:400">/月</span></div>'+
+      '<div style="font-size:12px;color:rgba(255,255,255,.4)">或 ¥299/年（省¥149）</div>'+
+    '</div>'+
+    '<button onclick="activatePro()" style="padding:14px 40px;border:none;border-radius:12px;font-size:16px;font-weight:700;background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;cursor:pointer;box-shadow:0 4px 16px rgba(255,109,0,.4);width:100%;margin-bottom:8px">开始免费试用 7 天</button>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:12px">无需信用卡 · 随时取消</div>'+
+    '<button onclick="document.getElementById(\'pro-modal-overlay\').remove()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:13px">以后再说</button>'+
+  '</div>';
+  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove()});
+  document.body.appendChild(overlay);
+  try{trackEvent('monetization','pro_modal_show','')}catch(e){}
+}
+function activatePro(){
+  localStorage.setItem('bridge-pro','true');
+  localStorage.setItem('bridge-pro-date',new Date().toISOString());
+  var el=document.getElementById('pro-modal-overlay');
+  if(el)el.remove();
+  dismissProBanner();
+  showLearnToast('💎 Pro版已激活','欢迎成为Pro用户！解锁全部功能。',3000);
+  try{trackEvent('monetization','pro_activate','')}catch(e){}
+  try{updateProStatusUI()}catch(e){}
+}
+function checkProTrial(){
+  let proDate=localStorage.getItem('bridge-pro-date');
+  if(!proDate)return;
+  let daysSince=Math.floor((Date.now()-new Date(proDate).getTime())/86400000);
+  if(daysSince>7&&localStorage.getItem('bridge-pro')==='true'&&!localStorage.getItem('bridge-pro-paid')){
+    localStorage.removeItem('bridge-pro');
+    showLearnToast('💎 试用期结束','升级Pro继续使用全部功能',4000);
+    showProModal();
+  }
+}
+function updateProStatusUI(){
+  let el=document.getElementById('opt-pro-status');
+  if(!el)return;
+  if(isPro()){
+    let proDate=localStorage.getItem('bridge-pro-date');
+    let days=proDate?Math.floor((Date.now()-new Date(proDate).getTime())/86400000):0;
+    el.textContent='💎 Pro用户（'+days+'天）';
+    el.style.background='rgba(255,213,79,.15)';
+    el.style.borderColor='rgba(255,213,79,.3)';
+    el.style.color='#ffd54f';
+  }else{
+    el.textContent='免费版 — 点击升级';
+    el.style.background='';
+    el.style.borderColor='';
+    el.style.color='';
+  }
+}
+
+// ============ FEATURE 2: LESSON GATING (📚 课程分级) ============
+var PRO_LESSON_LIMIT=30;
+function isLessonFree(idx){return idx<=PRO_LESSON_LIMIT}
+function canAccessLesson(idx){
+  if(isPro())return true;
+  return isLessonFree(idx);
+}
+function showUpgradePrompt(feature){
+  showLearnToast('🔒 Pro功能','升级Pro版解锁'+feature,3000);
+  showProModal();
+}
+
+// ============ FEATURE 3: USAGE ANALYTICS (📊 商业分析) ============
+function trackEvent(category,action,label){
+  try{
+    let events=JSON.parse(localStorage.getItem('bridge-events')||'[]');
+    events.push({t:Date.now(),c:category,a:action,l:label||''});
+    if(events.length>200)events=events.slice(-200);
+    localStorage.setItem('bridge-events',JSON.stringify(events));
+  }catch(e){}
+}
+function getAnalytics(){
+  let events=JSON.parse(localStorage.getItem('bridge-events')||'[]');
+  return{
+    totalEvents:events.length,
+    gamesPlayed:events.filter(function(e){return e.a==='game_complete'}).length,
+    lessonsViewed:events.filter(function(e){return e.c==='lesson'}).length,
+    proModalShown:events.filter(function(e){return e.a==='pro_modal_show'}).length,
+    proActivated:events.filter(function(e){return e.a==='pro_activate'}).length,
+    lastActive:events.length?new Date(events[events.length-1].t).toISOString():null
+  };
+}
+
+// ============ FEATURE 4: REFERRAL SYSTEM (🎁 邀请奖励) ============
+function generateReferralCode(){
+  let code=localStorage.getItem('bridge-ref-code');
+  if(!code){
+    code='BRIDGE'+Math.random().toString(36).substring(2,8).toUpperCase();
+    localStorage.setItem('bridge-ref-code',code);
+  }
+  return code;
+}
+function shareReferral(){
+  let code=generateReferralCode();
+  let text='我在用「小桥学牌」学习桥牌，超级好用！\n用邀请码 '+code+' 注册，我们都能获得7天Pro体验。\nhttps://greyrhino42.github.io/bridge-game/?ref='+code;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      showLearnToast('🎁 已复制','邀请链接已复制，发给朋友吧！',3000);
+    });
+  }else{
+    prompt('复制邀请链接:',text);
+  }
+  try{trackEvent('referral','share',code)}catch(e){}
+}
+function checkReferral(){
+  let params=new URLSearchParams(window.location.search);
+  let ref=params.get('ref');
+  if(ref&&ref!==localStorage.getItem('bridge-ref-code')){
+    localStorage.setItem('bridge-referred-by',ref);
+    if(!isPro()){
+      localStorage.setItem('bridge-pro','true');
+      localStorage.setItem('bridge-pro-date',new Date().toISOString());
+      showLearnToast('🎁 邀请奖励','你获得了7天Pro体验！',4000);
+    }
+    try{trackEvent('referral','redeem',ref)}catch(e){}
+  }
+}
+
+// ============ FEATURE 5: WECHAT SHARE INTEGRATION (📱 微信分享) ============
+function getShareCardHTML(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let streak=stats.streak||0;
+  let total=stats.totalHands||0;
+  let winRate=stats.totalHands>0?Math.round(stats.totalWon/stats.totalHands*100):0;
+
+  let card=document.createElement('canvas');
+  card.width=600;card.height=400;
+  let ctx=card.getContext('2d');
+
+  // Background
+  let grad=ctx.createLinearGradient(0,0,600,400);
+  grad.addColorStop(0,'#0a140a');grad.addColorStop(1,'#1a2a1a');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,600,400);
+
+  // Decorative border
+  ctx.strokeStyle='rgba(255,213,79,.3)';
+  ctx.lineWidth=2;
+  ctx.strokeRect(12,12,576,376);
+
+  // Title
+  ctx.fillStyle='#ffd54f';ctx.font='bold 28px sans-serif';
+  ctx.fillText('♠♥♦♣ 小桥学牌',20,50);
+
+  // Stats
+  ctx.fillStyle='#fff';ctx.font='16px sans-serif';
+  ctx.fillText('已打 '+total+' 手牌',20,100);
+  ctx.fillText('胜率 '+winRate+'%',20,130);
+  ctx.fillText('连续打卡 '+streak+' 天',20,160);
+
+  // CTA
+  ctx.fillStyle='#ffd54f';ctx.font='bold 18px sans-serif';
+  ctx.fillText('来挑战我吧！',20,220);
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='14px sans-serif';
+  ctx.fillText('greyrhino42.github.io/bridge-game/',20,250);
+
+  try{trackEvent('social','share_card_generated','')}catch(e){}
+
+  // Download the image
+  let link=document.createElement('a');
+  link.download='小桥学牌-分享卡片.png';
+  link.href=card.toDataURL('image/png');
+  link.click();
+
+  return card.toDataURL('image/png');
+}
+
+// ============ PRO SYSTEM INITIALIZATION HOOK ============
+function initProSystem(){
+  try{checkProBanner()}catch(e){}
+  try{checkProTrial()}catch(e){}
+  try{checkReferral()}catch(e){}
+  try{updateProStatusUI()}catch(e){}
+  try{trackEvent('system','init','')}catch(e){}
+}
+
 </script>
+<div id="pro-banner">
+  <span>💎 升级Pro版 — 解锁全部108课+AI深度分析+无限训练</span>
+  <button onclick="showProModal()">立即升级</button>
+  <span class="dismiss" onclick="dismissProBanner()">✕</span>
+</div>
 </body>
 </html>
