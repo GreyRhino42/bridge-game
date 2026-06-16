@@ -1947,6 +1947,35 @@ body.card-lg .card.sm .s{font-size:14px}
   100%{filter:brightness(1)}
 }
 .trick-winning{animation:trickWin 0.8s ease}
+
+/* ============ FEATURE: Reduced Motion Mode ============ */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
+body.reduce-motion *{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+
+/* ============ FEATURE: Trick Progress Ring ============ */
+#trick-ring{position:fixed;top:50px;right:16px;width:56px;height:56px;z-index:50;display:none}
+#trick-ring.show{display:block}
+#trick-ring svg{transform:rotate(-90deg)}
+#trick-ring .ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:4}
+#trick-ring .ring-fill{fill:none;stroke:#4caf50;stroke-width:4;stroke-linecap:round;
+  transition:stroke-dashoffset 0.8s ease}
+#trick-ring .ring-text{font-size:14px;font-weight:800;fill:#ffd54f;text-anchor:middle;
+  dominant-baseline:central;transform:rotate(90deg);transform-origin:center}
+
+/* ============ FEATURE: Tutorial Mode ============ */
+.tooltip-arrow{position:absolute;width:0;height:0;border-left:8px solid transparent;
+  border-right:8px solid transparent;border-top:8px solid #ffd54f;bottom:-8px;left:50%;transform:translateX(-50%)}
+.tutorial-tip{position:absolute;background:rgba(15,25,15,.96);border:2px solid #ffd54f;
+  border-radius:12px;padding:10px 16px;font-size:13px;color:#fff;z-index:200;
+  max-width:240px;box-shadow:0 8px 24px rgba(0,0,0,.6);animation:fadeInScale .3s ease}
+.tutorial-tip .tip-text{line-height:1.5}
+.tutorial-tip .tip-dismiss{display:block;margin-top:8px;font-size:11px;color:rgba(255,255,255,.5);
+  cursor:pointer;text-align:center}
+
+/* ============ FEATURE: Score Animation ============ */
+#animated-score{font-size:28px;font-weight:900;margin:8px 0;transition:color .3s}
 </style>
 </head>
 <body>
@@ -2086,6 +2115,13 @@ body.card-lg .card.sm .s{font-size:14px}
         <div class="setting-opt" data-val="lg" onclick="setCardSize('lg')">大</div>
       </div>
     </div>
+    <div class="setting-group">
+      <div class="setting-label">♿ 减少动画</div>
+      <div class="setting-options">
+        <div class="setting-opt" id="opt-reduce-motion" onclick="toggleReducedMotion()">点击切换</div>
+      </div>
+      <div class="setting-note">减少动画效果，适合对动画敏感的用户</div>
+    </div>
   </div>
   <div id="score-history-panel">
     <div class="sh-header">
@@ -2201,6 +2237,14 @@ body.card-lg .card.sm .s{font-size:14px}
   </div>
   <!-- Speed Timer -->
   <div id="speed-timer"><span id="speed-time">30</span>s</div>
+  <!-- Trick Progress Ring -->
+  <div id="trick-ring">
+    <svg viewBox="0 0 40 40" width="56" height="56">
+      <circle class="ring-bg" cx="20" cy="20" r="16"/>
+      <circle class="ring-fill" cx="20" cy="20" r="16" stroke-dasharray="100.53" stroke-dashoffset="100.53" id="ring-progress"/>
+      <text class="ring-text" x="20" y="20" id="ring-text">0</text>
+    </svg>
+  </div>
   <!-- Smart Hint -->
   <div id="smart-hint"><div id="smart-hint-popup"><div class="sh-title">💡 小桥提示</div><div id="sh-text"></div></div><button id="smart-hint-btn" onclick="toggleSmartHint()">💡</button></div>
   <!-- Hand History Panel -->
@@ -2558,6 +2602,8 @@ function init(){
   initStoryState();
   resetPlayedCards();
   try{updatePlayStreak();showStreakBadge()}catch(e){}
+  // Apply reduced motion preference
+  try{updateReduceMotionBtn()}catch(e){}
   document.getElementById('btn-go').style.display='';
   document.getElementById('btn-story').style.display='';
   document.getElementById('btn-just-play').style.display='';
@@ -4598,6 +4644,14 @@ function startPlay(){
     }
   }catch(e){}
   try{showSmartHint()}catch(e){}
+  // Show trick progress ring
+  try{showTrickRing();updateTrickRing()}catch(e){}
+  // Tutorial tips for first-time players
+  try{
+    setTimeout(function(){showTutorialTip('hand-S','👆 点击你的牌出牌')},1500);
+    setTimeout(function(){showTutorialTip('dummy-wrap','👀 这里是明手的牌，所有人都能看到')},6000);
+    setTimeout(function(){showTutorialTip('smart-hint-btn','💡 需要帮助？点这里获取提示')},10000);
+  }catch(e){}
   autoPlayIfNeeded();
   try{showEvalBar()}catch(e){}
 }
@@ -4740,6 +4794,7 @@ function playCard(pos,card){
   G.trick.push({pos,card});
   renderTrickCard(pos,card);
   playSound('card');
+  try{playCardSound()}catch(e){}
   trackPlayedCard(card);
   if(G.defenseMode&&pos==='S'){
     try{showDefenseFeedback(card)}catch(e){}
@@ -4955,7 +5010,10 @@ function resolveTrick(){
   document.getElementById('i-tricks').textContent='南北: '+G.nsTricks+' | 东西: '+G.ewTricks;
   setS(PN[win.pos]+'赢得此墩 ('+G.trickNum+'/13)');
   playSound('trick');
+  try{playTrickSound()}catch(e){}
   try{updateEvalBar()}catch(e){}
+  // Update trick progress ring
+  try{updateTrickRing()}catch(e){}
   // AI Commentary
   try{
     let comment='';
@@ -5115,13 +5173,21 @@ function finishPlay(){
     <p>目标: ${need} 墩 | 实际: ${dt} 墩</p>
     <p style="color:${color};font-weight:bold;margin:6px 0">${resultText}</p>
     <p style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">${breakdownHtml}</p>
-    <p style="font-size:16px;font-weight:700;margin:8px 0">本副得分: ${bonus>=0?'+':''}${bonus}</p>
+    <p style="font-size:16px;font-weight:700;margin:8px 0">本副得分: <span id="animated-score">${bonus>=0?'+':''}${bonus}</span></p>
     <hr>
     <p>累计 — 南北: ${G.totalNS} | 东西: ${G.totalEW}</p>
   `;
   document.getElementById('score-popup').classList.add('show');
   document.getElementById('overlay').classList.add('show');
   playSound('game');
+  // Score count-up animation
+  try{animateScore(document.getElementById('animated-score'),bonus,1200)}catch(e){}
+  // Win/lose sound enhancement
+  try{if(made){playWinSound()}else{playLoseSound()}}catch(e){}
+  // Hide trick ring
+  try{hideTrickRing()}catch(e){}
+  // Mark tutorial done after first completed game
+  try{finishTutorial()}catch(e){}
   // Confetti for player wins
   if(made){
     try{
@@ -11300,6 +11366,98 @@ function checkComebackBonus(){
     localStorage.setItem('bridge-xp',xp.toString());
   }
 }
+
+/* ============ FEATURE 4: Sound Enhancement ============ */
+function playTone(freq,duration,type){
+  try{
+    if(!G||!G.soundEnabled)return;
+    let ctx=getAudioCtx();
+    if(ctx.state==='suspended')ctx.resume();
+    let now=ctx.currentTime;
+    let osc=ctx.createOscillator();
+    let gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.type=type||'sine';
+    osc.frequency.value=freq;
+    gain.gain.setValueAtTime(0.1,now);
+    gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+    osc.start(now);osc.stop(now+duration);
+  }catch(e){}
+}
+function playWinSound(){playTone(523,0.15);setTimeout(function(){playTone(659,0.15)},150);setTimeout(function(){playTone(784,0.3)},300)}
+function playLoseSound(){playTone(330,0.2);setTimeout(function(){playTone(262,0.3)},200)}
+function playCardSound(){playTone(800+Math.random()*200,0.05,'triangle')}
+function playTrickSound(){playTone(440,0.1);setTimeout(function(){playTone(550,0.15)},100)}
+function animateScore(element,targetValue,duration){
+  if(!element)return;
+  let start=0;let startTime=null;
+  function step(timestamp){
+    if(!startTime)startTime=timestamp;
+    let progress=Math.min((timestamp-startTime)/duration,1);
+    let eased=1-Math.pow(1-progress,3);
+    let current=Math.round(start+(targetValue-start)*eased);
+    element.textContent=(current>=0?'+':'')+current;
+    element.style.color=current>=0?'#4caf50':'#ef5350';
+    if(progress<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ============ FEATURE 2: Reduced Motion Mode ============ */
+function toggleReducedMotion(){
+  let current=localStorage.getItem('bridge-reduced-motion')==='true';
+  let next=!current;
+  localStorage.setItem('bridge-reduced-motion',next.toString());
+  document.body.classList.toggle('reduce-motion',next);
+  updateReduceMotionBtn();
+  showLearnToast(next?'♿ 动画已减少':'✨ 动画已恢复','',2000);
+}
+function updateReduceMotionBtn(){
+  let btn=document.getElementById('opt-reduce-motion');
+  if(!btn)return;
+  let on=localStorage.getItem('bridge-reduced-motion')==='true';
+  btn.textContent=on?'已开启 ✓':'点击切换';
+  btn.classList.toggle('selected',on);
+}
+if(localStorage.getItem('bridge-reduced-motion')==='true'){
+  document.body.classList.add('reduce-motion');
+}
+
+/* ============ FEATURE 3: Trick Progress Ring ============ */
+function updateTrickRing(){
+  let need=G.contract?+G.contract[0]+6:0;
+  let ns=G.nsTricks;
+  let pct=need>0?ns/need:0;
+  let circumference=2*Math.PI*16;
+  let offset=circumference*(1-Math.min(pct,1));
+  let ring=document.getElementById('ring-progress');
+  let text=document.getElementById('ring-text');
+  if(ring)ring.style.strokeDashoffset=offset;
+  if(text)text.textContent=ns+'/'+need;
+  if(ring){
+    ring.style.stroke=pct>=1?'#ffd54f':pct>=0.7?'#4caf50':pct>=0.4?'#ff9800':'#ef5350';
+  }
+}
+function showTrickRing(){document.getElementById('trick-ring').classList.add('show')}
+function hideTrickRing(){document.getElementById('trick-ring').classList.remove('show')}
+
+/* ============ FEATURE 5: Tutorial Mode ============ */
+function showTutorialTip(targetId,text){
+  if(localStorage.getItem('bridge-tutorial-done')==='true')return;
+  let target=document.getElementById(targetId);
+  if(!target)return;
+  let tip=document.createElement('div');
+  tip.className='tutorial-tip';
+  tip.innerHTML='<div class="tip-text">'+text+'</div><span class="tip-dismiss" onclick="this.parentElement.remove()">知道了 ✓</span>';
+  let r=target.getBoundingClientRect();
+  tip.style.left=Math.max(8,Math.min(r.left,window.innerWidth-260))+'px';
+  tip.style.top=(r.bottom+8)+'px';
+  document.body.appendChild(tip);
+  setTimeout(function(){if(tip.parentElement)tip.remove()},8000);
+}
+function dismissAllTutorial(){document.querySelectorAll('.tutorial-tip').forEach(function(t){t.remove()})}
+function finishTutorial(){localStorage.setItem('bridge-tutorial-done','true');dismissAllTutorial()}
+
 </script>
 </body>
 </html>
