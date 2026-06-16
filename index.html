@@ -2046,6 +2046,26 @@ body.colorblind-mode .card[data-suit='♣']::after{content:'♣';font-size:10px;
   width:16px;height:16px;border-radius:50%;background:rgba(255,193,7,.85);color:#000;
   font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;
   z-index:10;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+
+/* ============ THEME SYSTEM ============ */
+body.theme-light{--bg:#f5f5f5;--text:#1a1a1a;--card-bg:#fff;--accent:#1976d2}
+body.theme-classic{--bg:#1a472a;--text:#fff;--card-bg:#2d5a3f;--accent:#ffd54f}
+body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4dff}
+
+/* ============ CARD BACK DESIGNS ============ */
+.card-back{background:linear-gradient(135deg,#1a237e,#283593);border:2px solid #3949ab}
+.card-back.classic{background:linear-gradient(135deg,#b71c1c,#c62828);border:2px solid #e53935}
+.card-back.gold{background:linear-gradient(135deg,#ff6f00,#ff8f00);border:2px solid #ffa000}
+.card-back.nature{background:linear-gradient(135deg,#1b5e20,#2e7d32);border:2px solid #43a047}
+
+/* ============ SETTINGS SLIDER ============ */
+.speed-slider{width:100%;margin:8px 0;-webkit-appearance:none;appearance:none;height:6px;
+  border-radius:3px;background:rgba(255,255,255,.15);outline:none}
+.speed-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;
+  border-radius:50%;background:#ffd54f;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.speed-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;
+  background:#ffd54f;cursor:pointer;border:none;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.speed-label{text-align:center;font-size:11px;color:rgba(255,255,255,.6);margin-top:4px}
 </style>
 </head>
 <body>
@@ -2209,6 +2229,35 @@ body.colorblind-mode .card[data-suit='♣']::after{content:'♣';font-size:10px;
       <div class="setting-note" style="margin-top:8px">
         <button onclick="shareReferral()" style="padding:6px 14px;border:none;border-radius:8px;font-size:11px;font-weight:600;background:rgba(76,175,80,.2);color:#81c784;cursor:pointer;transition:all .2s">🎁 邀请好友得Pro</button>
         <button onclick="getShareCardHTML();showLearnToast('📱 分享卡片','已生成分享卡片',2000)" style="padding:6px 14px;border:none;border-radius:8px;font-size:11px;font-weight:600;background:rgba(33,150,243,.2);color:#64b5f6;cursor:pointer;transition:all .2s;margin-left:6px">📱 生成分享卡片</button>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">🎨 主题切换</div>
+      <div class="setting-options" id="opt-theme">
+        <div class="setting-opt selected" data-val="dark" onclick="setTheme('dark')">暗黑</div>
+        <div class="setting-opt" data-val="light" onclick="setTheme('light')">明亮</div>
+        <div class="setting-opt" data-val="classic" onclick="setTheme('classic')">经典绿</div>
+        <div class="setting-opt" data-val="midnight" onclick="setTheme('midnight')">午夜蓝</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">🃏 牌背样式</div>
+      <div class="setting-options" id="opt-cardback">
+        <div class="setting-opt selected" data-val="default" onclick="setCardBack('default')">默认</div>
+        <div class="setting-opt" data-val="classic" onclick="setCardBack('classic')">经典红</div>
+        <div class="setting-opt" data-val="gold" onclick="setCardBack('gold')">金色</div>
+        <div class="setting-opt" data-val="nature" onclick="setCardBack('nature')">自然绿</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">⏩ 出牌速度倍率</div>
+      <input type="range" class="speed-slider" id="speed-slider" min="0.5" max="3" step="0.1" value="1" oninput="setGameSpeed(parseFloat(this.value));document.getElementById('speed-val').textContent=this.value+'x'">
+      <div class="speed-label" id="speed-val">1x</div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">🖥️ 显示模式</div>
+      <div class="setting-options">
+        <div class="setting-opt" onclick="toggleFullscreen()">切换全屏</div>
       </div>
     </div>
   </div>
@@ -2692,6 +2741,8 @@ function init(){
   };
   G.stats={defensePlayed:0,defenseWon:0,leadAccuracy:0,dailyStreak:0,convCorrect:0,fastestHand:999,maxTricks:0,comeback:false,grandSlam:false,tripleGame:0};
   loadSettings();
+  initTheme();
+  try{initSettingsUI()}catch(e){}
   initStoryState();
   resetPlayedCards();
   try{updatePlayStreak();showStreakBadge()}catch(e){}
@@ -12252,6 +12303,65 @@ function quickPlay(){
   document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
   document.getElementById('i-round').textContent='⚡ 快速开始';
   setS('⚡ '+ac.reason);updateLabels();renderHands();setTimeout(startPlay,spd(800));
+}
+
+// ============ THEME SYSTEM ============
+function setTheme(theme){
+  document.body.className=document.body.className.replace(/theme-\w+/g,'');
+  if(theme!=='dark')document.body.classList.add('theme-'+theme);
+  localStorage.setItem('bridge-theme',theme);
+  try{selectOpt('opt-theme',theme)}catch(e){}
+}
+function initTheme(){let t=localStorage.getItem('bridge-theme');if(t)setTheme(t)}
+
+// ============ SOUND TOGGLE (enhanced) ============
+function isSoundEnabled(){return localStorage.getItem('bridge-sound')!=='0'}
+// Original toggleSound at line ~5474 already exists; override with toast
+(function(){
+  let _orig=window.toggleSound;
+  window.toggleSound=function(){
+    _orig();
+    let on=G.soundEnabled;
+    showLearnToast(on?'🔊 音效已开启':'🔇 音效已关闭','',2000);
+  };
+})();
+
+// ============ SPEED CONTROL ============
+function setGameSpeed(speed){
+  localStorage.setItem('bridge-aispeed',speed.toString());
+  G._speedMult=speed;
+}
+function getGameSpeed(){
+  return parseFloat(localStorage.getItem('bridge-aispeed')||'1');
+}
+
+// ============ FULLSCREEN MODE ============
+function toggleFullscreen(){
+  if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(e=>{});
+  else document.exitFullscreen().catch(e=>{});
+}
+
+// ============ CARD BACK DESIGN ============
+function setCardBack(style){
+  localStorage.setItem('bridge-cardback',style);
+  document.querySelectorAll('.card-back').forEach(el=>{
+    el.className='card-back'+(style!=='default'?' '+style:'');
+  });
+  try{selectOpt('opt-cardback',style)}catch(e){}
+}
+
+// ============ INIT SETTINGS UI ============
+function initSettingsUI(){
+  // Theme
+  let t=localStorage.getItem('bridge-theme')||'dark';
+  try{selectOpt('opt-theme',t)}catch(e){}
+  // Card back
+  let cb=localStorage.getItem('bridge-cardback')||'default';
+  try{selectOpt('opt-cardback',cb)}catch(e){}
+  // Speed slider
+  let sp=getGameSpeed();
+  let slider=document.getElementById('speed-slider');
+  if(slider){slider.value=sp;let sv=document.getElementById('speed-val');if(sv)sv.textContent=sp+'x';}
 }
 
 </script>
