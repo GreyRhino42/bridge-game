@@ -2139,6 +2139,10 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <div id="pa-content"></div>
       <div class="pa-btns">
         <button class="pa-replay" onclick="replayHand()">🔄 重打这副牌</button>
+        <button onclick="startTrickReplay()">⏪ 逐墩回放</button>
+        <button onclick="showDecisionPoints()">❗ 关键决策</button>
+        <button onclick="showSkillRadar()">📊 技能图</button>
+        <button onclick="showAchievementProgress()">🏆 成就进度</button>
         <button class="pa-share" onclick="shareHand()">📤 分享</button>
         <button class="pa-next" onclick="closeAnalysis();nextDeal()">🃏 下一副</button>
         </div>
@@ -12348,6 +12352,171 @@ function setCardBack(style){
     el.className='card-back'+(style!=='default'?' '+style:'');
   });
   try{selectOpt('opt-cardback',style)}catch(e){}
+}
+
+// ============ ADVANCED TEACHING FEATURES ============
+
+// Feature 1: Trick-by-Trick Replay (⏪ 逐墩回放)
+function startTrickReplay(){
+  if(!G.trickHistoryFull||G.trickHistoryFull.length===0)return;
+  showReplayTrick(0);
+}
+function showReplayTrick(idx){
+  if(!G.trickHistoryFull||idx<0||idx>=G.trickHistoryFull.length)return;
+  let t=G.trickHistoryFull[idx];
+  let html='<div style="text-align:center;padding:16px">';
+  html+='<h3 style="color:#ffd54f">墩 '+(idx+1)+'/'+G.trickHistoryFull.length+'</h3>';
+  html+='<div style="display:flex;gap:12px;justify-content:center;margin:16px 0">';
+  let order=['N','E','S','W'];
+  order.forEach(pos=>{
+    let card=t.cards.find(c=>c.pos===pos);
+    if(card){
+      let color=SC[card.suit]==='red'?'#ef9a9a':'#bbb';
+      html+='<div style="text-align:center"><div style="font-size:10px;color:rgba(255,255,255,.4)">'+PN[pos]+'</div>';
+      html+='<div style="font-size:20px;color:'+color+'">'+card.suit+card.rank+'</div></div>';
+    }
+  });
+  html+='</div>';
+  let winTeam=(t.winnerPos==='N'||t.winnerPos==='S')?'NS':'EW';
+  html+='<div style="color:'+(winTeam==='NS'?'#81c784':'#ef9a9a')+'">'+PN[t.winnerPos]+'赢墩</div>';
+  html+='<div style="margin-top:12px"><button onclick="showReplayTrick('+(idx-1)+')" style="padding:6px 16px;margin:4px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer" '+(idx===0?'disabled style="opacity:.3"':'')+'>← 上一墩</button>';
+  html+='<button onclick="showReplayTrick('+(idx+1)+')" style="padding:6px 16px;margin:4px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer" '+(idx>=G.trickHistoryFull.length-1?'disabled style="opacity:.3"':'')+'>下一墩 →</button>';
+  html+='<button onclick="document.getElementById(\'trick-log\').classList.remove(\'show\')" style="padding:6px 16px;margin:4px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer">关闭</button></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// Feature 2: Decision Point Markers (❗ 关键决策点)
+function analyzeDecisionPoints(){
+  if(!G.trickHistoryFull)return[];
+  let points=[];
+  G.trickHistoryFull.forEach((t,i)=>{
+    if(t.winnerPos&&(i>0)){
+      let prev=G.trickHistoryFull[i-1];
+      if(prev.winnerPos!==t.winnerPos){
+        points.push({trick:i+1,type:'swing',desc:'墩'+(i+1)+'：胜负转换'});
+      }
+    }
+    if(t.cards.some(c=>c.suit===G.trump)){
+      points.push({trick:i+1,type:'trump',desc:'墩'+(i+1)+'：将牌参与'});
+    }
+  });
+  return points;
+}
+function showDecisionPoints(){
+  let pts=analyzeDecisionPoints();
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;text-align:center">❗ 关键决策点</h3>';
+  if(pts.length===0){html+='<div style="color:rgba(255,255,255,.4);text-align:center;padding:16px">本局没有显著转折点</div>';}
+  else{
+    html+='<div style="margin-top:12px">';
+    pts.forEach(p=>{
+      let icon=p.type==='swing'?'🔄':'🃏';
+      let color=p.type==='swing'?'#ffd54f':'#64b5f6';
+      html+='<div style="padding:8px 12px;margin:4px 0;background:rgba(255,255,255,.04);border-radius:8px;border-left:3px solid '+color+'">';
+      html+='<span>'+icon+' '+p.desc+'</span></div>';
+    });
+    html+='</div>';
+  }
+  html+='<div style="text-align:center;margin-top:12px"><button onclick="document.getElementById(\'trick-log\').classList.remove(\'show\')" style="padding:6px 16px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer">关闭</button></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// Feature 3: Skill Rating Breakdown (📊 技能雷达图)
+function getSkillRatings(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let modeStats=JSON.parse(localStorage.getItem('bridge-mode-stats')||'{}');
+  return{
+    bidding:Math.min(100,Math.round((stats.totalHands||0)/10+50)),
+    declarer:modeStats.justPlay?Math.round(modeStats.justPlay.won/Math.max(1,modeStats.justPlay.played)*100):50,
+    defense:modeStats.defense?Math.round(modeStats.defense.won/Math.max(1,modeStats.defense.played)*100):50,
+    conventions:Math.min(100,parseInt(localStorage.getItem('bridge-conv-correct')||'0')*5),
+    openingLead:Math.min(100,parseInt(localStorage.getItem('bridge-lead-correct')||'0')*10)
+  };
+}
+function showSkillRadar(){
+  let r=getSkillRatings();
+  let skills=[
+    {key:'bidding',name:'叫牌',color:'#ffd54f'},
+    {key:'declarer',name:'做庄',color:'#81c784'},
+    {key:'defense',name:'防守',color:'#64b5f6'},
+    {key:'conventions',name:'约定叫',color:'#ce93d8'},
+    {key:'openingLead',name:'首攻',color:'#ef9a9a'}
+  ];
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;text-align:center">📊 技能评估</h3>';
+  html+='<div style="margin-top:12px">';
+  skills.forEach(s=>{
+    let v=Math.min(100,r[s.key]||0);
+    html+='<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">';
+    html+='<span>'+s.name+'</span><span style="color:'+s.color+'">'+v+'/100</span></div>';
+    html+='<div style="height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden">';
+    html+='<div style="height:100%;width:'+v+'%;background:'+s.color+';border-radius:4px;transition:width .5s"></div></div></div>';
+  });
+  html+='</div>';
+  html+='<div style="text-align:center;margin-top:12px"><button onclick="document.getElementById(\'trick-log\').classList.remove(\'show\')" style="padding:6px 16px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer">关闭</button></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// Feature 4: Achievement Progress Tracker (🏆 成就进度)
+function getAchievementProgress(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let modeStats=JSON.parse(localStorage.getItem('bridge-mode-stats')||'{}');
+  return[
+    {id:'first_game',name:'🃏 第一局',desc:'完成第一局游戏',progress:Math.min(1,stats.totalHands||0),max:1},
+    {id:'ten_games',name:'🎴 老手',desc:'完成10局游戏',progress:Math.min(10,stats.totalHands||0),max:10},
+    {id:'hundred_games',name:'🃏 传奇',desc:'完成100局游戏',progress:Math.min(100,stats.totalHands||0),max:100},
+    {id:'win_streak',name:'🔥 连胜',desc:'连续赢得5局',progress:Math.min(5,stats.maxStreak||0),max:5},
+    {id:'defense_master',name:'🛡️ 防守大师',desc:'防守模式赢10局',progress:Math.min(10,(modeStats.defense||{}).won||0),max:10},
+    {id:'daily_streak',name:'📅 每日战士',desc:'连续7天打卡',progress:Math.min(7,stats.streak||0),max:7},
+    {id:'elo_master',name:'♟️ 等级大师',desc:'ELO达到1800',progress:Math.min(1800,parseInt(localStorage.getItem('bridge-elo')||'1200')),max:1800}
+  ];
+}
+function showAchievementProgress(){
+  let ach=getAchievementProgress();
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;text-align:center">🏆 成就进度</h3>';
+  html+='<div style="margin-top:12px">';
+  ach.forEach(a=>{
+    let pct=Math.round(a.progress/a.max*100);
+    let done=a.progress>=a.max;
+    let barColor=done?'#81c784':'#ffd54f';
+    html+='<div style="padding:8px 12px;margin:6px 0;background:rgba(255,255,255,.03);border-radius:8px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center">';
+    html+='<div><span style="font-size:14px">'+a.name+'</span>';
+    html+='<div style="font-size:11px;color:rgba(255,255,255,.4)">'+a.desc+'</div></div>';
+    html+='<span style="font-size:12px;color:'+barColor+'">'+(done?'✅ '+pct+'%':pct+'%')+'</span></div>';
+    html+='<div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:6px">';
+    html+='<div style="height:100%;width:'+pct+'%;background:'+barColor+';border-radius:3px"></div></div></div>';
+  });
+  html+='</div>';
+  html+='<div style="text-align:center;margin-top:12px"><button onclick="document.getElementById(\'trick-log\').classList.remove(\'show\')" style="padding:6px 16px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer">关闭</button></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// Feature 5: End-of-Session Summary (📋 本局总结)
+function showSessionSummary(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let sessionHands=stats.sessionHands||0;
+  let sessionWon=stats.sessionWon||0;
+  if(sessionHands<2)return;
+  let eloTitle='初学者';
+  try{if(typeof getELOTitle==='function'&&typeof getELO==='function')eloTitle=getELOTitle(getELO());}catch(e){}
+  let html='<div style="text-align:center;padding:20px">';
+  html+='<h2 style="color:#ffd54f;margin-bottom:16px">📋 本局总结</h2>';
+  html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">';
+  html+='<div style="padding:12px;background:rgba(255,255,255,.04);border-radius:10px"><div style="font-size:24px;font-weight:800;color:#ffd54f">'+sessionHands+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">总局数</div></div>';
+  html+='<div style="padding:12px;background:rgba(255,255,255,.04);border-radius:10px"><div style="font-size:24px;font-weight:800;color:#81c784">'+Math.round(sessionWon/Math.max(1,sessionHands)*100)+'%</div><div style="font-size:11px;color:rgba(255,255,255,.4)">完成率</div></div>';
+  html+='<div style="padding:12px;background:rgba(255,255,255,.04);border-radius:10px"><div style="font-size:24px;font-weight:800;color:#64b5f6">'+eloTitle+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">当前段位</div></div>';
+  html+='</div>';
+  html+='<div style="color:rgba(255,255,255,.5);font-size:13px">做得好！继续加油 💪</div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
 }
 
 // ============ INIT SETTINGS UI ============
