@@ -397,6 +397,77 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 .analytics-mistake .am-text{flex:1}
 .analytics-mistake .am-bid{font-weight:700;color:rgba(255,255,255,.9)}
 .analytics-mistake .am-explain{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+
+/* ============ JUST PLAY BUTTON ============ */
+#btn-just-play{padding:7px 22px;border:none;border-radius:8px;cursor:pointer;font-size:13px;
+  background:linear-gradient(135deg,#e65100,#bf360c);color:#fff;font-weight:600;letter-spacing:.3px;
+  transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#btn-just-play:hover{background:linear-gradient(135deg,#ff6d00,#e65100);
+  box-shadow:0 4px 14px rgba(230,81,0,.4);transform:translateY(-1px)}
+
+/* ============ POST-GAME ANALYSIS PANEL ============ */
+#post-analysis{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(10,20,10,.96);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:0;z-index:210;min-width:420px;max-width:95vw;max-height:85vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+  animation:fadeInScale .35s ease-out}
+#post-analysis.show{display:flex}
+@keyframes fadeInScale{from{opacity:0;transform:translate(-50%,-50%) scale(.92)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.pa-header{display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.pa-header h3{font-size:17px;font-weight:700;color:#ffd54f;letter-spacing:.5px}
+.pa-header button{background:none;border:none;color:rgba(255,255,255,.5);font-size:20px;
+  cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
+.pa-header button:hover{background:rgba(255,255,255,.1);color:#fff}
+#pa-content{flex:1;overflow-y:auto;padding:16px 24px;line-height:1.7;font-size:13px;color:rgba(255,255,255,.85)}
+.pa-section{margin:14px 0}
+.pa-section-title{font-size:14px;font-weight:700;color:#ffd54f;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pa-score-box{text-align:center;padding:16px;margin:10px 0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(76,175,80,.12),rgba(33,150,243,.08));
+  border:1px solid rgba(76,175,80,.2)}
+.pa-score-big{font-size:42px;font-weight:900;color:#81c784;text-shadow:0 0 16px rgba(129,199,132,.3)}
+.pa-score-sub{font-size:13px;color:rgba(255,255,255,.6);margin-top:4px}
+.pa-pct{font-size:15px;font-weight:700;color:#ffd54f;margin-top:6px}
+.pa-trick-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.pa-trick-table th{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.6px;
+  text-transform:uppercase;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center}
+.pa-trick-table td{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.03);text-align:center;color:rgba(255,255,255,.8)}
+.pa-trick-table tr.pa-trick-winner td{background:rgba(76,175,80,.08)}
+.pa-trick-table .pa-ns-win{color:#81c784;font-weight:600}
+.pa-trick-table .pa-ew-win{color:#ef9a9a;font-weight:600}
+.pa-moment{padding:10px 14px;margin:6px 0;border-radius:10px;font-size:12px;line-height:1.6;
+  background:rgba(255,193,7,.06);border:1px solid rgba(255,193,7,.12);color:rgba(255,255,255,.8)}
+.pa-moment .pa-moment-icon{margin-right:6px}
+.pa-moment.pa-moment-good{background:rgba(76,175,80,.08);border-color:rgba(76,175,80,.15)}
+.pa-moment.pa-moment-bad{background:rgba(244,67,54,.08);border-color:rgba(244,67,54,.15)}
+.pa-advice{padding:12px 16px;margin:10px 0;border-radius:12px;font-size:13px;line-height:1.6;
+  background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.15);color:#64b5f6}
+.pa-btns{display:flex;gap:10px;justify-content:center;padding:14px 24px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.pa-btns button{padding:10px 28px;border:none;border-radius:10px;cursor:pointer;font-size:13px;
+  font-weight:700;letter-spacing:.3px;transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.pa-btns .pa-replay{background:linear-gradient(135deg,#ff6d00,#e65100);color:#fff}
+.pa-btns .pa-replay:hover{background:linear-gradient(135deg,#ff8f00,#ff6d00);box-shadow:0 4px 14px rgba(255,109,0,.4);transform:translateY(-1px)}
+.pa-btns .pa-next{background:linear-gradient(135deg,#43a047,#388e3c);color:#fff}
+.pa-btns .pa-next:hover{background:linear-gradient(135deg,#66bb6a,#4caf50);box-shadow:0 4px 14px rgba(67,160,71,.4);transform:translateY(-1px)}
+
+/* Just Play contract display */
+.jd-contract-info{text-align:center;padding:14px 18px;margin:8px 0;border-radius:12px;
+  background:rgba(255,193,7,.1);border:1px solid rgba(255,193,7,.25)}
+.jd-contract-info .jd-contract-name{font-size:28px;font-weight:900;color:#ffd54f;
+  text-shadow:0 0 12px rgba(255,213,79,.3)}
+.jd-contract-info .jd-contract-reason{font-size:12px;color:rgba(255,255,255,.6);margin-top:4px}
+
+@media(max-width:768px){
+  #post-analysis{min-width:auto;width:95vw;max-height:90vh}
+  .pa-header{padding:14px 16px}
+  #pa-content{padding:12px 16px}
+  .pa-btns{padding:10px 16px}
+  .pa-score-big{font-size:32px}
+  .pa-trick-table{font-size:11px}
+}
 .analytics-recommend{padding:14px 18px;background:linear-gradient(135deg,rgba(33,150,243,.1),rgba(76,175,80,.08));
   border:1px solid rgba(33,150,243,.2);border-radius:12px;margin:14px 0}
 .analytics-recommend .ar-title{font-weight:700;color:#64b5f6;margin-bottom:6px;font-size:14px}
@@ -1267,6 +1338,57 @@ body.card-lg .card.sm .s{font-size:14px}
   .ob-card-mini .s{font-size:11px}
 }
 
+/* ============ XIAO QIAO AI COACH ============ */
+#xq-toggle{cursor:pointer;transition:all .2s;font-size:14px;padding:4px 12px;border-radius:10px;
+  background:rgba(33,150,243,.15);border:1px solid rgba(33,150,243,.2);
+  color:#64b5f6;font-weight:600;user-select:none;white-space:nowrap}
+#xq-toggle:hover{background:rgba(33,150,243,.3);border-color:rgba(33,150,243,.4);transform:scale(1.03)}
+#xq-toggle.active{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.3);color:#81c784}
+#xq-panel{position:fixed;bottom:90px;right:20px;z-index:140;
+  width:280px;max-width:85vw;
+  background:rgba(10,20,10,.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(33,150,243,.2);
+  border-radius:16px;padding:0;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+  transform:translateX(120%);opacity:0;
+  transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .3s ease}
+#xq-panel.show{transform:translateX(0);opacity:1}
+.xq-header{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:rgba(33,150,243,.1);border-bottom:1px solid rgba(33,150,243,.1);
+  cursor:pointer}
+.xq-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#1565c0,#1976d2);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:0 2px 8px rgba(21,101,192,.4);transition:transform .3s ease}
+.xq-avatar.bounce{animation:xqBounce .5s ease}
+@keyframes xqBounce{0%{transform:scale(1)}25%{transform:scale(1.25)}50%{transform:scale(.9)}100%{transform:scale(1)}}
+.xq-name{font-size:13px;font-weight:700;color:#64b5f6}
+.xq-role{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.3px}
+.xq-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.4);
+  font-size:16px;cursor:pointer;padding:2px 6px;border-radius:4px;transition:all .2s}
+.xq-close:hover{color:#fff;background:rgba(255,255,255,.1)}
+.xq-body{padding:12px 14px;min-height:60px;max-height:200px;overflow-y:auto}
+.xq-bubble{position:relative;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  padding:10px 12px;font-size:12px;line-height:1.7;
+  color:rgba(255,255,255,.9);min-height:36px}
+.xq-bubble::before{content:'';position:absolute;left:-7px;top:12px;
+  width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;
+  border-right:7px solid rgba(255,255,255,.08)}
+.xq-typing .xq-cursor{display:inline-block;width:2px;height:1em;background:#64b5f6;
+  margin-left:2px;animation:xqBlink .5s step-end infinite;vertical-align:text-bottom}
+@keyframes xqBlink{0%,100%{opacity:1}50%{opacity:0}}
+.xq-dismiss{font-size:10px;color:rgba(255,255,255,.3);text-align:center;
+  padding:4px;cursor:pointer;transition:color .2s}
+.xq-dismiss:hover{color:rgba(255,255,255,.6)}
+@media(max-width:768px){
+  #xq-panel{bottom:70px;right:10px;width:240px}
+  .xq-avatar{width:30px;height:30px;font-size:15px}
+  .xq-body{padding:8px 10px}
+  .xq-bubble{font-size:11px;padding:8px 10px}
+}
+
 /* ============ LEARNING OVERLAY ============ */
 #learn-container{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:160;
   display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:90vw;max-width:480px}
@@ -1344,6 +1466,7 @@ body.card-lg .card.sm .s{font-size:14px}
       <span class="hint-bulb">💡</span> 提示: <span id="hint-level-label">标准</span>
     </span>
     <span id="btn-help" onclick="replayOnboarding()" title="新手引导">❓</span>
+    <span id="xq-toggle" onclick="xqToggle()" title="AI教练小桥">🤖 小桥</span>
   </div>
   <div id="table">
     <div id="hand-N" class="hand"></div>
@@ -1376,6 +1499,17 @@ body.card-lg .card.sm .s{font-size:14px}
       <button onclick="nextDeal()">下一副</button>
     </div>
     <div id="overlay"></div>
+    <div id="post-analysis">
+      <div class="pa-header">
+        <h3>📊 赛后分析</h3>
+        <button onclick="closeAnalysis()">✕</button>
+      </div>
+      <div id="pa-content"></div>
+      <div class="pa-btns">
+        <button class="pa-replay" onclick="replayHand()">🔄 重打这副牌</button>
+        <button class="pa-next" onclick="closeAnalysis();nextDeal()">🃏 下一副</button>
+      </div>
+    </div>
     <div id="bid-tooltip"></div>
     <div id="analysis-popup"></div>
   </div>
@@ -1541,6 +1675,7 @@ body.card-lg .card.sm .s{font-size:14px}
     <span id="stxt"></span>
     <button id="btn-go" onclick="startGame()">开始游戏</button>
     <button id="btn-story" class="story-btn" onclick="openLevelMap()">🎮 故事模式</button>
+    <button id="btn-just-play" onclick="startJustPlay()">🎯 只打牌</button>
   </div>
   <div id="onboarding">
     <div class="ob-card">
@@ -1608,6 +1743,18 @@ body.card-lg .card.sm .s{font-size:14px}
         <div class="ob-dot active"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div>
       </div>
     </div>
+  </div>
+  <!-- Xiao Qiao AI Coach Panel -->
+  <div id="xq-panel">
+    <div class="xq-header">
+      <div class="xq-avatar" id="xq-avatar">🤖</div>
+      <div><div class="xq-name">小桥 (Xiao Qiao)</div><div class="xq-role">AI 桥牌教练</div></div>
+      <button class="xq-close" onclick="xqHide()">✕</button>
+    </div>
+    <div class="xq-body" id="xq-body">
+      <div class="xq-bubble" id="xq-bubble">你好！我是小桥，你的AI桥牌教练。有我在，学牌更轻松！</div>
+    </div>
+    <div class="xq-dismiss" onclick="xqHide()">点击关闭</div>
   </div>
 </div>
 
@@ -1786,12 +1933,15 @@ function init(){
     vulnNS:false,vulnEW:false,
     scoreHistory:[],
     humanSeat:'S',aiDifficulty:'normal',speed:1,speedName:'normal',
-    cardSize:'md',soundEnabled:true
+    cardSize:'md',soundEnabled:true,
+    justPlayMode:false,replayHands:null,trickHistoryFull:[]
   };
   loadSettings();
   initStoryState();
   resetPlayedCards();
   document.getElementById('btn-go').style.display='';
+  document.getElementById('btn-story').style.display='';
+  document.getElementById('btn-just-play').style.display='';
   setS('点击"开始游戏"开始');
   clearTrick();
   hideDummy();
@@ -1861,8 +2011,12 @@ function deal(){
 
 function startGame(){
   document.getElementById('btn-go').style.display='none';
+  document.getElementById('btn-just-play').style.display='none';
   resetPlayedCards();
   deal();
+  G.justPlayMode=false;
+  // Save hands for replay
+  G.replayHands={N:G.hands['N'].slice(),S:G.hands['S'].slice(),E:G.hands['E'].slice(),W:G.hands['W'].slice()};
   renderHands();
   G.phase='bidding';
   G.currentBidder=G.dealer;
@@ -3787,6 +3941,7 @@ function startPlay(){
   G.trick=[];
   G.current=G.declarer;
   learnTrickLog=[]; // Reset trick log for new hand
+  G.trickHistoryFull=[]; // Reset full trick history for post-game analysis
   clearTrick();
   renderHands();
   updateDummyDisplay();
@@ -4238,11 +4393,17 @@ function finishPlay(){
     vulnEW:G.vulnEW
   });
   renderScoreHistory();
+
+  // Show post-game analysis after a short delay
+  setTimeout(function(){
+    try{showPostGameAnalysis(made,dt,need,bonus,team)}catch(e){console.error('Analysis error:',e)}
+  },spd(1500));
 }
 
 function nextDeal(){
   document.getElementById('score-popup').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
+  document.getElementById('post-analysis').classList.remove('show');
   // Learning overlay: clean up review section
   try{
     document.getElementById('learn-review-section').classList.remove('show');
@@ -4250,6 +4411,12 @@ function nextDeal(){
     document.getElementById('learn-container').innerHTML='';
     dismissLearnTip();
   }catch(e){}
+
+  // If in just-play mode, continue with just-play
+  if(G.justPlayMode){
+    startJustPlay();
+    return;
+  }
 
   G.round++;
   resetPlayedCards();
@@ -4260,6 +4427,8 @@ function nextDeal(){
   document.getElementById('i-trump').textContent='将牌：无';
   clearTrick();
   deal();
+  // Save hands for replay
+  G.replayHands={N:G.hands['N'].slice(),S:G.hands['S'].slice(),E:G.hands['E'].slice(),W:G.hands['W'].slice()};
   renderHands();
   hideDummy();
   G.phase='bidding';
@@ -6798,6 +6967,9 @@ function recordTrickForReview(trick,winnerPos){
     winningRank:winningRank,
     defenseWin:defenseWin
   });
+  // Full trick data for post-game analysis
+  let fullTrick=trick.map(t=>({pos:t.pos,suit:t.card.suit,rank:t.card.rank}));
+  G.trickHistoryFull.push({cards:fullTrick,winnerPos:winnerPos,lead:lead,trumpUsed:trumpUsed,trickNum:G.trickNum});
 }
 
 // ============ STORY MODE SYSTEM ============
@@ -7627,6 +7799,840 @@ function dismissResume(){
 // ---- Patch playCard to validate story mode ----
 const _origPlayCard=playCard;
 // We'll hook into the click handler instead
+
+// ============ XIAO QIAO AI COACH ============
+let xqEnabled=true;
+let xqQueue=[];
+let xqTimer=null;
+let xqDismissTimer=null;
+let xqTyping=false;
+
+(function(){
+  let saved=localStorage.getItem('bridge-xq-enabled');
+  if(saved==='0'){xqEnabled=false}
+  updateXqToggle();
+  if(!xqEnabled){document.getElementById('xq-panel').style.display='none'}
+})();
+
+function xqToggle(){
+  xqEnabled=!xqEnabled;
+  localStorage.setItem('bridge-xq-enabled',xqEnabled?'1':'0');
+  updateXqToggle();
+  let panel=document.getElementById('xq-panel');
+  if(xqEnabled){panel.style.display='';xqShowPanel()}
+  else{xqHidePanel();setTimeout(()=>{panel.style.display='none'},400)}
+}
+function updateXqToggle(){
+  let btn=document.getElementById('xq-toggle');
+  if(!btn)return;
+  btn.classList.toggle('active',xqEnabled);
+  btn.textContent=xqEnabled?'🤖 小桥':'🤖 小桥 (关)';
+}
+
+function xqShowPanel(){document.getElementById('xq-panel').classList.add('show')}
+function xqHidePanel(){document.getElementById('xq-panel').classList.remove('show')}
+function xqShow(){if(xqEnabled)xqShowPanel()}
+function xqHide(){xqHidePanel()}
+
+function xqSay(msg,priority){
+  if(!xqEnabled)return;
+  try{
+    // Cancel any pending dismiss/hide when new message arrives
+    if(xqDismissTimer){clearTimeout(xqDismissTimer);xqDismissTimer=null}
+    if(priority){
+      xqQueue.unshift(msg);
+    }else{
+      xqQueue.push(msg);
+    }
+    if(!xqTyping)xqDequeue();
+  }catch(e){}
+}
+
+function xqDequeue(){
+  if(xqQueue.length===0)return;
+  let msg=xqQueue.shift();
+  xqTypingEffect(msg);
+}
+
+function xqTypingEffect(msg){
+  if(!xqEnabled)return;
+  xqTyping=true;
+  xqShowPanel();
+  let bubble=document.getElementById('xq-bubble');
+  let avatar=document.getElementById('xq-avatar');
+  avatar.classList.remove('bounce');
+  void avatar.offsetWidth;
+  avatar.classList.add('bounce');
+  bubble.innerHTML='<span class="xq-cursor"></span>';
+  bubble.classList.add('xq-typing');
+  let i=0;
+  if(xqTimer)clearInterval(xqTimer);
+  xqTimer=setInterval(()=>{
+    if(i<msg.length){
+      bubble.innerHTML=msg.substring(0,i+1)+'<span class="xq-cursor"></span>';
+      i++;
+    }else{
+      clearInterval(xqTimer);
+      xqTimer=null;
+      bubble.innerHTML=msg;
+      bubble.classList.remove('xq-typing');
+      xqTyping=false;
+      if(xqDismissTimer)clearTimeout(xqDismissTimer);
+      xqDismissTimer=setTimeout(()=>{
+        xqHidePanel();
+        setTimeout(()=>{xqDequeue()},500);
+      },6000);
+    }
+  },35);
+}
+
+// ---- Hand Analysis for Coach ----
+function xqGetHCP(hand){
+  let h=0;
+  try{hand.forEach(c=>{if(c.rank==='A')h+=4;else if(c.rank==='K')h+=3;else if(c.rank==='Q')h+=2;else if(c.rank==='J')h+=1})}catch(e){}
+  return h;
+}
+function xqGetSuitLen(hand,suit){
+  try{return hand.filter(c=>c.suit===suit).length}catch(e){return 0}
+}
+
+// ---- Coach: Bidding Advice ----
+function xqOnShowBid(){
+  try{
+    let hs=G.humanSeat||'S';
+    let hand=G.hands[hs];
+    if(!hand||hand.length===0)return;
+    let hcp=xqGetHCP(hand);
+    let suitLens=S4.map(s=>({suit:s,len:xqGetSuitLen(hand,s)}));
+    suitLens.sort((a,b)=>b.len-a.len);
+    let longest=suitLens[0];
+    let dist=suitLens.map(s=>s.len).join('-');
+    let totalBids=G.bids.filter(b=>b.bid!=='Pass');
+    let msg='';
+
+    if(totalBids.length===0){
+      // Opening bid
+      if(hcp>=12&&hcp<=14&&longest.len>=5&&(longest.suit==='♥'||longest.suit==='♠')){
+        msg='你的牌有'+hcp+'HCP，'+longest.len+'张'+longest.suit+'。适合开叫1'+longest.suit+'！';
+      }else if(hcp>=15&&hcp<=17){
+        let suits={'\u2660':xqGetSuitLen(hand,'\u2660'),'\u2665':xqGetSuitLen(hand,'\u2665'),'\u2666':xqGetSuitLen(hand,'\u2666'),'\u2663':xqGetSuitLen(hand,'\u2663')};
+        if(isBalanced(suits,hand)){msg='你的牌有'+hcp+'HCP，均型牌('+dist+')。可以开叫1NT！';}
+        else{msg='你的牌有'+hcp+'HCP，牌型'+dist+'。可以开叫。';}
+      }else if(hcp>=12&&longest.len>=5){
+        msg='你的牌有'+hcp+'HCP，'+longest.len+'张'+longest.suit+'。可以开叫1'+longest.suit+'！';
+      }else if(hcp>=12){
+        msg='你的牌有'+hcp+'HCP，可以开叫。最长套是'+longest.suit+'('+longest.len+'张)。';
+      }else{
+        msg='你的牌只有'+hcp+'HCP，牌力不足开叫。建议Pass。';
+      }
+    }else{
+      // Responding/competing
+      let lastBid=totalBids[totalBids.length-1];
+      let partnerPos={'S':'N','N':'S','E':'W','W':'E'}[hs];
+      let partnerBids=totalBids.filter(b=>b.pos===partnerPos);
+      let oppBids=totalBids.filter(b=>b.pos!==hs&&b.pos!==partnerPos);
+
+      if(partnerBids.length>0){
+        let pBid=partnerBids[partnerBids.length-1].bid;
+        let psuit=pBid.slice(1);
+        let plv=+pBid[0];
+        let support=xqGetSuitLen(hand,psuit==='NT'?'':psuit);
+        if(psuit!=='NT'&&support>=3){
+          msg='搭档叫了'+pBid+'。你有'+support+'张'+psuit+'支持和'+hcp+'HCP。';
+          if(hcp+Math.max(0,support-3)*2>=18) msg+='可以考虑加叫进局！';
+          else if(hcp>=6) msg+='可以加叫，支持搭档。';
+        }else{
+          msg='搭档叫了'+pBid+'。你有'+hcp+'HCP，牌型'+dist+'。选择合适的应叫。';
+        }
+      }else if(oppBids.length>0){
+        msg='对手争叫了'+lastBid.bid+'。你有'+hcp+'HCP。';
+        if(hcp>=12) msg+='可以考虑争叫或技术性加倍。';
+        else msg+='牌力不足，建议Pass。';
+      }else{
+        msg='现在轮到你叫牌了。你有'+hcp+'HCP，牌型'+dist+'。';
+      }
+    }
+    if(msg)xqSay(msg,true);
+  }catch(e){}
+}
+
+// ---- Coach: After Human Bid ----
+function xqOnBid(pos,bid){
+  try{
+    if(pos!==(G.humanSeat||'S'))return;
+    let msgs=[];
+    if(bid==='Pass'){
+      msgs.push('你选择了Pass，稳妥的选择。');
+    }else if(bid==='X'){
+      msgs.push('技术性加倍！告诉搭档你有开叫实力。');
+    }else if(bid==='XX'){
+      msgs.push('再加倍！很有信心！要小心打牌。');
+    }else{
+      let suit=bid.slice(1);
+      let suitName=suit==='NT'?'无将':(SN[suit]||suit);
+      msgs.push('你叫了'+bid+'('+suitName+')，信息传达到位！');
+    }
+    // Add partner context if available
+    let totalBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
+    if(totalBids.length>=2){
+      let partnerPos={'S':'N','N':'S','E':'W','W':'E'}[pos];
+      let partnerLast=totalBids.filter(b=>b.pos===partnerPos);
+      if(partnerLast.length>0){
+        let pb=partnerLast[partnerLast.length-1];
+        msgs.push('搭档之前叫了'+pb.bid+'，你们在建立叫牌进程。');
+      }
+    }
+    xqSay(msgs[Math.random()*msgs.length|0]);
+  }catch(e){}
+}
+
+// ---- Coach: Play Start ----
+function xqOnPlayStart(){
+  try{
+    let hs=G.humanSeat||'S';
+    let humanIsDeclarer=(G.declarer===hs);
+    let need=+G.contract[0]+6;
+    let trumpStr=G.trump?SN[G.trump]:'无将';
+    let msg='定约'+G.contract+'('+trumpStr+')，'+PN[G.declarer]+'主打。';
+    msg+='需要'+need+'墩完成定约。';
+
+    if(humanIsDeclarer){
+      msg+='你是庄家！先看看明手的牌，规划你的打法。';
+      if(G.trump){
+        msg+='注意将牌控制，不要过早用完将牌。';
+      }
+    }else{
+      msg+='你是防守方。和搭档配合，争取阻止庄家完成定约。';
+    }
+    xqSay(msg,true);
+  }catch(e){}
+}
+
+// ---- Coach: Card Played ----
+function xqOnCardPlayed(pos,card){
+  try{
+    let hs=G.humanSeat||'S';
+    let humanIsDeclarer=(G.declarer===hs);
+    let isHuman=(pos===hs||(pos===G.dummy&&humanIsDeclarer));
+
+    if(G.trick.length===1){
+      // Leading card
+      if(isHuman){
+        let leadAdvice='';
+        if(G.trump&&card.suit===G.trump){
+          leadAdvice='你出了将牌。将牌引出可以减少对手的将吃能力。';
+        }else if(card.suit===G.trumpSuit){
+          leadAdvice='你引出了'+SN[card.suit]+'。';
+        }else{
+          leadAdvice='你引出了'+card.suit+card.rank+'。看看能否建立长套赢墩。';
+        }
+        xqSay(leadAdvice);
+      }
+    }else if(G.trick.length===3&&!isHuman){
+      // Last card before human plays next - contextual tip
+      let humanCards=G.hands[hs];
+      if(humanCards&&humanCards.length<=3){
+        xqSay('💡 残局时要仔细计算剩余的赢墩和输墩。');
+      }
+    }
+  }catch(e){}
+}
+
+// ---- Coach: Trick Resolution ----
+function xqOnTrickResolved(trick,winPos){
+  try{
+    let hs=G.humanSeat||'S';
+    let humanIsDeclarer=(G.declarer===hs);
+    let humanTeam=(winPos===hs||(winPos===G.dummy&&humanIsDeclarer))||(winPos==={'S':'N','N':'S','E':'W','W':'E'}[hs]&&!humanIsDeclarer);
+    // Actually determine if human's side won
+    let winIsNS=(winPos==='N'||winPos==='S');
+    let humanIsNS=(hs==='N'||hs==='S');
+    let humanSideWon=(winIsNS===humanIsNS);
+
+    let winCard=trick.find(t=>t.pos===winPos);
+    let winCardStr=winCard?(winCard.card.suit+winCard.card.rank):'';
+
+    if(humanSideWon){
+      let msgs=[
+        '好牌！你方赢了这一墩。'+winCardStr+'最大。',
+        '漂亮！赢了一墩。保持优势！',
+        '不错！这墩归你们了。继续加油！'
+      ];
+      xqSay(msgs[Math.random()*msgs.length|0]);
+    }else{
+      // Check if human was trumped
+      let humanCard=trick.find(t=>t.pos===hs||((t.pos===G.dummy&&humanIsDeclarer)));
+      let wasTrumped=G.trump&&trick.some(t=>t.card.suit===G.trump&&t.pos!==winPos);
+      
+      if(humanCard&&humanCard.card.suit!==winCard?.card?.suit&&wasTrumped){
+        xqSay('对手将吃了！下次注意保护自己的将牌，或先清完对手的将牌。');
+      }else{
+        let msgs=[
+          '这一墩让给了对手。没关系，保持冷静！',
+          '对手赢了这墩。分析一下他们的出牌规律。',
+          '不要紧，后面还有机会。继续加油！'
+        ];
+        xqSay(msgs[Math.random()*msgs.length|0]);
+      }
+    }
+
+    // Contextual tips
+    let tricksPlayed=G.nsTricks+G.ewTricks;
+    let need=+G.contract[0]+6;
+    let declTeam=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+    let declTricks=declTeam==='NS'?G.nsTricks:G.ewTricks;
+    let remaining=13-tricksPlayed;
+
+    if(remaining>0&&remaining<=3){
+      xqSay('💡 残局阶段！还剩'+remaining+'墩。仔细计算赢墩数。');
+    }
+    if(humanIsDeclarer&&G.trump&&remaining>0){
+      let humanTrumps=xqGetSuitLen(G.hands[hs],G.trump);
+      if(humanTrumps===0){
+        xqSay('💡 你已经没有将牌了，注意对手的将吃。');
+      }
+    }
+  }catch(e){}
+}
+
+// ---- Coach: Hand Complete ----
+function xqOnHandComplete(made,dt,need){
+  try{
+    let hs=G.humanSeat||'S';
+    let humanIsDeclarer=(G.declarer===hs);
+    let overOrUnder=dt-need;
+    let msg='';
+
+    if(made){
+      if(overOrUnder>=3){
+        msg='太棒了！超额'+overOrUnder+'墩完成定约！你的打牌非常出色！🏆';
+      }else if(overOrUnder>=1){
+        msg='恭喜！完成定约并超额'+overOrUnder+'墩。关键牌处理得很好！';
+      }else{
+        msg='恭喜！刚好完成定约！稳健的打牌。';
+      }
+    }else{
+      if(overOrUnder<=-3){
+        msg='可惜，宕了'+Math.abs(overOrUnder)+'墩。下次可以更仔细地规划打牌路线。';
+      }else{
+        msg='可惜，只差'+Math.abs(overOrUnder)+'墩就完成了。复盘一下，看看哪里可以改进。';
+      }
+    }
+
+    // Add specific learning point
+    if(humanIsDeclarer){
+      if(!made&&G.trump){
+        msg+=' 💡 有将定约中，将牌管理很关键。';
+      }else if(made){
+        msg+=' 你在打牌中有进步，继续保持！';
+      }
+    }else{
+      msg+=' 防守需要和搭档的默契配合。';
+    }
+
+    xqSay(msg,true);
+  }catch(e){}
+}
+
+// ---- Hook into existing game functions ----
+const _xqOrigShowBidUI=typeof showBidUI!=='undefined'?showBidUI:null;
+const _xqOrigSubmitBid=submitBid;
+const _xqOrigResolveTrick=resolveTrick;
+const _xqOrigFinishPlay=finishPlay;
+const _xqOrigStartPlay=startPlay;
+const _xqOrigPlayCard=playCard;
+const _xqOrigNextBid=nextBid;
+
+// Hook: nextBid - detect when it's human's turn
+nextBid=function(){
+  _xqOrigNextBid.apply(this,arguments);
+  try{
+    let hs=G.humanSeat||'S';
+    if(G.phase==='bidding'&&G.currentBidder===hs){
+      setTimeout(()=>xqOnShowBid(),600);
+    }
+  }catch(e){}
+};
+
+// Hook: submitBid - after human bids
+submitBid=function(pos,bid){
+  _xqOrigSubmitBid.apply(this,arguments);
+  try{xqOnBid(pos,bid)}catch(e){}
+};
+
+// Hook: startPlay - when play phase begins
+startPlay=function(){
+  _xqOrigStartPlay.apply(this,arguments);
+  try{setTimeout(()=>xqOnPlayStart(),1500)}catch(e){}
+};
+
+// Hook: playCard - when a card is played
+playCard=function(pos,card){
+  _xqOrigPlayCard.apply(this,arguments);
+  try{xqOnCardPlayed(pos,card)}catch(e){}
+};
+
+// Hook: resolveTrick - after trick resolution
+resolveTrick=function(){
+  let trickCopy=G.trick.slice();
+  let winPosBefore=null;
+  // Calculate winner before original function modifies state
+  try{
+    if(trickCopy.length===4){
+      let lead=trickCopy[0].card.suit;
+      let trump=G.trump;
+      let win;
+      if(trump){
+        let tc=trickCopy.filter(t=>t.card.suit===trump);
+        if(tc.length>0) win=tc.reduce((a,b)=>RV[a.card.rank]>RV[b.card.rank]?a:b);
+        else {let lc=trickCopy.filter(t=>t.card.suit===lead);win=lc.reduce((a,b)=>RV[a.card.rank]>RV[b.card.rank]?a:b)}
+      } else {
+        let lc=trickCopy.filter(t=>t.card.suit===lead);
+        win=lc.reduce((a,b)=>RV[a.card.rank]>RV[b.card.rank]?a:b);
+      }
+      winPosBefore=win.pos;
+    }
+  }catch(e){}
+  
+  _xqOrigResolveTrick.apply(this,arguments);
+  try{
+    if(winPosBefore)setTimeout(()=>xqOnTrickResolved(trickCopy,winPosBefore),100);
+  }catch(e){}
+};
+
+// Hook: finishPlay - after hand completion
+finishPlay=function(){
+  let needBefore=+(G.contract||'')[0]+6;
+  let dtBefore=(G.declarer==='N'||G.declarer==='S')?G.nsTricks:G.ewTricks;
+  let madeBefore=dtBefore>=needBefore;
+  
+  _xqOrigFinishPlay.apply(this,arguments);
+  try{setTimeout(()=>xqOnHandComplete(madeBefore,dtBefore,needBefore),800)}catch(e){}
+};
+
+// ============ JUST DECLARE MODE & POST-GAME ANALYSIS ============
+
+// ---- Auto Contract Selection ----
+function autoSelectContract(){
+  let nHand=G.hands['N'], sHand=G.hands['S'];
+  let nHCP=countHCP(nHand), sHCP=countHCP(sHand);
+  let totalHCP=nHCP+sHCP;
+  let suitCounts={};
+  S4.forEach(s=>{
+    suitCounts[s]=nHand.filter(c=>c.suit===s).length+sHand.filter(c=>c.suit===s).length;
+  });
+  // Find longest suit
+  let longestSuit=S4.reduce((a,b)=>suitCounts[a]>=suitCounts[b]?a:b);
+  let longestLen=suitCounts[longestSuit];
+  // Check for major fits (8+ cards)
+  let heartFit=suitCounts['♥'];
+  let spadeFit=suitCounts['♠'];
+  // Check balanced hands
+  let nDist=S4.map(s=>nHand.filter(c=>c.suit===s).length);
+  let sDist=S4.map(s=>sHand.filter(c=>c.suit===s).length);
+  let nBalanced=nDist.every(c=>c>=2)&&nDist.every(c=>c<=5)&&nDist.filter(c=>c===5).length<=1;
+  let sBalanced=sDist.every(c=>c>=2)&&sDist.every(c=>c<=5)&&sDist.filter(c=>c===5).length<=1;
+  let bothBalanced=nBalanced&&sBalanced;
+
+  let contract,trumpSuit,trump,reason;
+
+  if(totalHCP>=33&&longestLen>=8){
+    // Small slam
+    let level=6;
+    contract=level+longestSuit;
+    trumpSuit=longestSuit;
+    trump=trumpSuit==='NT'?null:trumpSuit;
+    reason='联手'+totalHCP+'HCP，'+longestLen+'张'+SN[longestSuit]+'配合，叫小满贯';
+  } else if(totalHCP>=25&&bothBalanced&&(heartFit<8&&spadeFit<8)){
+    // 3NT
+    contract='3NT';
+    trumpSuit='NT';
+    trump=null;
+    reason='联手'+totalHCP+'HCP，均型牌，无8张高花配合';
+  } else if(totalHCP>=25&&spadeFit>=8){
+    // 4♠
+    contract='4♠';
+    trumpSuit='♠';
+    trump='♠';
+    reason='联手'+totalHCP+'HCP，'+spadeFit+'张黑桃配合';
+  } else if(totalHCP>=25&&heartFit>=8){
+    // 4♥
+    contract='4♥';
+    trumpSuit='♥';
+    trump='♥';
+    reason='联手'+totalHCP+'HCP，'+heartFit+'张红心配合';
+  } else if(totalHCP>=28){
+    // Game in longest fit
+    if(longestSuit==='♠'||longestSuit==='♥'){
+      contract='4'+longestSuit;
+    } else if(bothBalanced){
+      contract='3NT';
+    } else {
+      contract='5'+longestSuit;
+    }
+    trumpSuit=contract==='3NT'?'NT':contract.slice(1);
+    trump=trumpSuit==='NT'?null:trumpSuit;
+    reason='联手'+totalHCP+'HCP，'+longestLen+'张'+SN[longestSuit]+'配合';
+  } else if(totalHCP>=25){
+    // Try game in best fit
+    if(spadeFit>=7){contract='4♠';trumpSuit='♠';trump='♠'}
+    else if(heartFit>=7){contract='4♥';trumpSuit='♥';trump='♥'}
+    else if(bothBalanced){contract='3NT';trumpSuit='NT';trump=null}
+    else{contract='3'+longestSuit;trumpSuit=longestSuit;trump=longestSuit==='NT'?null:longestSuit}
+    reason='联手'+totalHCP+'HCP，'+longestLen+'张'+SN[longestSuit]+'配合';
+  } else {
+    // Part score
+    contract='1'+longestSuit;
+    trumpSuit=longestSuit;
+    trump=longestSuit==='NT'?null:longestSuit;
+    reason='联手'+totalHCP+'HCP，部分分数定约';
+  }
+
+  return{contract:contract,trumpSuit:trumpSuit,trump:trump,reason:reason,totalHCP:totalHCP,
+    heartFit:heartFit,spadeFit:spadeFit,longestSuit:longestSuit,longestLen:longestLen};
+}
+
+// ---- Start Just Declare Mode ----
+function startJustPlay(){
+  // Hide buttons
+  document.getElementById('btn-go').style.display='none';
+  document.getElementById('btn-story').style.display='none';
+  document.getElementById('btn-just-play').style.display='none';
+
+  // Clean up any existing state
+  document.getElementById('score-popup').classList.remove('show');
+  document.getElementById('post-analysis').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+
+  init();
+  G.justPlayMode=true;
+  G.round=1;
+  resetPlayedCards();
+  deal();
+
+  // Save hands for replay
+  G.replayHands={N:G.hands['N'].slice(),S:G.hands['S'].slice(),E:G.hands['E'].slice(),W:G.hands['W'].slice()};
+
+  // Auto-select contract
+  let ac=autoSelectContract();
+  G.contract=ac.contract;
+  G.declarer='S';
+  G.dummy='N';
+  G.trumpSuit=ac.trumpSuit;
+  G.trump=ac.trump;
+  G.trickNum=0;
+  G.nsTricks=0;
+  G.ewTricks=0;
+  G.doubled=0;
+
+  // Update UI
+  document.getElementById('i-contract').textContent='定约：'+G.contract+' (南主打)';
+  document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-round').textContent='只打牌模式';
+
+  // Show contract info in status
+  setS('🎯 自动定约: '+G.contract+' — '+ac.reason);
+
+  // Show contract explanation toast
+  setTimeout(function(){
+    try{
+      showLearnToast('自动定约: '+G.contract,'🎯 '+ac.reason,5000);
+    }catch(e){}
+  },500);
+
+  updateLabels();
+  renderHands();
+  setTimeout(startPlay,spd(1000));
+}
+
+// ---- Post-Game Analysis ----
+function showPostGameAnalysis(made,dt,need,bonus,team){
+  let analysisEl=document.getElementById('post-analysis');
+  let contentEl=document.getElementById('pa-content');
+  let html='';
+
+  // 1. Score Summary
+  let contractStr=G.contract+(G.doubled===1?' (X)':G.doubled===2?' (XX)':'');
+  let resultText;
+  if(made){
+    let over=dt-need;
+    resultText=over>0?'赢'+dt+'墩 (超额'+over+')':'恰好完成 (赢'+dt+'墩)';
+  } else {
+    resultText='赢'+dt+'墩 (宕'+(need-dt)+')';
+  }
+
+  let scoreColor=made?'#81c784':'#ef9a9a';
+  html+='<div class="pa-section">';
+  html+='<div class="pa-section-title">📋 本副总结</div>';
+  html+='<div class="pa-score-box">';
+  html+='<div class="pa-score-big" style="color:'+scoreColor+'">'+(bonus>=0?'+':'')+bonus+'</div>';
+  html+='<div class="pa-score-sub">'+contractStr+' ('+PN[G.declarer]+'主打) — '+resultText+'</div>';
+  html+='<div class="pa-pct">你的得分超过了约 '+estimatePercentile(made,dt,need,G.contract)+'% 的玩家</div>';
+  html+='</div></div>';
+
+  // 2. Trick-by-trick review
+  if(G.trickHistoryFull&&G.trickHistoryFull.length>0){
+    html+='<div class="pa-section">';
+    html+='<div class="pa-section-title">🃏 逐墩回顾</div>';
+    html+='<table class="pa-trick-table"><thead><tr>';
+    html+='<th>墩</th><th>'+PN['S']+'</th><th>'+PN['W']+'</th><th>'+PN['N']+'</th><th>'+PN['E']+'</th><th>赢方</th>';
+    html+='</tr></thead><tbody>';
+
+    for(let i=0;i<G.trickHistoryFull.length;i++){
+      let t=G.trickHistoryFull[i];
+      let winTeam=(t.winnerPos==='N'||t.winnerPos==='S')?'NS':'EW';
+      let rowClass=winTeam==='NS'?'pa-ns-win':'pa-ew-win';
+      html+='<tr class="pa-trick-winner">';
+      html+='<td>'+(i+1)+'</td>';
+
+      // Show cards in S, W, N, E order (matching display order)
+      let order=['S','W','N','E'];
+      for(let p of order){
+        let card=t.cards.find(c=>c.pos===p);
+        if(card){
+          let color=SC[card.suit]==='red'?'#ef9a9a':'#bbb';
+          html+='<td style="color:'+color+'">'+card.suit+card.rank+'</td>';
+        } else {
+          html+='<td>-</td>';
+        }
+      }
+      html+='<td class="'+rowClass+'">'+PN[t.winnerPos]+'</td>';
+      html+='</tr>';
+    }
+    html+='</tbody></table>';
+    html+='</div>';
+  }
+
+  // 3. Key Moments
+  let moments=generateKeyMoments();
+  if(moments.length>0){
+    html+='<div class="pa-section">';
+    html+='<div class="pa-section-title">⚡ 关键时刻</div>';
+    for(let m of moments){
+      let cls=m.good?'pa-moment-good':'pa-moment-bad';
+      let icon=m.good?'✅':'💡';
+      html+='<div class="pa-moment '+cls+'"><span class="pa-moment-icon">'+icon+'</span>'+m.text+'</div>';
+    }
+    html+='</div>';
+  }
+
+  // 4. Advice
+  html+='<div class="pa-section">';
+  html+='<div class="pa-section-title">📝 建议</div>';
+  html+='<div class="pa-advice">'+generateAdvice(made,dt,need)+'</div>';
+  html+='</div>';
+
+  contentEl.innerHTML=html;
+  analysisEl.classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function estimatePercentile(made,dt,need,contract){
+  // Estimate a reasonable percentile based on result quality
+  if(!made){
+    let under=need-dt;
+    if(under>=3)return Math.floor(5+Math.random()*10);
+    if(under>=2)return Math.floor(15+Math.random()*15);
+    return Math.floor(30+Math.random()*15);
+  }
+  let over=dt-need;
+  if(over>=3)return Math.floor(88+Math.random()*10);
+  if(over>=2)return Math.floor(75+Math.random()*12);
+  if(over>=1)return Math.floor(60+Math.random()*12);
+  return Math.floor(45+Math.random()*15);
+}
+
+function generateKeyMoments(){
+  let moments=[];
+  if(!G.trickHistoryFull||G.trickHistoryFull.length===0)return moments;
+
+  // Analyze tricks for interesting patterns
+  let trumpTricks=G.trickHistoryFull.filter(t=>t.trumpUsed);
+  let firstFewTricks=G.trickHistoryFull.slice(0,3);
+  let lastFewTricks=G.trickHistoryFull.slice(-3);
+
+  // Check for opening lead analysis
+  if(firstFewTricks.length>0){
+    let firstLead=firstFewTricks[0].cards[0];
+    let leadTeam=(firstFewTricks[0].cards[0].pos==='N'||firstFewTricks[0].cards[0].pos==='S')?'NS':'EW';
+    if(firstFewTricks[0].winnerPos==='N'||firstFewTricks[0].winnerPos==='S'){
+      moments.push({good:true,text:'第1墩: '+PN[firstLead.pos]+'首攻'+firstLead.suit+firstLead.rank+'，南北赢得首墩，好的开始！'});
+    } else {
+      moments.push({good:false,text:'第1墩: '+PN[firstLead.pos]+'首攻'+firstLead.suit+firstLead.rank+'，东西赢得首墩。注意首攻选择。'});
+    }
+  }
+
+  // Check for trump usage
+  if(trumpTricks.length>0){
+    let first=trumpTricks[0];
+    let ruffCard=first.cards.find(c=>c.suit===G.trump);
+    if(ruffCard){
+      let ruffTeam=(ruffCard.pos==='N'||ruffCard.pos==='S')?'NS':'EW';
+      if(ruffTeam==='NS'){
+        moments.push({good:true,text:'第'+first.trickNum+'墩: 南北用将牌将吃，建立额外赢墩！'});
+      } else {
+        moments.push({good:false,text:'第'+first.trickNum+'墩: 东西用将牌将吃赢墩。注意控制将牌。'});
+      }
+    }
+  }
+
+  // Check for big swings in late tricks
+  let nsWins=0,ewWins=0;
+  for(let i=0;i<G.trickHistoryFull.length;i++){
+    let t=G.trickHistoryFull[i];
+    if(t.winnerPos==='N'||t.winnerPos==='S')nsWins++;
+    else ewWins++;
+    // Detect momentum shifts
+    if(i>=3&&i<G.trickHistoryFull.length){
+      let recentNS=0,recentEW=0;
+      for(let j=Math.max(0,i-2);j<=i;j++){
+        let r=G.trickHistoryFull[j];
+        if(r.winnerPos==='N'||r.winnerPos==='S')recentNS++;
+        else recentEW++;
+      }
+      if(recentNS===3&&nsWins>ewWins){
+        moments.push({good:true,text:'第'+t.trickNum+'墩附近: 南北连续赢墩，势头很好！'});
+        break;
+      }
+    }
+  }
+
+  // Endgame comment
+  if(lastFewTricks.length>0){
+    let lastWin=lastFewTricks[lastFewTricks.length-1];
+    if(lastWin.winnerPos==='N'||lastWin.winnerPos==='S'){
+      moments.push({good:true,text:'残局: 南北赢得最后一墩，完美收官！'});
+    }
+  }
+
+  // Limit to 3 most interesting moments
+  if(moments.length>3)moments=moments.slice(0,3);
+  return moments;
+}
+
+function generateAdvice(made,dt,need){
+  let advices=[];
+  if(made){
+    let over=dt-need;
+    if(over>=3){
+      advices.push('太棒了！超额'+over+'墩，你的打法非常出色。');
+      advices.push('可以考虑挑战更高阶的定约。');
+    } else if(over>=1){
+      advices.push('做得好！赢了'+dt+'墩，超额'+over+'墩完成定约。');
+    } else {
+      advices.push('恰好完成定约，精准的打法！');
+    }
+  } else {
+    let under=need-dt;
+    if(under>=3){
+      advices.push('宕了'+under+'墩，差距较大。');
+      advices.push('建议回顾前几墩的出牌顺序，看看能否找到更多赢墩。');
+      advices.push('注意计算两手牌的快速赢墩和潜在赢墩。');
+    } else if(under>=2){
+      advices.push('差'+under+'墩，下次注意牌型分布的推断。');
+      advices.push('看看关键时刻的出牌，可能有更好的选择。');
+    } else {
+      advices.push('仅差1墩！非常接近了。');
+      advices.push('检查是否有某个花色的处理可以更优化。');
+    }
+  }
+  // General tips
+  if(G.trump){
+    advices.push('💡 将牌定约小贴士：注意将牌的使用时机，过早用完将牌会失去控制。');
+  } else {
+    advices.push('💡 无将定约小贴士：建立长套赢墩是关键，先算好快速赢墩再制定计划。');
+  }
+  return advices.join('<br>');
+}
+
+function closeAnalysis(){
+  document.getElementById('post-analysis').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ---- Replay Hand ----
+function replayHand(){
+  // Close analysis and score popups
+  document.getElementById('post-analysis').classList.remove('show');
+  document.getElementById('score-popup').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+
+  // Store the original hands for replay
+  let savedHands={
+    N:G.replayHands?G.replayHands.N.slice():G.hands['N'].slice(),
+    S:G.replayHands?G.replayHands.S.slice():G.hands['S'].slice(),
+    E:G.replayHands?G.replayHands.E.slice():G.hands['E'].slice(),
+    W:G.replayHands?G.replayHands.W.slice():G.hands['W'].slice()
+  };
+
+  let wasJustPlay=G.justPlayMode;
+  let savedNS=G.totalNS, savedEW=G.totalEW, savedHist=G.scoreHistory.slice(), savedRound=G.round;
+
+  // Reset game state
+  resetPlayedCards();
+  clearTrick();
+  hideDummy();
+
+  // Restore the exact same hands
+  G.hands={N:savedHands.N.slice(),S:savedHands.S.slice(),E:savedHands.E.slice(),W:savedHands.W.slice()};
+  G.replayHands=savedHands;
+  G.trickHistoryFull=[];
+  G.trickNum=0;
+  G.nsTricks=0;
+  G.ewTricks=0;
+  G.trick=[];
+
+  if(wasJustPlay){
+    // Replay in just-play mode with same hands
+    G.justPlayMode=true;
+    G.round=savedRound;
+    G.totalNS=savedNS;
+    G.totalEW=savedEW;
+    G.scoreHistory=savedHist;
+
+    let ac=autoSelectContract();
+    G.contract=ac.contract;
+    G.declarer='S';
+    G.dummy='N';
+    G.trumpSuit=ac.trumpSuit;
+    G.trump=ac.trump;
+    G.doubled=0;
+
+    document.getElementById('i-contract').textContent='定约：'+G.contract+' (南主打)';
+    document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+    document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+    document.getElementById('i-round').textContent='只打牌模式';
+    setS('🔄 重打这副牌 — '+ac.reason);
+  } else {
+    // Replay with bidding
+    G.justPlayMode=false;
+    G.round=savedRound;
+    G.totalNS=savedNS;
+    G.totalEW=savedEW;
+    G.scoreHistory=savedHist;
+
+    G.contract=null;G.declarer=null;G.dummy=null;G.trump=null;G.trumpSuit=null;
+    G.phase='bidding';
+    G.currentBidder=G.dealer;
+    G.bids=[];G.highestBid=null;G.highestBidder=null;G.passCount=0;G.doubled=0;
+
+    document.getElementById('i-contract').textContent='定约：--';
+    document.getElementById('i-trump').textContent='将牌：无';
+    document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+    document.getElementById('i-round').textContent='第 '+G.round+' 副';
+    setS('🔄 重打这副牌 — 叫牌阶段');
+  }
+
+  renderHands();
+  updateLabels();
+
+  if(wasJustPlay){
+    setTimeout(startPlay,spd(800));
+  } else {
+    setTimeout(nextBid,spd(500));
+  }
+}
 
 // ============ INIT ============
 init();
