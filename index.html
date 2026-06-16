@@ -17,13 +17,27 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 #game{width:100vw;height:100vh;display:flex;flex-direction:column}
 
 /* ============ INFO BAR (Glass-morphism) ============ */
-#info-bar{text-align:center;padding:10px 16px;
+#info-bar{text-align:center;padding:8px 16px 6px;
   background:rgba(15,25,15,.75);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,.08);
-  font-size:13px;display:flex;justify-content:center;gap:16px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+  font-size:13px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:0}
+#info-row1{display:flex;justify-content:center;gap:14px;align-items:center;flex-wrap:wrap}
+#info-row2{display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap;
+  padding-top:6px;margin-top:6px;border-top:1px solid rgba(255,255,255,.06);width:100%}
 .tag{background:rgba(255,255,255,.1);padding:4px 14px;border-radius:12px;white-space:nowrap;
-  border:1px solid rgba(255,255,255,.06);font-weight:500;letter-spacing:.3px}
+  border:1px solid rgba(255,255,255,.06);font-weight:600;letter-spacing:.3px;font-size:13px}
+#i-contract{font-size:14px;font-weight:700;background:rgba(255,193,7,.15);border-color:rgba(255,193,7,.25);color:#ffd54f}
+
+/* Row 2 icon-only buttons */
+#info-row2 .tool-btn{cursor:pointer;transition:all .2s;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);user-select:none;
+  position:relative;line-height:1.3}
+#info-row2 .tool-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
+#info-row2 .tool-btn[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);
+  left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fff;padding:4px 10px;
+  border-radius:6px;font-size:11px;white-space:nowrap;pointer-events:none;z-index:999;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);font-weight:500}
 
 /* ============ TABLE (Felt texture + radial gradient) ============ */
 #table{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -36,10 +50,10 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
   box-shadow:inset 0 0 30px rgba(0,0,0,.2)}
 
 /* ============ PLAYER LABELS ============ */
-.plabel{position:absolute;font-size:13px;font-weight:700;letter-spacing:.5px;z-index:5;pointer-events:none;
+.plabel{position:absolute;font-size:14px;font-weight:700;letter-spacing:.5px;z-index:5;pointer-events:none;
   padding:4px 12px;border-radius:8px;
   background:rgba(0,0,0,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  text-shadow:0 1px 3px rgba(0,0,0,.8);transition:all .3s ease}
+  text-shadow:0 1px 4px rgba(0,0,0,.9),0 0 8px rgba(0,0,0,.3);transition:all .3s ease}
 #lbl-N{top:8px;left:50%;transform:translateX(-50%);color:#64b5f6}
 #lbl-S{bottom:8px;left:50%;transform:translateX(-50%);color:#81c784}
 #lbl-E{right:10px;top:50%;transform:translateY(-50%);color:#ef5350}
@@ -53,7 +67,7 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 /* ============ HANDS ============ */
 .hand{position:absolute;display:flex;justify-content:center;z-index:2}
 #hand-N{top:32px;left:50%;transform:translateX(-50%);gap:-2px}
-#hand-S{bottom:32px;left:50%;transform:translateX(-50%);gap:3px}
+#hand-S{bottom:32px;left:50%;transform:translateX(-50%);gap:4px}
 #hand-E{right:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:-2px}
 #hand-W{left:10px;top:50%;transform:translateY(-50%);flex-direction:column;gap:-2px}
 
@@ -70,48 +84,67 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 #dummy-cards.vert{flex-direction:column;align-items:center}
 
 /* ============ CARDS ============ */
-.card{width:46px;height:66px;border-radius:7px;font-size:12px;cursor:default;
+.card{width:50px;height:72px;border-radius:8px;font-size:12px;cursor:default;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border:1px solid rgba(0,0,0,.1);background:linear-gradient(135deg,#ffffff 0%,#f5f5f5 100%);
+  border:1px solid rgba(0,0,0,.12);background:linear-gradient(135deg,#ffffff 0%,#f0f0f0 100%);
   color:#333;transition:all .18s cubic-bezier(.4,0,.2,1);
   flex-shrink:0;position:relative;
-  box-shadow:0 2px 6px rgba(0,0,0,.2),0 1px 2px rgba(0,0,0,.15);
-  font-weight:600}
-.card .r{font-size:16px;font-weight:800;line-height:1}
-.card .s{font-size:14px;line-height:1}
-.card.red{color:#c62828}
-.card.black{color:#1a1a1a}
+  box-shadow:1px 3px 8px rgba(0,0,0,.25),0 1px 3px rgba(0,0,0,.15);
+  font-weight:600;overflow:hidden}
+.card::before{content:'';position:absolute;inset:3px;border:1px solid rgba(0,0,0,.04);border-radius:5px;pointer-events:none}
+.card .r{font-size:17px;font-weight:900;line-height:1}
+.card .s{font-size:15px;line-height:1}
+.card .cs{position:absolute;bottom:14px;font-size:18px;opacity:.12;pointer-events:none}
+.card.red{color:#b71c1c;background:linear-gradient(135deg,#fff 0%,#fce4ec 100%)}
+.card.red .r,.card.red .s{background:linear-gradient(180deg,#d32f2f,#b71c1c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.card.black{color:#212121;background:linear-gradient(135deg,#fff 0%,#f5f5f5 100%)}
+.card.black .r,.card.black .s{background:linear-gradient(180deg,#212121,#000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
 /* Small cards (N/E/W hands, dummy) */
-.card.sm{width:30px;height:42px;border-radius:5px}
+.card.sm{width:32px;height:44px;border-radius:5px}
 .card.sm .r{font-size:10px}
 .card.sm .s{font-size:11px}
+.card.sm .cs{display:none}
+.card.sm::before{inset:2px;border-radius:3px}
 
 /* Face-down cards */
-.card.fd{background:linear-gradient(135deg,#1a237e 0%,#283593 50%,#1a237e 100%);
+.card.fd{background:linear-gradient(135deg,#0d1b3e 0%,#1a237e 40%,#0d1b3e 100%);
   border-color:rgba(0,0,0,.3);color:transparent;
   box-shadow:0 2px 6px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
 .card.fd .r,.card.fd .s{display:none}
-.card.fd::after{content:'🂠';position:absolute;font-size:24px;color:rgba(121,134,203,.6);
-  text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.card.fd::before{content:'';position:absolute;inset:4px;border-radius:4px;
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(255,255,255,.03) 4px,rgba(255,255,255,.03) 5px),
+  repeating-linear-gradient(-45deg,transparent,transparent 4px,rgba(255,255,255,.03) 4px,rgba(255,255,255,.03) 5px);
+  border:1px solid rgba(255,255,255,.06);pointer-events:none}
+.card.fd::after{content:'♦';position:absolute;font-size:28px;color:rgba(121,134,203,.2);
+  text-shadow:0 1px 2px rgba(0,0,0,.3);font-weight:300}
+.card.sm.fd::after{font-size:16px}
+.card.sm.fd::before{inset:2px;border-radius:3px;
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,.03) 3px,rgba(255,255,255,.03) 4px),
+  repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,.03) 3px,rgba(255,255,255,.03) 4px)}
 
 /* Playable cards */
 .card.ok{cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1)}
 .card.ok:hover{transform:translateY(-12px);
-  box-shadow:0 8px 20px rgba(255,215,0,.5),0 4px 10px rgba(0,0,0,.2);
+  box-shadow:0 8px 24px rgba(255,215,0,.6),0 4px 12px rgba(0,0,0,.25),0 0 0 2px rgba(255,215,0,.3);
   border-color:rgba(255,215,0,.4);z-index:20}
 
 /* ============ TRICK SLOTS ============ */
-#trick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;z-index:4;pointer-events:none}
+#trick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;z-index:4;pointer-events:none}
 #trick::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:100px;height:100px;border-radius:50%;
-  border:1.5px dashed rgba(255,255,255,.08);pointer-events:none}
+  width:120px;height:120px;border-radius:50%;
+  border:2px dashed rgba(255,255,255,.1);pointer-events:none;
+  box-shadow:0 0 20px rgba(255,255,255,.02)}
 .ts{position:absolute;display:flex;align-items:center;justify-content:center;
   transition:transform .25s ease}
 #ts-N{top:0;left:50%;transform:translateX(-50%)}
+#ts-N::before{content:'N';position:absolute;top:-14px;font-size:9px;color:rgba(255,255,255,.15);font-weight:700;letter-spacing:1px;pointer-events:none}
 #ts-E{right:0;top:50%;transform:translateY(-50%)}
+#ts-E::before{content:'E';position:absolute;right:-12px;font-size:9px;color:rgba(255,255,255,.15);font-weight:700;letter-spacing:1px;pointer-events:none}
 #ts-S{bottom:0;left:50%;transform:translateX(-50%)}
+#ts-S::before{content:'S';position:absolute;bottom:-14px;font-size:9px;color:rgba(255,255,255,.15);font-weight:700;letter-spacing:1px;pointer-events:none}
 #ts-W{left:0;top:50%;transform:translateY(-50%)}
+#ts-W::before{content:'W';position:absolute;left:-12px;font-size:9px;color:rgba(255,255,255,.15);font-weight:700;letter-spacing:1px;pointer-events:none}
 
 /* ============ BIDDING PANEL ============ */
 #bid-panel{display:none;position:absolute;bottom:90px;left:50%;transform:translateX(-50%);
@@ -121,7 +154,8 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
   border-radius:16px;padding:18px 22px;z-index:100;min-width:380px;max-width:92vw;
   box-shadow:0 12px 40px rgba(0,0,0,.5)}
 #bid-panel.show{display:block}
-#bid-panel h3{text-align:center;margin-bottom:10px;font-size:15px;font-weight:600;letter-spacing:.5px;color:rgba(255,255,255,.9)}
+#bid-panel h3{text-align:center;margin-bottom:10px;font-size:16px;font-weight:700;letter-spacing:.5px;color:#ffd54f}
+#stxt{font-weight:600;letter-spacing:.3px}
 #bid-hist{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;min-height:26px;justify-content:center}
 .bc{padding:4px 10px;border-radius:10px;font-size:12px;background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.06);font-weight:500}
@@ -140,16 +174,21 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 #bid-btns button.bp:hover{background:linear-gradient(135deg,#9e9e9e,#757575)}
 
 /* ============ STATUS BAR ============ */
-#status{text-align:center;padding:10px 16px;
-  background:rgba(10,20,10,.8);
+#status{text-align:center;padding:10px 16px;font-size:14px;
+  background:linear-gradient(180deg,rgba(10,20,10,.85),rgba(10,20,10,.75));
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   border-top:1px solid rgba(255,255,255,.06);
-  font-size:13px;min-height:40px;display:flex;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
+  min-height:42px;display:flex;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
 #status button{padding:7px 22px;border:none;border-radius:8px;cursor:pointer;font-size:13px;
   background:linear-gradient(135deg,#1976d2,#1565c0);color:#fff;font-weight:600;letter-spacing:.3px;
   transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 #status button:hover{background:linear-gradient(135deg,#42a5f5,#1e88e5);
   box-shadow:0 4px 14px rgba(25,118,210,.4);transform:translateY(-1px)}
+#btn-go{padding:9px 28px;font-size:14px;font-weight:700;
+  background:linear-gradient(135deg,#2e7d32,#1b5e20)!important;
+  box-shadow:0 3px 12px rgba(46,125,50,.4)!important;letter-spacing:.5px}
+#btn-go:hover{background:linear-gradient(135deg,#43a047,#2e7d32)!important;
+  box-shadow:0 5px 18px rgba(46,125,50,.5)!important;transform:translateY(-2px)}
 
 /* ============ SCORE POPUP ============ */
 #score-popup{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -181,20 +220,28 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 
 /* ============ RESPONSIVE ============ */
 @media(max-width:768px){
-  #info-bar{font-size:11px;padding:6px 8px;gap:8px}
-  .tag{padding:2px 8px;font-size:10px}
-  .card{width:38px;height:56px;border-radius:6px}
+  #info-bar{padding:6px 8px 4px}
+  #info-row1{gap:8px}
+  #info-row2{gap:4px;padding-top:4px;margin-top:4px}
+  #info-row2 .tool-btn{font-size:13px;padding:2px 6px}
+  .tag{padding:3px 10px;font-size:11px}
+  .card{width:40px;height:58px;border-radius:6px}
   .card .r{font-size:13px}
   .card .s{font-size:12px}
+  .card .cs{font-size:14px;bottom:10px}
   .card.sm{width:26px;height:38px}
   .card.sm .r{font-size:9px}
   .card.sm .s{font-size:10px}
-  .plabel{font-size:11px;padding:3px 8px}
+  .plabel{font-size:12px;padding:3px 8px}
   #bid-panel{min-width:auto;width:92vw;padding:12px 14px}
   #bid-btns button{padding:5px 10px;font-size:11px}
   #status{font-size:11px;padding:6px 8px}
   #status button{padding:5px 16px;font-size:12px}
+  #btn-go{padding:7px 22px;font-size:13px}
   #score-popup{min-width:auto;width:88vw;padding:20px 24px}
+  .story-btn{padding:6px 16px;font-size:13px}
+  #btn-just-play{padding:6px 18px;font-size:13px}
+  #hint-level-label{display:none}
 }
 
 /* ============ SCROLLBAR (hidden for clean look) ============ */
@@ -254,7 +301,8 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 .sh-vul.ew-v{background:rgba(244,67,54,.15);color:#ef9a9a}
 .sh-vul.both-v{background:rgba(255,193,7,.15);color:#ffd54f}
 .sh-empty{text-align:center;padding:40px 20px;color:rgba(255,255,255,.35);font-size:13px}
-#btn-score-toggle{cursor:pointer;transition:all .2s}
+#btn-score-toggle{cursor:pointer;transition:all .2s;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04)}
 #btn-score-toggle:hover{background:rgba(255,255,255,.15)!important}
 
 @media(max-width:768px){
@@ -399,11 +447,11 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 .analytics-mistake .am-explain{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
 
 /* ============ JUST PLAY BUTTON ============ */
-#btn-just-play{padding:7px 22px;border:none;border-radius:8px;cursor:pointer;font-size:13px;
-  background:linear-gradient(135deg,#e65100,#bf360c);color:#fff;font-weight:600;letter-spacing:.3px;
-  transition:all .2s ease;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#btn-just-play{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#e65100,#bf360c);color:#fff;font-weight:700;letter-spacing:.3px;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(230,81,0,.4)}
 #btn-just-play:hover{background:linear-gradient(135deg,#ff6d00,#e65100);
-  box-shadow:0 4px 14px rgba(230,81,0,.4);transform:translateY(-1px)}
+  box-shadow:0 5px 18px rgba(230,81,0,.5);transform:translateY(-2px)}
 
 /* ============ POST-GAME ANALYSIS PANEL ============ */
 #post-analysis{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -635,9 +683,9 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 .lesson-complete .lc-continue:hover{background:linear-gradient(135deg,#66bb6a,#4caf50)}
 
 /* Lesson button in info bar */
-#btn-lessons{cursor:pointer;transition:all .2s;font-size:13px;padding:3px 10px;border-radius:8px;
-  background:rgba(76,175,80,.15);border:1px solid rgba(76,175,80,.25);color:#81c784;font-weight:600}
-#btn-lessons:hover{background:rgba(76,175,80,.3);border-color:rgba(76,175,80,.4);transform:scale(1.03)}
+#btn-lessons{cursor:pointer;transition:all .2s;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);font-weight:600}
+#btn-lessons:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
 
 @media(max-width:768px){
   #lesson-panel{width:100vw;max-height:100vh;border-radius:0}
@@ -705,7 +753,7 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 @keyframes cardPlayFromE{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
 @keyframes cardPlayFromW{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
 @keyframes cardWin{0%{box-shadow:0 2px 6px rgba(0,0,0,.2)}50%{box-shadow:0 0 16px 4px rgba(255,215,0,.7),0 0 30px rgba(255,215,0,.3)}100%{box-shadow:0 2px 6px rgba(0,0,0,.2)}}
-@keyframes cardDeal{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes cardDeal{from{opacity:0;transform:scale(.5) translateY(-10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .card-play-S{animation:cardPlayFromS .3s ease-out}
 .card-play-N{animation:cardPlayFromN .3s ease-out}
 .card-play-E{animation:cardPlayFromE .3s ease-out}
@@ -714,9 +762,9 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 .card-deal{animation:cardDeal .25s ease-out both}
 
 /* ============ SETTINGS & SOUND BUTTONS ============ */
-.ctrl-btn{cursor:pointer;transition:all .2s;font-size:15px;padding:2px 8px;border-radius:8px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.06);user-select:none}
-.ctrl-btn:hover{background:rgba(255,255,255,.18);transform:scale(1.05)}
+.ctrl-btn{cursor:pointer;transition:all .2s;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);user-select:none}
+.ctrl-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
 .ctrl-btn.active{background:rgba(76,175,80,.25);border-color:rgba(76,175,80,.3)}
 
 /* ============ SETTINGS MODAL ============ */
@@ -746,13 +794,13 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
 #settings-close:hover{background:rgba(255,255,255,.1);color:#fff}
 
 /* ============ CARD SIZE CLASSES ============ */
-body.card-sm .card{width:36px;height:52px;border-radius:5px}
+body.card-sm .card{width:38px;height:54px;border-radius:5px}
 body.card-sm .card .r{font-size:11px}
 body.card-sm .card .s{font-size:10px}
 body.card-sm .card.sm{width:24px;height:34px;border-radius:4px}
 body.card-sm .card.sm .r{font-size:8px}
 body.card-sm .card.sm .s{font-size:9px}
-body.card-lg .card{width:56px;height:80px;border-radius:9px}
+body.card-lg .card{width:58px;height:82px;border-radius:9px}
 body.card-lg .card .r{font-size:20px}
 body.card-lg .card .s{font-size:18px}
 body.card-lg .card.sm{width:38px;height:54px;border-radius:6px}
@@ -785,8 +833,8 @@ body.card-lg .card.sm .s{font-size:14px}
   background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.2);
   border-radius:8px;font-size:11px;color:#81c784}
 #hint-panel .hint-tip::before{content:'💡 ';font-size:12px}
-#btn-hint-toggle{display:block;margin:8px auto 0;padding:5px 16px;border:none;border-radius:8px;
-  cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.3px;
+#btn-hint-toggle{display:block;margin:8px auto 0;padding:6px 18px;border:none;border-radius:8px;
+  cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.3px;
   background:linear-gradient(135deg,#f9a825,#f57f17);color:#fff;
   transition:all .2s ease;box-shadow:0 2px 8px rgba(249,168,37,.3)}
 #btn-hint-toggle:hover{background:linear-gradient(135deg,#fdd835,#f9a825);
@@ -1015,18 +1063,18 @@ body.card-lg .card.sm .s{font-size:14px}
 }
 
 /* ============ LEARNING BUTTONS IN INFO BAR ============ */
-.learn-btn{cursor:pointer;transition:all .2s;font-size:13px;padding:3px 10px;border-radius:8px;
-  background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.15);
-  color:#ffd54f;font-weight:500;user-select:none;white-space:nowrap}
-.learn-btn:hover{background:rgba(255,193,7,.25);border-color:rgba(255,193,7,.3);transform:scale(1.03)}
+.learn-btn{cursor:pointer;transition:all .2s;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);
+  color:rgba(255,255,255,.7);font-weight:500;user-select:none;white-space:nowrap}
+.learn-btn:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
 
 /* ============ STORY MODE ============ */
-.story-btn{cursor:pointer;transition:all .2s;font-size:14px;padding:6px 18px;border-radius:10px;
+.story-btn{cursor:pointer;transition:all .2s;font-size:14px;padding:8px 22px;border-radius:10px;
   background:linear-gradient(135deg,#7b1fa2,#9c27b0);border:1px solid rgba(156,39,176,.4);
   color:#fff;font-weight:700;user-select:none;white-space:nowrap;letter-spacing:.3px;
-  box-shadow:0 2px 10px rgba(123,31,162,.4)}
+  box-shadow:0 3px 12px rgba(123,31,162,.4)}
 .story-btn:hover{background:linear-gradient(135deg,#9c27b0,#ab47bc);
-  box-shadow:0 4px 16px rgba(156,39,176,.5);transform:translateY(-1px)}
+  box-shadow:0 5px 18px rgba(156,39,176,.5);transform:translateY(-2px)}
 
 /* XP Bar */
 #xp-bar{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:90px;
@@ -1505,11 +1553,10 @@ body.card-lg .card.sm .s{font-size:14px}
   color:#81c784;font-size:14px;display:none;animation:obCardIn .35s ease}
 .ob-feedback.show{display:block}
 
-#btn-help{cursor:pointer;font-size:16px;padding:2px 10px;border-radius:10px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);
+#btn-help{cursor:pointer;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);
   color:rgba(255,255,255,.6);transition:all .2s;font-weight:700}
-#btn-help:hover{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.3);
-  color:#81c784;transform:scale(1.1)}
+#btn-help:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
 
 @media(max-width:768px){
   .ob-card{padding:28px 24px;max-width:95vw}
@@ -1523,10 +1570,10 @@ body.card-lg .card.sm .s{font-size:14px}
 }
 
 /* ============ XIAO QIAO AI COACH ============ */
-#xq-toggle{cursor:pointer;transition:all .2s;font-size:14px;padding:4px 12px;border-radius:10px;
-  background:rgba(33,150,243,.15);border:1px solid rgba(33,150,243,.2);
-  color:#64b5f6;font-weight:600;user-select:none;white-space:nowrap}
-#xq-toggle:hover{background:rgba(33,150,243,.3);border-color:rgba(33,150,243,.4);transform:scale(1.03)}
+#xq-toggle{cursor:pointer;transition:all .2s;font-size:15px;padding:3px 8px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);
+  color:rgba(255,255,255,.7);font-weight:600;user-select:none;white-space:nowrap}
+#xq-toggle:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
 #xq-toggle.active{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.3);color:#81c784}
 #xq-panel{position:fixed;bottom:90px;right:20px;z-index:140;
   width:280px;max-width:85vw;
@@ -1632,26 +1679,28 @@ body.card-lg .card.sm .s{font-size:14px}
 <body>
 <div id="game">
   <div id="info-bar">
-    <span class="tag" id="i-round">第 1 副</span>
-    <span class="tag" id="i-contract">定约：--</span>
-    <span class="tag" id="i-tricks">南北: 0 | 东西: 0</span>
-    <span class="tag" id="i-trump">将牌：无</span>
-    <span class="tag" id="i-vuln">无局</span>
-    <span class="tag" id="btn-score-toggle" onclick="toggleScoreHistory()">📊 记分板</span>
-    <span class="ctrl-btn" id="btn-sound" onclick="toggleSound()" title="音效开关">🔊 音效</span>
-    <span class="ctrl-btn" id="btn-settings" onclick="openSettings()" title="设置">⚙️</span>
-    <span id="btn-lessons" onclick="openLessons()" title="刻意练习课程">📚 课程</span>
-    <span class="learn-btn" id="btn-tutorial" onclick="openTutorial()" title="学习模式">🎓 学习模式</span>
-    <span class="learn-btn" id="btn-cheat" onclick="openCheatSheet()" title="叫牌速查表">📋 叫牌表</span>
-    <span class="learn-btn" id="btn-practice" onclick="openPractice()" title="练习模式">🎯 练习模式</span>
-    <span class="learn-btn" id="btn-scenario" onclick="openScenarioLib()" title="叫牌场景库">📚 场景库</span>
-    <span class="learn-btn" id="btn-stats" onclick="openStats()" title="学习统计">📊 学习分析</span>
-    <span class="learn-btn" id="btn-daily" onclick="openDailyChallenge()" title="每日挑战">🏆 每日挑战</span>
-    <span class="learn-btn" id="btn-hint-level" onclick="cycleHintLevel()" title="提示详细程度">
-      <span class="hint-bulb">💡</span> 提示: <span id="hint-level-label">标准</span>
-    </span>
-    <span id="btn-help" onclick="replayOnboarding()" title="新手引导">❓</span>
-    <span id="xq-toggle" onclick="xqToggle()" title="AI教练小桥">🤖 小桥</span>
+    <div id="info-row1">
+      <span class="tag" id="i-round">第 1 副</span>
+      <span class="tag" id="i-contract">定约：--</span>
+      <span class="tag" id="i-tricks">南北: 0 | 东西: 0</span>
+      <span class="tag" id="i-trump">将牌：无</span>
+      <span class="tag" id="i-vuln">无局</span>
+    </div>
+    <div id="info-row2">
+      <span class="tool-btn" id="btn-score-toggle" onclick="toggleScoreHistory()" title="记分板">📊</span>
+      <span class="tool-btn" id="btn-sound" onclick="toggleSound()" title="音效">🔊</span>
+      <span class="tool-btn" id="btn-settings" onclick="openSettings()" title="设置">⚙️</span>
+      <span class="tool-btn" id="btn-lessons" onclick="openLessons()" title="课程">📚</span>
+      <span class="tool-btn" id="btn-tutorial" onclick="openTutorial()" title="学习模式">🎓</span>
+      <span class="tool-btn" id="btn-cheat" onclick="openCheatSheet()" title="叫牌表">📋</span>
+      <span class="tool-btn" id="btn-practice" onclick="openPractice()" title="练习">🎯</span>
+      <span class="tool-btn" id="btn-scenario" onclick="openScenarioLib()" title="场景库">📚</span>
+      <span class="tool-btn" id="btn-stats" onclick="openStats()" title="分析">📊</span>
+      <span class="tool-btn" id="btn-daily" onclick="openDailyChallenge()" title="挑战">🏆</span>
+      <span class="tool-btn" id="btn-hint-level" onclick="cycleHintLevel()" title="提示"><span class="hint-bulb">💡</span><span id="hint-level-label" style="font-size:10px;margin-left:2px"></span></span>
+      <span class="tool-btn" id="btn-help" onclick="replayOnboarding()" title="帮助">❓</span>
+      <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
+    </div>
   </div>
   <div id="table">
     <div id="hand-N" class="hand"></div>
@@ -1974,7 +2023,7 @@ function cid(c){return c.suit+c.rank}
 function mkCard(c,extra=''){
   let el=document.createElement('div');
   el.className='card '+SC[c.suit]+' '+extra;
-  el.innerHTML=`<span class="r">${c.rank}</span><span class="s">${c.suit}</span>`;
+  el.innerHTML=`<span class="r">${c.rank}</span><span class="s">${c.suit}</span><span class="cs">${c.suit}</span>`;
   return el;
 }
 function mkSm(c){
