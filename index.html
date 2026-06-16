@@ -1916,6 +1916,37 @@ body.card-lg .card.sm .s{font-size:14px}
 
 /* ============ QUICK WIN: Lesson Stars ============ */
 .lesson-stars-display{font-size:14px;letter-spacing:2px;color:#ffd54f;margin-top:4px}
+/* ============ EVAL BAR (Chess.com-style) ============ */
+#eval-bar{position:fixed;left:8px;top:50%;transform:translateY(-50%);width:28px;height:200px;
+  border-radius:14px;overflow:hidden;z-index:50;display:none;
+  border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.5)}
+#eval-bar.show{display:block}
+#eval-fill{position:absolute;bottom:0;width:100%;transition:height 0.8s ease;
+  background:linear-gradient(to top,#4caf50,#81c784)}
+#eval-ns{position:absolute;top:4px;width:100%;text-align:center;font-size:9px;font-weight:700;color:#81c784;z-index:1}
+#eval-ew{position:absolute;bottom:4px;width:100%;text-align:center;font-size:9px;font-weight:700;color:#ef9a9a;z-index:1}
+
+/* ============ CONFETTI ============ */
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:500;overflow:hidden}
+.confetti{position:absolute;width:10px;height:10px;top:-10px;animation:confettiFall 3s ease-in forwards}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+
+/* ============ CARD PLAY ANIMATION ENHANCEMENT ============ */
+@keyframes cardSwoop{
+  0%{transform:scale(1.2);opacity:0.5}
+  50%{transform:scale(1.05);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+.card-just-played{animation:cardSwoop 0.3s ease-out}
+@keyframes trickWin{
+  0%{filter:brightness(1)}
+  50%{filter:brightness(1.5) drop-shadow(0 0 12px gold)}
+  100%{filter:brightness(1)}
+}
+.trick-winning{animation:trickWin 0.8s ease}
 </style>
 </head>
 <body>
@@ -1946,6 +1977,7 @@ body.card-lg .card.sm .s{font-size:14px}
     </div>
   </div>
   <div id="table">
+    <div id="eval-bar"><span id="eval-ns">N</span><div id="eval-fill" style="height:50%"></div><span id="eval-ew">S</span></div>
     <div id="hand-goal"></div>
     <div id="hand-N" class="hand"></div>
     <div id="hand-E" class="hand"></div>
@@ -2473,6 +2505,7 @@ function clearTrick(){
 function renderTrickCard(pos,card){
   let el=mkSm(card);
   el.classList.add('card-play-'+pos);
+  el.classList.add('card-just-played');
   document.getElementById('ts-'+pos).innerHTML='';
   document.getElementById('ts-'+pos).appendChild(el);
 }
@@ -2546,6 +2579,7 @@ function init(){
   document.getElementById('i-round').textContent='第 1 副';
   updateVuln();
   renderScoreHistory();
+  try{checkComebackBonus()}catch(e){}
 }
 
 // ---- Vulnerability & Score History ----
@@ -4565,6 +4599,7 @@ function startPlay(){
   }catch(e){}
   try{showSmartHint()}catch(e){}
   autoPlayIfNeeded();
+  try{showEvalBar()}catch(e){}
 }
 
 function updateDummyDisplay(){
@@ -4920,21 +4955,22 @@ function resolveTrick(){
   document.getElementById('i-tricks').textContent='南北: '+G.nsTricks+' | 东西: '+G.ewTricks;
   setS(PN[win.pos]+'赢得此墩 ('+G.trickNum+'/13)');
   playSound('trick');
+  try{updateEvalBar()}catch(e){}
   // AI Commentary
   try{
     let comment='';
     let trumpUsed=trick.filter(t=>t.card.suit===G.trump).length>0;
-    if(G.trickNum===1){comment='第1墩: '+PN[trick[0].pos]+'首攻'+trick[0].card.suit+trick[0].card.rank}
-    if(trumpUsed)comment+=(comment?' · ':'')+'将牌出场！';
+    if(G.trickNum===1){comment='第1墩: '+PN[trick[0].pos]+'首攻'+trick[0].card.suit+trick[0].card.rank+' · '+getCoachQuip('openingLead')}
+    if(trumpUsed)comment+=(comment?' · ':'')+getCoachQuip('trump');
     let winTeam=(win.pos==='N'||win.pos==='S')?'NS':'EW';
     comment+=(comment?' · ':'')+PN[win.pos]+'赢墩';
-    if(G.defenseMode&&(win.pos==='N'||win.pos==='S'))comment+=' 👍';
+    if(G.defenseMode&&(win.pos==='N'||win.pos==='S'))comment+=' · '+getCoachQuip('defense');
     if(comment)showLearnToast('🗣️ 小桥',comment,2500);
   }catch(e){}
 
   // Highlight winning card
   let winEl=document.getElementById('ts-'+win.pos).querySelector('.card');
-  if(winEl)winEl.classList.add('card-win');
+  if(winEl){winEl.classList.add('card-win');winEl.classList.add('trick-winning')}
 
   // Learning overlay: show trick analysis toast and record for review
   try{showTrickAnalysisToast(trick,win.pos)}catch(e){}
@@ -4955,6 +4991,7 @@ function resolveTrick(){
 }
 
 function finishPlay(){
+  try{hideEvalBar()}catch(e){}
   try{hideHandGoal();clearGameCardHighlights()}catch(e){}
   try{hideSmartHint()}catch(e){}
   G.phase='done';
@@ -5085,6 +5122,24 @@ function finishPlay(){
   document.getElementById('score-popup').classList.add('show');
   document.getElementById('overlay').classList.add('show');
   playSound('game');
+  // Confetti for player wins
+  if(made){
+    try{
+      let hs=G.humanSeat||'S';
+      let humanIsDeclarer=(G.declarer===hs);
+      let declTeam=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+      let humanTeam=(hs==='N'||hs==='S')?'NS':'EW';
+      if(declTeam===humanTeam)showGameConfetti();
+    }catch(e){}
+  }else{
+    // Defense beat the contract - confetti for defenders
+    try{
+      let hs=G.humanSeat||'S';
+      let declTeam=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+      let humanTeam=(hs==='N'||hs==='S')?'NS':'EW';
+      if(declTeam!==humanTeam)showGameConfetti();
+    }catch(e){}
+  }
   // Record daily challenge result
   if(G.dailyMode)try{recordDailyResult(made,bonus)}catch(e){}
   // Tournament mode: record hand result
@@ -11176,6 +11231,75 @@ function openPerf(){
   document.getElementById('perf-overlay').classList.add('show');
 }
 function closePerf(){document.getElementById('perf-overlay').classList.remove('show')}
+
+// ============ CORE FEATURE 1: EVAL BAR ============
+function updateEvalBar(){
+  let bar=document.getElementById('eval-bar');
+  let fill=document.getElementById('eval-fill');
+  if(!bar||!fill||G.phase!=='play')return;
+  let need=+G.contract[0]+6;
+  let nsTricks=G.nsTricks;
+  let pct=Math.min(100,Math.max(5,50+(nsTricks-need/2)*10));
+  fill.style.height=pct+'%';
+  if(pct>55){fill.style.background='linear-gradient(to top,#4caf50,#81c784)'}
+  else if(pct<45){fill.style.background='linear-gradient(to top,#ef5350,#ef9a9a)'}
+  else{fill.style.background='linear-gradient(to top,#ffd54f,#fff9c4)'}
+}
+function showEvalBar(){document.getElementById('eval-bar').classList.add('show')}
+function hideEvalBar(){document.getElementById('eval-bar').classList.remove('show')}
+
+// ============ CORE FEATURE 2: GAME CONFETTI ============
+function showGameConfetti(){
+  let container=document.createElement('div');
+  container.className='confetti-container';
+  document.body.appendChild(container);
+  let colors=['#ffd54f','#4caf50','#2196f3','#ff5722','#9c27b0','#00bcd4','#e91e63'];
+  for(let i=0;i<60;i++){
+    let c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'%';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay=Math.random()*2+'s';
+    c.style.animationDuration=(2+Math.random()*2)+'s';
+    c.style.width=(6+Math.random()*8)+'px';
+    c.style.height=(6+Math.random()*8)+'px';
+    c.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    container.appendChild(c);
+  }
+  setTimeout(function(){container.remove()},5000);
+}
+
+// ============ CORE FEATURE 3: COACH QUIPS ============
+var COACH_QUIPS={
+  goodPlay:['漂亮！这就是教科书式的打法','好牌！你越来越厉害了','这招很聪明，小桥记住了','高手！这手牌值得回味'],
+  badPlay:['嗯...这手有点冒险','小桥觉得可能有更好的选择','没关系，失误是学习的一部分','下次可以试试另一种打法'],
+  openingLead:['好首攻！选对了花色','这个首攻很安全','首攻决定了这副牌的走向'],
+  trump:['将牌控制得很好！','注意将牌的使用时机','将牌是你的秘密武器'],
+  slam:['满贯！太精彩了！','这是高手级别的叫牌','小桥为你骄傲！'],
+  defense:['防守得很好！搭档一定很开心','这就是防守的艺术','好的防守赢比赛'],
+  comeback:['逆转了！好顽强！','从落后到领先，精彩！','永不放弃的精神！']
+};
+function getCoachQuip(category){
+  let quips=COACH_QUIPS[category];
+  if(!quips)return'';
+  return quips[Math.floor(Math.random()*quips.length)];
+}
+
+// ============ CORE FEATURE 4: COMEBACK BONUS ============
+function checkComebackBonus(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let last=stats.lastPlayDate;
+  if(!last)return;
+  let today=new Date().toISOString().slice(0,10);
+  let daysAway=Math.floor((new Date(today)-new Date(last))/86400000);
+  if(daysAway>=3){
+    let bonus=Math.min(daysAway*10,100);
+    showLearnToast('🎁 欢迎回来！','你离开了'+daysAway+'天，获得 '+bonus+' XP 回归奖励！',4000);
+    let xp=parseInt(localStorage.getItem('bridge-xp')||'0');
+    xp+=bonus;
+    localStorage.setItem('bridge-xp',xp.toString());
+  }
+}
 </script>
 </body>
 </html>
