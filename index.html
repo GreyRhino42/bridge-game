@@ -765,6 +765,279 @@ body.card-lg .card.sm .s{font-size:14px}
   color:#ffd54f;font-weight:500;user-select:none;white-space:nowrap}
 .learn-btn:hover{background:rgba(255,193,7,.25);border-color:rgba(255,193,7,.3);transform:scale(1.03)}
 
+/* ============ STORY MODE ============ */
+.story-btn{cursor:pointer;transition:all .2s;font-size:14px;padding:6px 18px;border-radius:10px;
+  background:linear-gradient(135deg,#7b1fa2,#9c27b0);border:1px solid rgba(156,39,176,.4);
+  color:#fff;font-weight:700;user-select:none;white-space:nowrap;letter-spacing:.3px;
+  box-shadow:0 2px 10px rgba(123,31,162,.4)}
+.story-btn:hover{background:linear-gradient(135deg,#9c27b0,#ab47bc);
+  box-shadow:0 4px 16px rgba(156,39,176,.5);transform:translateY(-1px)}
+
+/* XP Bar */
+#xp-bar{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:90px;
+  background:rgba(10,20,10,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(156,39,176,.3);border-radius:12px;padding:8px 18px;z-index:110;
+  font-size:12px;display:none;align-items:center;gap:8px;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.4)}
+#xp-bar.show{display:flex}
+#xp-bar .xp-level{color:#ce93d8;font-weight:700;font-size:13px}
+#xp-bar .xp-track{width:120px;height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden}
+#xp-bar .xp-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#7b1fa2,#ce93d8);transition:width .6s ease}
+#xp-bar .xp-text{color:rgba(255,255,255,.5);font-size:11px}
+
+/* XP Fly Animation */
+@keyframes xpFly{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-40px)}}
+.xp-fly{position:fixed;z-index:400;font-size:20px;font-weight:800;color:#ce93d8;
+  text-shadow:0 0 10px rgba(206,147,216,.6);pointer-events:none;animation:xpFly 1.2s ease-out forwards}
+
+/* Level Up Celebration */
+@keyframes levelUpBurst{0%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+#level-up-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center}
+#level-up-overlay.show{display:flex}
+#level-up-card{background:rgba(10,20,10,.95);border:2px solid rgba(206,147,216,.5);
+  border-radius:24px;padding:40px 48px;text-align:center;animation:levelUpBurst .5s ease;
+  box-shadow:0 0 40px rgba(123,31,162,.4);max-width:400px;width:90vw}
+#level-up-card .lu-icon{font-size:64px;margin-bottom:12px}
+#level-up-card .lu-title{font-size:24px;font-weight:800;color:#ce93d8;margin-bottom:8px}
+#level-up-card .lu-sub{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:20px}
+#level-up-card .lu-btn{padding:12px 32px;border:none;border-radius:12px;cursor:pointer;
+  font-size:14px;font-weight:700;background:linear-gradient(135deg,#7b1fa2,#9c27b0);color:#fff;
+  transition:all .2s;box-shadow:0 3px 12px rgba(123,31,162,.4)}
+#level-up-card .lu-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(123,31,162,.5)}
+
+/* Story Overlay */
+#story-overlay{display:none;position:fixed;inset:0;z-index:320;background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none}
+#story-overlay.show{display:block}
+
+/* Story Panel (Coach) */
+#story-panel{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:330;
+  width:280px;max-width:90vw;background:rgba(10,20,10,.94);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(156,39,176,.3);border-radius:18px;padding:20px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);display:none;flex-direction:column;gap:12px;
+  max-height:80vh;overflow-y:auto}
+#story-panel.show{display:flex}
+#story-panel .sp-chapter{font-size:11px;color:#ce93d8;letter-spacing:1px;text-transform:uppercase;font-weight:600}
+#story-panel .sp-title{font-size:20px;font-weight:800;color:rgba(255,255,255,.95);margin-bottom:4px}
+#story-panel .sp-objective{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px;
+  padding:8px 12px;background:rgba(156,39,176,.08);border:1px solid rgba(156,39,176,.15);border-radius:10px}
+#story-panel .sp-objective::before{content:'🎯 目标：';color:#ce93d8;font-weight:600}
+
+/* Coach Bubble */
+#story-panel .sp-coach{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+#story-panel .sp-avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#7b1fa2,#9c27b0);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 2px 10px rgba(123,31,162,.4)}
+#story-panel .sp-bubble{flex:1;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;
+  font-size:13px;line-height:1.7;color:rgba(255,255,255,.9);position:relative}
+#story-panel .sp-bubble::before{content:'';position:absolute;left:-8px;top:14px;
+  width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;
+  border-right:8px solid rgba(255,255,255,.1)}
+
+#story-panel .sp-feedback{padding:10px 14px;border-radius:10px;font-size:13px;display:none;
+  animation:prBounce .4s ease}
+#story-panel .sp-feedback.show{display:block}
+#story-panel .sp-feedback.correct{background:rgba(76,175,80,.15);border:1px solid rgba(76,175,80,.3);color:#81c784}
+#story-panel .sp-feedback.wrong{background:rgba(244,67,54,.15);border:1px solid rgba(244,67,54,.3);color:#ef9a9a}
+
+#story-panel .sp-next-btn{padding:10px 20px;border:none;border-radius:10px;cursor:pointer;
+  font-size:13px;font-weight:700;background:linear-gradient(135deg,#7b1fa2,#9c27b0);color:#fff;
+  transition:all .2s;box-shadow:0 2px 10px rgba(123,31,162,.4);width:100%}
+#story-panel .sp-next-btn:hover{background:linear-gradient(135deg,#9c27b0,#ab47bc);
+  box-shadow:0 4px 16px rgba(156,39,176,.5);transform:translateY(-1px)}
+
+#story-panel .sp-progress{display:flex;gap:4px;justify-content:center;margin-top:8px}
+#story-panel .sp-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .2s}
+#story-panel .sp-dot.done{background:#ce93d8}
+#story-panel .sp-dot.current{background:#9c27b0;box-shadow:0 0 6px rgba(156,39,176,.5)}
+
+#story-panel .sp-reward{display:none;padding:14px;text-align:center;
+  background:linear-gradient(135deg,rgba(123,31,162,.15),rgba(206,147,216,.1));
+  border:1px solid rgba(206,147,216,.3);border-radius:14px;animation:prBounce .5s ease}
+#story-panel .sp-reward.show{display:block}
+#story-panel .sp-reward .reward-xp{font-size:32px;font-weight:800;color:#ce93d8}
+#story-panel .sp-reward .reward-label{font-size:12px;color:rgba(255,255,255,.5)}
+#story-panel .sp-reward .reward-msg{font-size:13px;color:rgba(255,255,255,.8);margin-top:6px}
+
+#story-panel .sp-skip{position:absolute;top:10px;right:14px;background:none;border:none;
+  color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:all .2s}
+#story-panel .sp-skip:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* Golden Pulse for recommended cards */
+@keyframes goldenPulse{0%,100%{box-shadow:0 0 10px #ffd700}50%{box-shadow:0 0 25px #ffd700}}
+.card.recommended{animation:goldenPulse 1.5s ease-in-out infinite;border-color:#ffd700!important;z-index:10}
+.card.dimmed{opacity:.4;pointer-events:none}
+.card.required-suit{border:2px solid #42a5f5!important}
+
+/* Spotlight effect */
+.spotlight-active #table{position:relative}
+.spotlight-active .card:not(.spotlight-target):not(.spotlight-area *){opacity:.2}
+.spotlight-ring{position:absolute;border:3px solid #ffd700;border-radius:50%;
+  animation:goldenPulse 1.5s ease-in-out infinite;pointer-events:none;z-index:200}
+.spotlight-arrow{position:absolute;z-index:201;font-size:28px;animation:bounceArrow .8s ease-in-out infinite;pointer-events:none}
+@keyframes bounceArrow{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* Level Intro Full Screen */
+#level-intro{display:none;position:fixed;inset:0;z-index:350;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  align-items:center;justify-content:center}
+#level-intro.show{display:flex}
+#level-intro-card{background:rgba(10,20,10,.95);
+  border:2px solid rgba(156,39,176,.4);border-radius:24px;padding:40px 48px;
+  text-align:center;animation:obCardIn .5s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 60px rgba(123,31,162,.3);max-width:440px;width:90vw}
+#level-intro-card .li-chapter{font-size:12px;color:#ce93d8;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+#level-intro-card .li-icon{font-size:56px;margin-bottom:12px}
+#level-intro-card .li-title{font-size:28px;font-weight:800;color:rgba(255,255,255,.95);margin-bottom:8px}
+#level-intro-card .li-obj{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:24px;line-height:1.6}
+#level-intro-card .li-start{padding:14px 36px;border:none;border-radius:14px;cursor:pointer;
+  font-size:16px;font-weight:700;background:linear-gradient(135deg,#7b1fa2,#9c27b0);color:#fff;
+  transition:all .2s;box-shadow:0 4px 16px rgba(123,31,162,.4);letter-spacing:.5px}
+#level-intro-card .li-start:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(123,31,162,.5)}
+
+/* Story Mode Level Map (for choosing levels) */
+#level-map-overlay{display:none;position:fixed;inset:0;z-index:310;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#level-map-overlay.show{display:flex;align-items:center;justify-content:center}
+#level-map-modal{background:rgba(10,20,10,.96);border:1px solid rgba(156,39,176,.3);
+  border-radius:20px;padding:28px 32px;width:600px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);position:relative}
+#level-map-modal h2{text-align:center;font-size:20px;font-weight:700;color:#ce93d8;letter-spacing:.5px;margin-bottom:20px}
+.lm-chapter{margin-bottom:20px}
+.lm-chapter-title{font-size:14px;font-weight:700;color:#ce93d8;margin-bottom:10px;
+  padding-bottom:6px;border-bottom:1px solid rgba(156,39,176,.15)}
+.lm-levels{display:flex;flex-direction:column;gap:8px}
+.lm-level{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  cursor:pointer;transition:all .2s}
+.lm-level:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);
+  transform:translateY(-1px)}
+.lm-level.locked{opacity:.4;cursor:not-allowed}
+.lm-level.locked:hover{transform:none;background:rgba(255,255,255,.03)}
+.lm-level.completed{border-color:rgba(76,175,80,.3);background:rgba(76,175,80,.05)}
+.lm-level.current{border-color:rgba(156,39,176,.4);background:rgba(156,39,176,.08);
+  box-shadow:0 0 12px rgba(156,39,176,.15)}
+.lm-level .lm-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;flex-shrink:0;background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+.lm-level.completed .lm-num{background:rgba(76,175,80,.2);color:#81c784}
+.lm-level.current .lm-num{background:rgba(156,39,176,.2);color:#ce93d8}
+.lm-level.locked .lm-num{background:rgba(255,255,255,.04);color:rgba(255,255,255,.2)}
+.lm-level .lm-info{flex:1}
+.lm-level .lm-name{font-size:14px;font-weight:600;color:rgba(255,255,255,.9)}
+.lm-level .lm-desc{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.lm-level .lm-badge{font-size:18px}
+.lm-close{position:absolute;top:12px;right:16px;background:none;border:none;
+  color:rgba(255,255,255,.5);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.lm-close:hover{background:rgba(255,255,255,.1);color:#fff}
+
+@media(max-width:768px){
+  #story-panel{left:8px;width:240px;padding:14px;font-size:12px}
+  #story-panel .sp-title{font-size:17px}
+  #level-intro-card{padding:28px 24px}
+  #level-intro-card .li-title{font-size:22px}
+  #level-map-modal{width:95vw;padding:20px 16px}
+}
+
+/* ============ STORY MODE POLISH ============ */
+
+/* Narrator avatar */
+.sp-narrator{width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#1565c0,#1976d2);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 2px 10px rgba(21,101,192,.4);transition:all .3s ease;
+  position:relative;z-index:2}
+
+/* Narrator bounce on expression change */
+@keyframes narratorBounce{0%{transform:scale(1)}30%{transform:scale(1.2)}60%{transform:scale(.95)}100%{transform:scale(1)}}
+.sp-narrator.bounce{animation:narratorBounce .4s ease}
+
+/* Coach bubble typewriter cursor */
+.sp-bubble .tw-cursor{display:inline-block;width:2px;height:1em;background:#ce93d8;margin-left:2px;animation:twBlink .6s step-end infinite;vertical-align:text-bottom}
+@keyframes twBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Prompt step "?" icon */
+.sp-bubble .prompt-icon{display:inline-block;margin-right:6px;font-size:16px;vertical-align:middle;
+  animation:promptPulse 1.2s ease-in-out infinite;color:#ffd54f}
+@keyframes promptPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
+
+/* Confetti particles */
+.confetti-container{position:fixed;inset:0;z-index:500;pointer-events:none;overflow:hidden}
+.confetti-particle{position:absolute;width:8px;height:8px;border-radius:50%;opacity:0;
+  animation:confettiBurst 1s ease-out forwards}
+@keyframes confettiBurst{0%{opacity:1;transform:translate(0,0) scale(1)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translate(var(--cx),var(--cy)) scale(0.3)}}
+
+/* Improved dimmed cards (more dramatic spotlight) */
+.card.dimmed{opacity:.15!important;pointer-events:none;filter:saturate(.3)}
+
+/* Golden glow for highlighted cards */
+.card.recommended{animation:goldenPulseEnhanced 1.5s ease-in-out infinite;
+  border:2px solid #ffd700!important;z-index:10;
+  box-shadow:0 0 12px rgba(255,215,0,.6),0 0 24px rgba(255,215,0,.3)!important}
+@keyframes goldenPulseEnhanced{
+  0%,100%{box-shadow:0 0 12px rgba(255,215,0,.6),0 0 24px rgba(255,215,0,.3)}
+  50%{box-shadow:0 0 20px rgba(255,215,0,.8),0 0 40px rgba(255,215,0,.5)}}
+
+/* Bounce animation for highlighted cards */
+@keyframes cardBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.card.bounce-highlight{animation:cardBounce .8s ease-in-out infinite}
+
+/* Pulsing arrow pointing to highlighted cards */
+.highlight-arrow{position:absolute;z-index:202;font-size:20px;
+  animation:pulseArrow .8s ease-in-out infinite;pointer-events:none;
+  filter:drop-shadow(0 0 4px rgba(255,215,0,.6))}
+@keyframes pulseArrow{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-6px);opacity:.7}}
+
+/* Level completion overlay */
+#level-complete-overlay{display:none;position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;flex-direction:column}
+#level-complete-overlay.show{display:flex}
+.lc-text{font-size:48px;font-weight:900;color:#ffd54f;letter-spacing:4px;
+  text-shadow:0 0 20px rgba(255,215,0,.5),0 0 40px rgba(255,215,0,.2);
+  animation:lcScaleUp .8s cubic-bezier(.4,0,.2,1) forwards;opacity:0}
+@keyframes lcScaleUp{0%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
+.lc-xp-fly{font-size:28px;font-weight:800;color:#ce93d8;margin-top:20px;
+  text-shadow:0 0 10px rgba(206,147,216,.5);
+  animation:lcXpFly .6s ease-out .5s forwards;opacity:0}
+@keyframes lcXpFly{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+.lc-progress-wrap{width:200px;height:8px;background:rgba(255,255,255,.15);border-radius:4px;
+  margin-top:16px;overflow:hidden;animation:lcProgressFade .4s ease .8s forwards;opacity:0}
+@keyframes lcProgressFade{0%{opacity:0}100%{opacity:1}}
+.lc-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#7b1fa2,#ce93d8);
+  width:0;transition:width 1s ease .9s}
+.lc-continue{margin-top:24px;padding:12px 32px;border:none;border-radius:12px;cursor:pointer;
+  font-size:14px;font-weight:700;background:linear-gradient(135deg,#7b1fa2,#9c27b0);color:#fff;
+  transition:all .2s;box-shadow:0 3px 12px rgba(123,31,162,.4);
+  animation:lcProgressFade .4s ease 1.2s forwards;opacity:0}
+.lc-continue:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(123,31,162,.5)}
+
+/* Resume prompt */
+#resume-prompt{display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  align-items:center;justify-content:center}
+#resume-prompt.show{display:flex}
+.resume-card{background:rgba(10,20,10,.95);border:1px solid rgba(156,39,176,.3);
+  border-radius:18px;padding:30px 36px;text-align:center;max-width:380px;width:90vw;
+  animation:obCardIn .4s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 16px 48px rgba(0,0,0,.6)}
+.resume-card h3{font-size:18px;font-weight:700;color:#ce93d8;margin-bottom:8px}
+.resume-card p{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:20px;line-height:1.6}
+.resume-btns{display:flex;gap:10px;justify-content:center}
+.resume-btns button{padding:10px 24px;border:none;border-radius:10px;cursor:pointer;
+  font-size:13px;font-weight:700;transition:all .2s}
+.resume-btns .rb-yes{background:linear-gradient(135deg,#7b1fa2,#9c27b0);color:#fff;
+  box-shadow:0 3px 12px rgba(123,31,162,.4)}
+.resume-btns .rb-yes:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(123,31,162,.5)}
+.resume-btns .rb-no{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);
+  border:1px solid rgba(255,255,255,.1)}
+.resume-btns .rb-no:hover{background:rgba(255,255,255,.18);color:#fff}
+
 /* ============ PRACTICE MODE ============ */
 #practice-overlay{display:none;position:fixed;inset:0;z-index:300;
   background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -1202,6 +1475,60 @@ body.card-lg .card.sm .s{font-size:14px}
   <div id="daily-overlay">
     <div id="daily-modal"></div>
   </div>
+  <!-- Story Mode Overlays -->
+  <div id="level-map-overlay" onclick="closeLevelMap()">
+    <div id="level-map-modal" onclick="event.stopPropagation()"></div>
+  </div>
+  <div id="level-intro">
+    <div id="level-intro-card"></div>
+  </div>
+  <div id="story-overlay"></div>
+  <div id="story-panel">
+    <button class="sp-skip" onclick="exitStoryMode()">✕</button>
+    <div id="sp-chapter" class="sp-chapter"></div>
+    <div id="sp-title" class="sp-title"></div>
+    <div id="sp-objective" class="sp-objective"></div>
+    <div class="sp-coach">
+      <div class="sp-narrator" id="sp-narrator">🧑‍🏫</div>
+      <div class="sp-avatar">🎓</div>
+      <div class="sp-bubble" id="sp-bubble"></div>
+    </div>
+    <div id="sp-feedback" class="sp-feedback"></div>
+    <div id="sp-reward" class="sp-reward"></div>
+    <button id="sp-next-btn" class="sp-next-btn" onclick="storyNextStep()">下一步</button>
+    <div class="sp-progress" id="sp-progress"></div>
+  </div>
+  <div id="xp-bar">
+    <span class="xp-level" id="xp-level-label">Lv.1 新手</span>
+    <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+    <span class="xp-text" id="xp-text">0/100 XP</span>
+  </div>
+  <div id="level-up-overlay" onclick="closeLevelUp()">
+    <div id="level-up-card" onclick="event.stopPropagation()">
+      <div class="lu-icon">⬆️</div>
+      <div class="lu-title" id="lu-title">升级！</div>
+      <div class="lu-sub" id="lu-sub"></div>
+      <button class="lu-btn" onclick="closeLevelUp()">继续</button>
+    </div>
+  </div>
+  <!-- Level Completion Overlay -->
+  <div id="level-complete-overlay">
+    <div class="lc-text">通关！</div>
+    <div class="lc-xp-fly" id="lc-xp-text"></div>
+    <div class="lc-progress-wrap"><div class="lc-progress-fill" id="lc-progress-fill"></div></div>
+    <button class="lc-continue" id="lc-continue" onclick="continueAfterLevel()">继续 →</button>
+  </div>
+  <!-- Resume Prompt -->
+  <div id="resume-prompt">
+    <div class="resume-card">
+      <h3>🎮 继续上次的游戏？</h3>
+      <p id="resume-text">你有未完成的故事模式关卡</p>
+      <div class="resume-btns">
+        <button class="rb-yes" onclick="resumeStoryLevel()">继续游戏</button>
+        <button class="rb-no" onclick="dismissResume()">重新开始</button>
+      </div>
+    </div>
+  </div>
   <!-- Scenario Library Overlay -->
   <div id="scenario-overlay" onclick="closeScenarioLib()">
     <div id="scenario-modal" onclick="event.stopPropagation()"></div>
@@ -1213,6 +1540,7 @@ body.card-lg .card.sm .s{font-size:14px}
   <div id="status">
     <span id="stxt"></span>
     <button id="btn-go" onclick="startGame()">开始游戏</button>
+    <button id="btn-story" class="story-btn" onclick="openLevelMap()">🎮 故事模式</button>
   </div>
   <div id="onboarding">
     <div class="ob-card">
@@ -1334,11 +1662,13 @@ function renderHumanHand(){
   let canPlay=(G.phase==='play'||G.phase==='dummy-play');
   let myTurn=canPlay && G.current===hs;
   let humanIsDeclarer=(G.declarer===hs);
+  // In story mode, allow playing when waiting for player action
+  let storyPlayable=G.storyMode&&G.storyWaitingForPlay;
 
   G.hands[hs].forEach((c,i)=>{
     let el=mkCard(c,'card-deal');
     el.style.animationDelay=(i*30)+'ms';
-    if(myTurn && humanIsDeclarer && canPlayCard(c,hs)){
+    if((myTurn && humanIsDeclarer && canPlayCard(c,hs)) || (storyPlayable && canPlayCard(c,hs))){
       el.classList.add('ok');
       el.onclick=()=>playCard(hs,c);
     }
@@ -1459,6 +1789,7 @@ function init(){
     cardSize:'md',soundEnabled:true
   };
   loadSettings();
+  initStoryState();
   resetPlayedCards();
   document.getElementById('btn-go').style.display='';
   setS('点击"开始游戏"开始');
@@ -3508,6 +3839,12 @@ function autoPlayIfNeeded(){
 function playCard(pos,card){
   if(G.phase!=='play'&&G.phase!=='dummy-play')return;
   if(G.current!==pos)return;
+
+  // Story mode validation
+  if(G.storyMode&&G.storyWaitingForPlay){
+    validateStoryCardPlay(card);
+    return; // Don't proceed with normal play flow
+  }
 
   let i=G.hands[pos].findIndex(c=>cid(c)===cid(card));
   if(i===-1)return;
@@ -6463,13 +6800,843 @@ function recordTrickForReview(trick,winnerPos){
   });
 }
 
+// ============ STORY MODE SYSTEM ============
+
+// ---- Game State Extensions ----
+function initStoryState(){
+  G.storyMode=false;
+  G.storyLevelId=null;
+  G.storyStepIdx=0;
+  G.storyWaitingForPlay=false;
+  G.storyValidateFn=null;
+  G.xp=parseInt(localStorage.getItem('bridge-xp')||'0');
+  G.playerLevel=Math.floor(G.xp/100)+1;
+  G.completedLevels=JSON.parse(localStorage.getItem('bridge-completed-levels')||'[]');
+}
+
+// ---- Level Titles ----
+const LEVEL_TITLES={1:'新手',2:'学徒',3:'策略师',4:'牌手',5:'高手',6:'大师',7:'宗师',8:'传奇'};
+
+// ---- Level Definitions (10 levels, 3 chapters) ----
+const STORY_LEVELS={
+  1:{
+    title:'你的第一墩牌',chapter:'第一章：认识桥牌',icon:'🃏',
+    objective:'理解跟牌规则 —— 必须跟出同花色的牌',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'5'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♥',rank:'3'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'7'},{suit:'♦',rank:'4'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'},{suit:'♣',rank:'6'},{suit:'♣',rank:'3'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'7'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'8'},{suit:'♠',rank:'6'},{suit:'♠',rank:'3'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♦',rank:'6'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♠',rank:'K'},{suit:'♠',rank:'9'},{suit:'♠',rank:'7'},{suit:'♠',rank:'4'},{suit:'♠',rank:'2'},{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'Q'}],
+      trump:null,contract:'3NT',declarer:'S',dummy:'N',
+      trick:[{pos:'W',card:{suit:'♠',rank:'K'}}],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'👋 欢迎来到第一关！西家已经出了♠K，轮到你出牌啦。'},
+      {type:'highlight',target:'spade-cards',text:'看！你有两张♠：♠A和♠5。规则是必须跟同花色的牌哦！'},
+      {type:'explain',text:'💡 记住：别人出什么花色，你就得跟什么花色。这叫"跟牌规则"，是桥牌最基础的规则。'},
+      {type:'prompt',text:'请出一张♠试试！点击♠A或♠5。',validate:'any-spade'},
+      {type:'complete',text:'🎉 太棒了！你学会了桥牌最基本的一条规则：必须跟同花色的牌！'}
+    ],
+    rewards:{xp:10,badge:null}
+  },
+  2:{
+    title:'大牌赢小牌',chapter:'第一章：认识桥牌',icon:'👑',
+    objective:'理解大小比较 —— 大牌可以赢小牌',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♥',rank:'3'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'7'},{suit:'♦',rank:'4'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'},{suit:'♣',rank:'6'},{suit:'♣',rank:'3'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'7'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'9'},{suit:'♠',rank:'8'},{suit:'♠',rank:'6'},{suit:'♠',rank:'3'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♠',rank:'K'},{suit:'♠',rank:'7'},{suit:'♠',rank:'5'},{suit:'♠',rank:'4'},{suit:'♠',rank:'2'},{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'Q'}],
+      trump:null,contract:'3NT',declarer:'S',dummy:'N',
+      trick:[{pos:'E',card:{suit:'♠',rank:'9'}},{pos:'W',card:{suit:'♠',rank:'7'}}],
+      current:'S',phase:'play',preTricks:true
+    },
+    guidance:[
+      {type:'intro',text:'🃏 第二关！东家出了♠9，西家出了♠7，现在轮到你。'},
+      {type:'explain',text:'💡 牌的大小顺序：A最大，然后是K、Q、J、10…一直到2最小。'},
+      {type:'highlight',target:'spade-cards',text:'你有♠A！它是最大的♠，可以赢下这一墩。'},
+      {type:'prompt',text:'出♠A赢下这一墩！',validate:'spade-A'},
+      {type:'complete',text:'🎉 漂亮！♠A是最大的黑桃，任何♠都比它小。大小比较就是这样简单！'}
+    ],
+    rewards:{xp:15,badge:null}
+  },
+  3:{
+    title:'将牌的秘密',chapter:'第一章：认识桥牌',icon:'🃏',
+    objective:'理解将牌 —— 可以用将牌吃掉其他花色',
+    setup:{
+      S:[{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'7'},{suit:'♥',rank:'3'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'7'},{suit:'♦',rank:'4'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'},{suit:'♣',rank:'6'},{suit:'♣',rank:'3'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'8'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'7'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'A'},{suit:'♠',rank:'9'},{suit:'♠',rank:'8'},{suit:'♠',rank:'6'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♠',rank:'K'},{suit:'♠',rank:'7'},{suit:'♠',rank:'5'},{suit:'♠',rank:'4'},{suit:'♠',rank:'2'},{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'Q'}],
+      trump:'♥',contract:'4♥',declarer:'S',dummy:'N',
+      trick:[{pos:'W',card:{suit:'♠',rank:'K'}}],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'🃏 重要的一关！西家出了♠K，但你已经没有♠了！'},
+      {type:'explain',text:'💡 将牌的妙用：缺门时可以用将牌"吃掉"其他花色。你的将牌是♥！'},
+      {type:'highlight',target:'heart-cards',text:'用一张♥来将吃！试试♥A吧。'},
+      {type:'prompt',text:'出一张♥来将吃！',validate:'any-heart'},
+      {type:'complete',text:'🎉 太酷了！你用♥吃掉了♠！这就是将牌的魔力——缺门时它能赢任何花色！'}
+    ],
+    rewards:{xp:20,badge:'🃏'}
+  },
+  4:{
+    title:'首攻选择',chapter:'第二章：打牌策略',icon:'🎯',
+    objective:'学习首攻策略 —— 选择合适的花色攻出',
+    setup:{
+      S:[{suit:'♠',rank:'K'},{suit:'♠',rank:'J'},{suit:'♠',rank:'9'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'8'},{suit:'♦',rank:'J'},{suit:'♦',rank:'7'},{suit:'♦',rank:'3'},{suit:'♣',rank:'10'},{suit:'♣',rank:'6'},{suit:'♣',rank:'4'}],
+      N:[{suit:'♠',rank:'A'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♥',rank:'5'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'7'},{suit:'♣',rank:'3'}],
+      E:[{suit:'♠',rank:'8'},{suit:'♠',rank:'6'},{suit:'♠',rank:'5'},{suit:'♠',rank:'3'},{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♥',rank:'4'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'9'},{suit:'♦',rank:'6'},{suit:'♣',rank:'A'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'}],
+      W:[{suit:'♠',rank:'7'},{suit:'♠',rank:'4'},{suit:'♠',rank:'2'},{suit:'♥',rank:'8'},{suit:'♥',rank:'7'},{suit:'♥',rank:'3'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'5'},{suit:'♦',rank:'4'},{suit:'♦',rank:'2'},{suit:'♣',rank:'J'},{suit:'♣',rank:'5'}],
+      trump:'♠',contract:'4♠',declarer:'N',dummy:'S',
+      trick:[],current:'W',phase:'play',humanPlaysAs:'W'
+    },
+    guidance:[
+      {type:'intro',text:'🎯 第二章开始！你是西家，需要第一个出牌（叫"首攻"）。'},
+      {type:'explain',text:'💡 首攻小技巧：攻你最长的花色，帮助自己建立赢墩。你有4张♥！'},
+      {type:'highlight',target:'heart-cards',text:'你有4张♥，是不错的首攻选择。'},
+      {type:'prompt',text:'攻出一张♥试试！',validate:'any-heart'},
+      {type:'complete',text:'🎉 好选择！攻长套花色是基本策略，以后你的小♥就可能变成赢墩了！'}
+    ],
+    rewards:{xp:20,badge:null}
+  },
+  5:{
+    title:'长套建立',chapter:'第二章：打牌策略',icon:'📈',
+    objective:'理解长套赢墩 —— 用小牌建立额外赢墩',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'5'},{suit:'♠',rank:'4'},{suit:'♠',rank:'3'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♥',rank:'3'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'7'},{suit:'♣',rank:'J'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♠',rank:'9'},{suit:'♥',rank:'A'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'7'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'8'},{suit:'♠',rank:'7'},{suit:'♠',rank:'6'},{suit:'♠',rank:'2'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'6'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'9'},{suit:'♣',rank:'6'},{suit:'♣',rank:'3'}],
+      trump:null,contract:'3NT',declarer:'S',dummy:'N',
+      trick:[],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'📈 你主打3NT，手上有6张♠加上AKQ大牌连张！'},
+      {type:'explain',text:'💡 先出掉大牌消耗对手，等他们的♠用完了，你的小♠就变成赢墩了！'},
+      {type:'highlight',target:'spade-cards',text:'先出♠A！消耗对手的♠。'},
+      {type:'prompt',text:'出♠A开始建立长套！',validate:'spade-A'},
+      {type:'complete',text:'🎉 很好！大牌出完后，你的小♠543就变成赢墩了。这就是"长套建立"！'}
+    ],
+    rewards:{xp:25,badge:'📈'}
+  },
+  6:{
+    title:'飞牌技巧',chapter:'第三章：高级技巧',icon:'✈️',
+    objective:'学习飞牌 —— 用次大牌尝试赢墩',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'J'},{suit:'♠',rank:'5'},{suit:'♥',rank:'K'},{suit:'♥',rank:'8'},{suit:'♥',rank:'3'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'7'},{suit:'♦',rank:'4'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'},{suit:'♣',rank:'6'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'10'},{suit:'♠',rank:'9'},{suit:'♥',rank:'A'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'7'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'K'},{suit:'♠',rank:'8'},{suit:'♠',rank:'6'},{suit:'♠',rank:'3'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♠',rank:'7'},{suit:'♠',rank:'4'},{suit:'♠',rank:'2'},{suit:'♥',rank:'10'},{suit:'♥',rank:'6'},{suit:'♥',rank:'5'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'6'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'3'}],
+      trump:null,contract:'3NT',declarer:'S',dummy:'N',
+      trick:[],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'✈️ 第三章！你主打3NT，猜测♠K在东家手里。'},
+      {type:'explain',text:'💡 飞牌技巧：出次大牌（J），如果西家不出K，北家的Q就能赢！'},
+      {type:'highlight',target:'south-j-spade',text:'出♠J试试飞牌！'},
+      {type:'prompt',text:'出♠J进行飞牌！',validate:'spade-J'},
+      {type:'complete',text:'🎉 飞牌成功！通过出次大牌，可以"飞过"对手的大牌。这是桥牌常用技巧！'}
+    ],
+    rewards:{xp:30,badge:'✈️'}
+  },
+  7:{
+    title:'将吃与交叉将吃',chapter:'第三章：高级技巧',icon:'⚔️',
+    objective:'学习交叉将吃策略',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'5'},{suit:'♥',rank:'K'},{suit:'♥',rank:'4'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♦',rank:'7'},{suit:'♣',rank:'J'},{suit:'♣',rank:'9'},{suit:'♣',rank:'6'},{suit:'♣',rank:'3'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'K'},{suit:'♠',rank:'3'},{suit:'♥',rank:'A'},{suit:'♥',rank:'J'},{suit:'♥',rank:'9'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'7'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♠',rank:'9'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'8'},{suit:'♥',rank:'6'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♣',rank:'A'},{suit:'♣',rank:'8'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♠',rank:'8'},{suit:'♠',rank:'7'},{suit:'♠',rank:'6'},{suit:'♠',rank:'4'},{suit:'♠',rank:'2'},{suit:'♥',rank:'10'},{suit:'♥',rank:'7'},{suit:'♥',rank:'5'},{suit:'♥',rank:'3'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'6'},{suit:'♦',rank:'3'}],
+      trump:'♣',contract:'5♣',declarer:'S',dummy:'N',
+      trick:[],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'⚔️ 你主打5♣，虽然缺少♣A，但有很好的边花控制。'},
+      {type:'explain',text:'💡 先出掉边花大牌，然后和搭档轮流用将牌赢墩。这叫"交叉将吃"！'},
+      {type:'highlight',target:'diamond-cards',text:'先出♦A清掉对手的♦！'},
+      {type:'prompt',text:'出♦A！',validate:'diamond-A'},
+      {type:'complete',text:'🎉 出掉大牌后，你可以用将牌交叉将吃。两手牌轮流将吃，威力巨大！'}
+    ],
+    rewards:{xp:30,badge:'⚔️'}
+  },
+  8:{
+    title:'读牌计算',chapter:'第三章：高级技巧',icon:'🧮',
+    objective:'学习推算对手持牌',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'K'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'J'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'},{suit:'♣',rank:'10'}],
+      N:[{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♠',rank:'9'},{suit:'♥',rank:'J'},{suit:'♥',rank:'10'},{suit:'♥',rank:'9'},{suit:'♦',rank:'A'},{suit:'♦',rank:'10'},{suit:'♦',rank:'9'},{suit:'♣',rank:'9'},{suit:'♣',rank:'8'},{suit:'♣',rank:'7'},{suit:'♣',rank:'6'}],
+      E:[{suit:'♠',rank:'8'},{suit:'♠',rank:'7'},{suit:'♠',rank:'6'},{suit:'♠',rank:'5'},{suit:'♥',rank:'8'},{suit:'♥',rank:'7'},{suit:'♥',rank:'6'},{suit:'♦',rank:'8'},{suit:'♦',rank:'7'},{suit:'♦',rank:'6'},{suit:'♣',rank:'5'},{suit:'♣',rank:'4'},{suit:'♣',rank:'3'}],
+      W:[{suit:'♠',rank:'4'},{suit:'♠',rank:'3'},{suit:'♠',rank:'2'},{suit:'♥',rank:'5'},{suit:'♥',rank:'4'},{suit:'♥',rank:'3'},{suit:'♥',rank:'2'},{suit:'♦',rank:'5'},{suit:'♦',rank:'4'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'A'},{suit:'♣',rank:'2'}],
+      trump:'NT',contract:'7NT',declarer:'S',dummy:'N',
+      trick:[],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'🧮 你主打大满贯7NT！需要赢全部13墩，有信心吗？'},
+      {type:'explain',text:'💡 你有超强牌力，先出掉大牌消耗对手的牌。一步一步来！'},
+      {type:'highlight',target:'south-cards',text:'先出♠A开始！'},
+      {type:'prompt',text:'出♠A！',validate:'spade-A'},
+      {type:'complete',text:'🎉 大满贯！你已经学会了读牌计算，强牌时要确保赢墩数量够。'}
+    ],
+    rewards:{xp:40,badge:'🧮'}
+  },
+  9:{
+    title:'防守信号',chapter:'第三章：高级技巧',icon:'🚩',
+    objective:'学习防守配合 —— 给搭档信号',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'7'},{suit:'♠',rank:'4'},{suit:'♥',rank:'K'},{suit:'♥',rank:'9'},{suit:'♥',rank:'6'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'8'},{suit:'♦',rank:'5'},{suit:'♣',rank:'J'},{suit:'♣',rank:'7'},{suit:'♣',rank:'3'},{suit:'♣',rank:'2'}],
+      N:[{suit:'♠',rank:'K'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'7'},{suit:'♥',rank:'4'},{suit:'♦',rank:'K'},{suit:'♦',rank:'J'},{suit:'♦',rank:'9'},{suit:'♣',rank:'K'},{suit:'♣',rank:'10'},{suit:'♣',rank:'6'},{suit:'♣',rank:'4'}],
+      E:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'9'},{suit:'♠',rank:'6'},{suit:'♠',rank:'3'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♥',rank:'8'},{suit:'♦',rank:'A'},{suit:'♦',rank:'7'},{suit:'♦',rank:'3'},{suit:'♣',rank:'A'},{suit:'♣',rank:'9'},{suit:'♣',rank:'5'}],
+      W:[{suit:'♠',rank:'8'},{suit:'♠',rank:'5'},{suit:'♠',rank:'2'},{suit:'♥',rank:'10'},{suit:'♥',rank:'5'},{suit:'♥',rank:'3'},{suit:'♥',rank:'2'},{suit:'♦',rank:'10'},{suit:'♦',rank:'6'},{suit:'♦',rank:'4'},{suit:'♦',rank:'2'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'8'}],
+      trump:'♥',contract:'4♥',declarer:'N',dummy:'S',
+      trick:[{pos:'E',card:{suit:'♦',rank:'A'}}],current:'S',phase:'play',humanPlaysAs:'S'
+    },
+    guidance:[
+      {type:'intro',text:'🚩 你在防守4♥。东家（你的搭档）出了♦A！'},
+      {type:'explain',text:'💡 搭档出大牌通常表示欢迎这个花色。跟大牌=鼓励，跟小牌=不喜欢。'},
+      {type:'highlight',target:'diamond-cards',text:'跟♦Q表示欢迎搭档继续攻♦！'},
+      {type:'prompt',text:'出♦Q表示欢迎！',validate:'diamond-Q'},
+      {type:'complete',text:'🎉 好！搭档看到你的♦Q就知道继续攻♦。防守配合就是靠这种默契！'}
+    ],
+    rewards:{xp:35,badge:'🚩'}
+  },
+  10:{
+    title:'终局打法',chapter:'第三章：高级技巧',icon:'🏁',
+    objective:'学习终局投入 —— 让对手被迫送墩',
+    setup:{
+      S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♥',rank:'A'},{suit:'♥',rank:'3'},{suit:'♦',rank:'K'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'J'},{suit:'♣',rank:'7'},{suit:'♣',rank:'6'},{suit:'♣',rank:'5'},{suit:'♣',rank:'4'},{suit:'♣',rank:'3'}],
+      N:[{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♥',rank:'J'},{suit:'♦',rank:'A'},{suit:'♦',rank:'10'},{suit:'♦',rank:'9'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'},{suit:'♣',rank:'10'}],
+      E:[{suit:'♠',rank:'9'},{suit:'♠',rank:'8'},{suit:'♠',rank:'7'},{suit:'♥',rank:'10'},{suit:'♥',rank:'9'},{suit:'♥',rank:'8'},{suit:'♥',rank:'7'},{suit:'♥',rank:'6'},{suit:'♦',rank:'8'},{suit:'♦',rank:'7'},{suit:'♦',rank:'6'},{suit:'♦',rank:'5'},{suit:'♦',rank:'4'}],
+      W:[{suit:'♠',rank:'6'},{suit:'♠',rank:'5'},{suit:'♠',rank:'4'},{suit:'♠',rank:'3'},{suit:'♠',rank:'2'},{suit:'♥',rank:'5'},{suit:'♥',rank:'4'},{suit:'♥',rank:'2'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'A'},{suit:'♣',rank:'9'},{suit:'♣',rank:'8'}],
+      trump:'NT',contract:'6NT',declarer:'S',dummy:'N',
+      trick:[],current:'S',phase:'play'
+    },
+    guidance:[
+      {type:'intro',text:'🏁 最后一关！你主打6NT小满贯，需要赢12墩！'},
+      {type:'explain',text:'💡 用终局打法：先出掉其他赢墩，最后用♦投入对手，让他们被迫送墩。'},
+      {type:'highlight',target:'south-cards',text:'先出♠A！消耗对手的♠。'},
+      {type:'prompt',text:'出♠A！',validate:'spade-A'},
+      {type:'complete',text:'🏆 恭喜通关！你已经掌握了桥牌的核心技巧，去正常游戏模式大展身手吧！'}
+    ],
+    rewards:{xp:50,badge:'🏆'}
+  }
+};
+
+// ---- Chapter groupings for level map ----
+const STORY_CHAPTERS=[
+  {name:'第一章：认识桥牌',levels:[1,2,3]},
+  {name:'第二章：打牌策略',levels:[4,5]},
+  {name:'第三章：高级技巧',levels:[6,7,8,9,10]}
+];
+
+// ---- Level Map ----
+function openLevelMap(){
+  let overlay=document.getElementById('level-map-overlay');
+  let modal=document.getElementById('level-map-modal');
+  let html='<h2>🎮 故事模式</h2>';
+  html+='<div style="text-align:center;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.5)">Lv.'+G.playerLevel+' '+LEVEL_TITLES[Math.min(G.playerLevel,8)]+' &nbsp;|&nbsp; '+G.xp+' XP</div>';
+
+  for(let ch of STORY_CHAPTERS){
+    html+='<div class="lm-chapter"><div class="lm-chapter-title">'+ch.name+'</div><div class="lm-levels">';
+    for(let lid of ch.levels){
+      let lv=STORY_LEVELS[lid];
+      let done=G.completedLevels.includes(lid);
+      let unlocked=lid===1||G.completedLevels.includes(lid-1);
+      let current=unlocked&&!done;
+      let cls='lm-level'+(done?' completed':'')+(current?' current':'')+(unlocked?'':' locked');
+      html+='<div class="'+cls+'" onclick="'+(unlocked?'startStoryLevel('+lid+')':'')+'">';
+      html+='<div class="lm-num">'+(done?'✓':unlocked?lid:'🔒')+'</div>';
+      html+='<div class="lm-info"><div class="lm-name">'+lv.icon+' '+lv.title+'</div>';
+      html+='<div class="lm-desc">'+lv.objective+'</div></div>';
+      html+='<div class="lm-badge">'+(done?(lv.rewards.badge||'⭐'):'')+'</div>';
+      html+='</div>';
+    }
+    html+='</div></div>';
+  }
+  html+='<button class="lm-close" onclick="closeLevelMap()">✕</button>';
+  modal.innerHTML=html;
+  overlay.classList.add('show');
+}
+
+function closeLevelMap(){
+  document.getElementById('level-map-overlay').classList.remove('show');
+}
+
+// ---- Start a story level ----
+function startStoryLevel(levelId){
+  closeLevelMap();
+  let lv=STORY_LEVELS[levelId];
+  if(!lv)return;
+
+  // Show level intro
+  let intro=document.getElementById('level-intro');
+  let card=document.getElementById('level-intro-card');
+  card.innerHTML=`
+    <div class="li-chapter">${lv.chapter}</div>
+    <div class="li-icon">${lv.icon}</div>
+    <div class="li-title">${lv.title}</div>
+    <div class="li-obj">${lv.objective}</div>
+    <button class="li-start" onclick="beginStoryLevel(${levelId})">开始关卡</button>
+  `;
+  intro.classList.add('show');
+}
+
+function beginStoryLevel(levelId){
+  document.getElementById('level-intro').classList.remove('show');
+  let lv=STORY_LEVELS[levelId];
+
+  // Initialize game state with level setup
+  init();
+  initStoryState();
+  G.storyMode=true;
+  G.storyLevelId=levelId;
+  G.storyStepIdx=0;
+
+  // Set up hands from level definition
+  let s=lv.setup;
+  G.hands={S:[...s.S],N:[...s.N],E:[...s.E],W:[...s.W]};
+  for(let p of POS) sortH(G.hands[p]);
+
+  // Set game state
+  G.trump=s.trump;
+  G.trumpSuit=s.trump||'NT';
+  G.contract=s.contract;
+  G.declarer=s.declarer;
+  G.dummy=s.dummy;
+  G.phase='play';
+  G.current=s.current;
+  G.trickNum=0;
+  G.nsTricks=0;G.ewTricks=0;
+  G.trick=[];
+  G.humanSeat=s.humanPlaysAs||'S';
+
+  // Update UI
+  document.getElementById('btn-go').style.display='none';
+  document.getElementById('btn-story').style.display='none';
+  document.getElementById('i-contract').textContent='定约：'+G.contract;
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+  document.getElementById('i-round').textContent='故事模式';
+  renderHands();
+  updateLabels();
+  clearTrick();
+
+  // Place any pre-existing trick cards
+  if(s.trick&&s.trick.length>0){
+    for(let t of s.trick){
+      if(t.card){
+        G.trick.push(t);
+        renderTrickCard(t.pos,t.card);
+        // Remove the card from the hand if present
+        let ci=G.hands[t.pos].findIndex(c=>cid(c)===cid(t.card));
+        if(ci!==-1) G.hands[t.pos].splice(ci,1);
+      }
+    }
+  }
+
+  // Show XP bar
+  document.getElementById('xp-bar').classList.add('show');
+  updateXPBar();
+
+  // Show story panel and start guidance
+  document.getElementById('story-overlay').classList.add('show');
+  document.getElementById('story-panel').classList.add('show');
+
+  // Start guidance flow
+  showStoryStep(0);
+
+  // Override playCard for story mode validation
+  G.storyWaitingForPlay=false;
+}
+
+// ---- Story Guidance Steps ----
+function showStoryStep(idx){
+  let lv=STORY_LEVELS[G.storyLevelId];
+  if(!lv)return;
+  if(idx>=lv.guidance.length){return}
+
+  G.storyStepIdx=idx;
+  let step=lv.guidance[idx];
+
+  // Save progress for persistence
+  saveStoryProgress();
+
+  // Play sound for new step
+  if(step.type!=='complete') try{playSound('bid')}catch(e){}
+
+  // Update narrator expression
+  updateNarrator(step.type);
+
+  // Update progress dots
+  let prog=document.getElementById('sp-progress');
+  prog.innerHTML='';
+  for(let i=0;i<lv.guidance.length;i++){
+    let dot=document.createElement('div');
+    dot.className='sp-dot'+(i<idx?' done':'')+(i===idx?' current':'');
+    prog.appendChild(dot);
+  }
+
+  // Update chapter/title/objective
+  document.getElementById('sp-chapter').textContent=lv.chapter;
+  document.getElementById('sp-title').textContent=lv.icon+' '+lv.title;
+  document.getElementById('sp-objective').textContent=lv.objective;
+
+  // Hide feedback and reward
+  let fb=document.getElementById('sp-feedback');
+  fb.classList.remove('show','correct','wrong');
+  let rw=document.getElementById('sp-reward');
+  rw.classList.remove('show');
+
+  let btn=document.getElementById('sp-next-btn');
+  let bubble=document.getElementById('sp-bubble');
+
+  switch(step.type){
+    case 'intro':
+      typewriterText(bubble,step.text);
+      btn.textContent='下一步';
+      btn.style.display='';
+      btn.onclick=function(){storyNextStep()};
+      G.storyWaitingForPlay=false;
+      clearCardHighlights();
+      break;
+
+    case 'highlight':
+      bubble.innerHTML=step.text;
+      btn.textContent='下一步';
+      btn.style.display='';
+      btn.onclick=function(){storyNextStep()};
+      G.storyWaitingForPlay=false;
+      highlightStoryCards(step.target);
+      break;
+
+    case 'explain':
+      bubble.innerHTML=step.text;
+      btn.textContent='下一步';
+      btn.style.display='';
+      btn.onclick=function(){storyNextStep()};
+      G.storyWaitingForPlay=false;
+      break;
+
+    case 'prompt':
+      bubble.innerHTML='<span class="prompt-icon">❓</span>'+step.text;
+      btn.style.display='none';
+      G.storyWaitingForPlay=true;
+      G.storyValidateFn=step.validate;
+      renderHumanHand();
+      highlightPlayableCards(step.validate);
+      break;
+
+    case 'complete':
+      bubble.innerHTML=step.text;
+      // Show rewards
+      rw.innerHTML='<div class="reward-xp">+'+lv.rewards.xp+' XP</div><div class="reward-label">经验值</div><div class="reward-msg">关卡完成！</div>';
+      rw.classList.add('show');
+      btn.textContent='完成 ✓';
+      btn.style.display='';
+      btn.onclick=function(){completeStoryLevel()};
+      G.storyWaitingForPlay=false;
+      clearCardHighlights();
+      // Show confetti for completion
+      showConfetti();
+      break;
+  }
+}
+
+function storyNextStep(){
+  showStoryStep(G.storyStepIdx+1);
+}
+
+// ---- Card Highlighting ----
+function clearCardHighlights(){
+  document.querySelectorAll('.card.recommended').forEach(c=>c.classList.remove('recommended','bounce-highlight'));
+  document.querySelectorAll('.card.dimmed').forEach(c=>c.classList.remove('dimmed'));
+  document.querySelectorAll('.card.required-suit').forEach(c=>c.classList.remove('required-suit'));
+  document.querySelectorAll('.spotlight-ring').forEach(e=>e.remove());
+  document.querySelectorAll('.spotlight-arrow').forEach(e=>e.remove());
+  document.querySelectorAll('.highlight-arrow').forEach(e=>e.remove());
+}
+
+function highlightStoryCards(target){
+  clearCardHighlights();
+  let hs=G.humanSeat||'S';
+  let handEl=document.getElementById('hand-'+hs);
+  if(!handEl)return;
+  let cards=handEl.querySelectorAll('.card');
+  let suitMap={'spade-cards':'♠','heart-cards':'♥','diamond-cards':'♦','club-cards':'♣'};
+  let targetSuit=suitMap[target]||null;
+
+  cards.forEach(c=>{
+    let suitText=c.querySelector('.s');
+    if(!suitText)return;
+    let suit=suitText.textContent;
+    if(target==='south-cards'||target==='south-j-spade'){
+      c.classList.add('recommended');
+    } else if(targetSuit&&suit===targetSuit){
+      c.classList.add('recommended');
+    }
+  });
+}
+
+function highlightPlayableCards(validate){
+  clearCardHighlights();
+  let hs=G.humanSeat||'S';
+  let handEl=document.getElementById('hand-'+hs);
+  if(!handEl)return;
+  let cards=handEl.querySelectorAll('.card');
+  let requiredSuit=null;
+
+  if(G.trick.length>0){
+    requiredSuit=G.trick[0].card.suit;
+  }
+
+  let validateSuit=null;
+  if(validate==='any-spade')validateSuit='♠';
+  else if(validate==='any-heart')validateSuit='♥';
+  else if(validate==='any-diamond')validateSuit='♦';
+  else if(validate==='any-club')validateSuit='♣';
+
+  cards.forEach(c=>{
+    let suitText=c.querySelector('.s');
+    if(!suitText)return;
+    let suit=suitText.textContent;
+
+    // Dim non-matching cards
+    let matchesRequired=!requiredSuit||suit===requiredSuit||!G.hands[hs].some(cc=>cc.suit===requiredSuit);
+    let matchesValidate=!validateSuit||suit===validateSuit;
+
+    if(!matchesRequired){
+      c.classList.add('dimmed');
+    } else if(validateSuit&&suit===validateSuit){
+      c.classList.add('recommended');
+    } else if(requiredSuit&&suit===requiredSuit){
+      c.classList.add('required-suit');
+    }
+  });
+}
+
+// ---- Story Mode Card Play Validation ----
+function validateStoryCardPlay(card){
+  if(!G.storyMode||!G.storyWaitingForPlay)return true;
+  let validate=G.storyValidateFn;
+  let valid=false;
+
+  switch(validate){
+    case 'any-spade':valid=card.suit==='♠';break;
+    case 'any-heart':valid=card.suit==='♥';break;
+    case 'any-diamond':valid=card.suit==='♦';break;
+    case 'any-club':valid=card.suit==='♣';break;
+    case 'spade-A':valid=card.suit==='♠'&&card.rank==='A';break;
+    case 'spade-J':valid=card.suit==='♠'&&card.rank==='J';break;
+    case 'diamond-A':valid=card.suit==='♦'&&card.rank==='A';break;
+    case 'diamond-Q':valid=card.suit==='♦'&&card.rank==='Q';break;
+    default:valid=true;
+  }
+
+  if(valid){
+    // Show correct feedback
+    let fb=document.getElementById('sp-feedback');
+    fb.textContent='✅ 太棒了！';
+    fb.className='sp-feedback show correct';
+    G.storyWaitingForPlay=false;
+    clearCardHighlights();
+    updateNarrator('success');
+    try{playSound('trick')}catch(e){}
+    // Auto-advance after short delay
+    setTimeout(function(){storyNextStep()},1500);
+    return true;
+  } else {
+    // Show wrong feedback
+    updateNarrator('mistake');
+    let fb=document.getElementById('sp-feedback');
+    fb.textContent='❌ 不太对哦，再试试看！';
+    fb.className='sp-feedback show wrong';
+    // Shake animation
+    fb.style.animation='none';
+    fb.offsetHeight;
+    fb.style.animation='';
+    return false;
+  }
+}
+
+// ---- Complete Level ----
+function completeStoryLevel(){
+  let lv=STORY_LEVELS[G.storyLevelId];
+  if(!lv)return;
+
+  let oldLevel=G.playerLevel;
+  G.xp+=lv.rewards.xp;
+  G.playerLevel=Math.floor(G.xp/100)+1;
+  localStorage.setItem('bridge-xp',String(G.xp));
+
+  if(!G.completedLevels.includes(G.storyLevelId)){
+    G.completedLevels.push(G.storyLevelId);
+    localStorage.setItem('bridge-completed-levels',JSON.stringify(G.completedLevels));
+  }
+
+  // Clear saved progress
+  clearStoryProgress();
+
+  // Play completion sound
+  try{playSound('game')}catch(e){}
+
+  // Update narrator
+  updateNarrator('levelup');
+
+  // Close story panel
+  document.getElementById('story-panel').classList.remove('show');
+  document.getElementById('story-overlay').classList.remove('show');
+
+  // Show level completion overlay
+  showLevelCompleteOverlay(lv,oldLevel);
+
+  // Update XP bar
+  updateXPBar();
+
+  // Restore UI
+  G.storyMode=false;
+  document.getElementById('btn-go').style.display='';
+  document.getElementById('btn-story').style.display='';
+  G.humanSeat='S';
+
+  // Check level up
+  if(G.playerLevel>oldLevel){
+    setTimeout(function(){showLevelUp(G.playerLevel)},1500);
+  }
+}
+
+function showLevelCompleteOverlay(lv,oldLevel){
+  let overlay=document.getElementById('level-complete-overlay');
+  let xpText=document.getElementById('lc-xp-text');
+  let progressFill=document.getElementById('lc-progress-fill');
+  let continueBtn=document.getElementById('lc-continue');
+
+  // Reset animations
+  overlay.classList.add('show');
+  xpText.textContent='+'+lv.rewards.xp+' XP';
+
+  // Calculate new progress percentage
+  let newPct=G.xp%100;
+  setTimeout(function(){
+    progressFill.style.width=newPct+'%';
+  },50);
+
+  // Check if next level exists
+  let hasNext=!!STORY_LEVELS[G.storyLevelId+1];
+  continueBtn.textContent=hasNext?'下一关 →':'返回地图';
+
+  // Auto-continue after 3 seconds
+  let autoTimer=setTimeout(function(){
+    continueAfterLevel();
+  },3500);
+  continueBtn.onclick=function(){
+    clearTimeout(autoTimer);
+    continueAfterLevel();
+  };
+}
+
+function continueAfterLevel(){
+  document.getElementById('level-complete-overlay').classList.remove('show');
+  // Reset progress bar for next use
+  document.getElementById('lc-progress-fill').style.width='0%';
+
+  if(STORY_LEVELS[G.storyLevelId+1]){
+    startStoryLevel(G.storyLevelId+1);
+  } else {
+    setS('🎉 恭喜通关全部关卡！');
+  }
+}
+
+// ---- Exit Story Mode ----
+function exitStoryMode(){
+  G.storyMode=false;
+  G.storyWaitingForPlay=false;
+  clearCardHighlights();
+  clearStoryProgress();
+  if(G._twTimer)clearTimeout(G._twTimer);
+  document.getElementById('story-panel').classList.remove('show');
+  document.getElementById('story-overlay').classList.remove('show');
+  document.getElementById('xp-bar').classList.remove('show');
+  document.getElementById('level-complete-overlay').classList.remove('show');
+  document.getElementById('btn-go').style.display='';
+  document.getElementById('btn-story').style.display='';
+  G.humanSeat='S';
+  init();
+  setS('点击"开始游戏"开始');
+}
+
+// ---- XP Bar ----
+function updateXPBar(){
+  let xpInLevel=G.xp%100;
+  let pct=xpInLevel;
+  document.getElementById('xp-fill').style.width=pct+'%';
+  document.getElementById('xp-level-label').textContent='Lv.'+G.playerLevel+' '+LEVEL_TITLES[Math.min(G.playerLevel,8)];
+  document.getElementById('xp-text').textContent=G.xp+'/100 XP';
+}
+
+function showXPFly(amount){
+  let el=document.createElement('div');
+  el.className='xp-fly';
+  el.textContent='+'+amount+' XP';
+  el.style.left='50%';
+  el.style.top='40%';
+  el.style.transform='translateX(-50%)';
+  document.body.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},1300);
+}
+
+// ---- Level Up ----
+function showLevelUp(newLevel){
+  let title=LEVEL_TITLES[Math.min(newLevel,8)];
+  document.getElementById('lu-title').textContent='🎉 升级到 Lv.'+newLevel+'！';
+  document.getElementById('lu-sub').textContent='你已晋升为「'+title+'」';
+  document.getElementById('level-up-overlay').classList.add('show');
+}
+
+function closeLevelUp(){
+  document.getElementById('level-up-overlay').classList.remove('show');
+}
+
+// ---- Typewriter Effect ----
+function typewriterText(el,text,speed){
+  speed=speed||25;
+  if(G._twTimer)clearTimeout(G._twTimer);
+  el.innerHTML='<span class="tw-cursor"></span>';
+  let i=0;
+  function typeNext(){
+    if(i<text.length){
+      el.innerHTML=text.substring(0,i+1)+'<span class="tw-cursor"></span>';
+      i++;
+      G._twTimer=setTimeout(typeNext,speed);
+    } else {
+      el.innerHTML=text;
+    }
+  }
+  typeNext();
+}
+
+// ---- Confetti Particles ----
+function showConfetti(){
+  let container=document.createElement('div');
+  container.className='confetti-container';
+  document.body.appendChild(container);
+  let colors=['#ffd700','#ff6b6b','#4ecdc4','#45b7d1','#96e6a1','#dda0dd','#ff9a9e','#a18cd1','#fbc2eb','#f6d365'];
+  for(let i=0;i<20;i++){
+    let p=document.createElement('div');
+    p.className='confetti-particle';
+    let angle=Math.random()*Math.PI*2;
+    let dist=80+Math.random()*120;
+    let cx=Math.cos(angle)*dist;
+    let cy=Math.sin(angle)*dist-50;
+    p.style.cssText='left:50%;top:50%;background:'+colors[i%colors.length]+';--cx:'+cx+'px;--cy:'+cy+'px;animation-delay:'+(Math.random()*0.3)+'s;width:'+(4+Math.random()*6)+'px;height:'+(4+Math.random()*6)+'px;';
+    container.appendChild(p);
+  }
+  setTimeout(function(){if(container.parentNode)container.parentNode.removeChild(container)},2000);
+}
+
+// ---- Narrator Expression ----
+function updateNarrator(context){
+  let el=document.getElementById('sp-narrator');
+  if(!el)return;
+  let emoji='🧑‍🏫';
+  switch(context){
+    case 'intro':case 'highlight':case 'explain':case 'prompt':emoji='🧑‍🏫';break;
+    case 'success':emoji='🎉';break;
+    case 'mistake':emoji='🤔';break;
+    case 'complete':case 'levelup':emoji='💪';break;
+  }
+  el.textContent=emoji;
+  el.classList.remove('bounce');
+  void el.offsetWidth;
+  el.classList.add('bounce');
+}
+
+// ---- Add Bounce to Highlighted Cards ----
+function addHighlightBounce(){
+  document.querySelectorAll('.card.recommended').forEach(function(c){
+    c.classList.add('bounce-highlight');
+  });
+  // Add pulsing arrows pointing to highlighted cards
+  document.querySelectorAll('.highlight-arrow').forEach(function(e){e.remove()});
+  document.querySelectorAll('.card.recommended').forEach(function(c){
+    let rect=c.getBoundingClientRect();
+    let arrow=document.createElement('div');
+    arrow.className='highlight-arrow';
+    arrow.textContent='👇';
+    arrow.style.position='fixed';
+    arrow.style.left=(rect.left+rect.width/2-10)+'px';
+    arrow.style.top=(rect.top-28)+'px';
+    document.body.appendChild(arrow);
+  });
+}
+
+// Override highlightStoryCards to add bounce
+const _origHighlightStoryCards=highlightStoryCards;
+highlightStoryCards=function(target){
+  _origHighlightStoryCards(target);
+  addHighlightBounce();
+};
+const _origHighlightPlayableCards=highlightPlayableCards;
+highlightPlayableCards=function(validate){
+  _origHighlightPlayableCards(validate);
+  addHighlightBounce();
+};
+
+// ---- Progress Persistence ----
+function saveStoryProgress(){
+  try{
+    if(G.storyMode&&G.storyLevelId!=null){
+      localStorage.setItem('bridge-story-progress',JSON.stringify({
+        levelId:G.storyLevelId,
+        stepIdx:G.storyStepIdx,
+        xp:G.xp
+      }));
+    }
+  }catch(e){}
+}
+function clearStoryProgress(){
+  try{localStorage.removeItem('bridge-story-progress')}catch(e){}
+}
+function checkResumeProgress(){
+  try{
+    let data=JSON.parse(localStorage.getItem('bridge-story-progress')||'null');
+    if(data&&data.levelId&&STORY_LEVELS[data.levelId]){
+      let lv=STORY_LEVELS[data.levelId];
+      document.getElementById('resume-text').textContent='你上次在第'+data.levelId+'关「'+lv.title+'」中途离开了，要继续吗？';
+      document.getElementById('resume-prompt').classList.add('show');
+    }
+  }catch(e){}
+}
+function resumeStoryLevel(){
+  document.getElementById('resume-prompt').classList.remove('show');
+  try{
+    let data=JSON.parse(localStorage.getItem('bridge-story-progress')||'null');
+    if(data&&data.levelId){
+      beginStoryLevel(data.levelId);
+      // Jump to saved step if it's beyond 0
+      if(data.stepIdx>0){
+        setTimeout(function(){showStoryStep(data.stepIdx)},300);
+      }
+    }
+  }catch(e){}
+}
+function dismissResume(){
+  document.getElementById('resume-prompt').classList.remove('show');
+  clearStoryProgress();
+}
+
+// ---- Patch playCard to validate story mode ----
+const _origPlayCard=playCard;
+// We'll hook into the click handler instead
+
 // ============ INIT ============
 init();
-// Show onboarding on first visit
+// Show onboarding on first visit, then check for resume
 (function(){
   try{
     if(!localStorage.getItem('bridge-onboarded')){
       showOnboarding();
+    } else {
+      checkResumeProgress();
     }
   }catch(e){showOnboarding()}
 })();
