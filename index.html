@@ -2423,6 +2423,7 @@ body.colorblind-mode .card[data-suit='♣']::after{content:'♣';font-size:10px;
     <button id="btn-tour" onclick="openTournament()">🏆 锦标赛</button>
     <button id="btn-history" onclick="openHistory()">📜 历史</button>
     <button id="btn-perf" onclick="openPerf()">📊 数据</button>
+    <button id="btn-quick" onclick="quickPlay()" style="padding:16px 40px;border:none;border-radius:16px;font-size:18px;font-weight:800;background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;cursor:pointer;box-shadow:0 6px 24px rgba(255,109,0,.4);margin:12px 0">⚡ 快速开始</button>
   </div>
   <div id="onboarding">
     <div class="ob-card">
@@ -5364,6 +5365,17 @@ function finishPlay(){
   try{recordHandResult(made)}catch(e){}
   try{saveGameProgress()}catch(e){}
   try{updateQuickStats()}catch(e){}
+
+  // Social/competitive features: ELO + Mode Stats
+  try{
+    let oldElo=getELO();
+    let newElo=updateELO(made,G.contract);
+    showELOToast(oldElo,newElo);
+  }catch(e){}
+  try{
+    let mode=getCurrentMode();
+    recordModeStats(mode,made,bonus);
+  }catch(e){}
 
   // Show post-game analysis after a short delay
   setTimeout(function(){
@@ -12132,6 +12144,114 @@ function initProSystem(){
   try{checkReferral()}catch(e){}
   try{updateProStatusUI()}catch(e){}
   try{trackEvent('system','init','')}catch(e){}
+}
+
+// ============ FEATURE 1: ELO Rating System (♟️ 等级分系统) ============
+function getELO(){return parseInt(localStorage.getItem('bridge-elo')||'1200')}
+function updateELO(made,contract){
+  if(!contract)return getELO();
+  let elo=getELO();
+  let need=+contract[0]+6;
+  let difficulty=need>=10?1600:need>=8?1400:1200;
+  let K=32;
+  let expected=1/(1+Math.pow(10,(difficulty-elo)/400));
+  let actual=made?1:0;
+  let newElo=Math.round(elo+K*(actual-expected));
+  localStorage.setItem('bridge-elo',newElo.toString());
+  return newElo;
+}
+function getELOTitle(elo){
+  if(elo>=2000)return'大师';
+  if(elo>=1800)return'专家';
+  if(elo>=1600)return'高级';
+  if(elo>=1400)return'中级';
+  if(elo>=1200)return'初级';
+  return'新手';
+}
+function showELOToast(oldElo,newElo){
+  let diff=newElo-oldElo;
+  let sign=diff>=0?'+':'';
+  let color=diff>=0?'#4caf50':'#ef5350';
+  let title=getELOTitle(newElo);
+  try{
+    showLearnToast('♟️ 等级分: '+newElo+' ('+title+')',sign+diff+' 分',3000);
+  }catch(e){
+    console.log('ELO change:',sign+diff,'New:',newElo,'Title:',title);
+  }
+}
+
+// ============ FEATURE 2: Weekly Challenge (📆 每周挑战) ============
+function getWeekSeed(){let d=new Date();let onejan=new Date(d.getFullYear(),0,1);return d.getFullYear()*100+Math.ceil(((d-onejan)/86400000+onejan.getDay()+1)/7)}
+function isWeeklyCompleted(){let s=localStorage.getItem('bridge-weekly');return s===getWeekSeed().toString()}
+function completeWeekly(){localStorage.setItem('bridge-weekly',getWeekSeed().toString())}
+
+// ============ FEATURE 3: Hand of the Day (🌟 今日名局) ============
+var FAMOUS_HANDS=[
+  {title:'1975百慕大杯经典',desc:'意大利蓝队的关键一局',contract:'6♠',declarer:'S',
+   S:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'}],
+   N:[{suit:'♠',rank:'9'},{suit:'♠',rank:'8'},{suit:'♠',rank:'7'},{suit:'♥',rank:'J'},{suit:'♥',rank:'10'},{suit:'♥',rank:'9'},{suit:'♦',rank:'Q'},{suit:'♦',rank:'J'},{suit:'♦',rank:'10'},{suit:'♣',rank:'J'},{suit:'♣',rank:'10'},{suit:'♣',rank:'9'},{suit:'♣',rank:'8'}],
+   E:[{suit:'♠',rank:'6'},{suit:'♠',rank:'5'},{suit:'♠',rank:'4'},{suit:'♥',rank:'8'},{suit:'♥',rank:'7'},{suit:'♥',rank:'6'},{suit:'♦',rank:'9'},{suit:'♦',rank:'8'},{suit:'♦',rank:'7'},{suit:'♣',rank:'7'},{suit:'♣',rank:'6'},{suit:'♣',rank:'5'},{suit:'♣',rank:'4'}],
+   W:[{suit:'♠',rank:'3'},{suit:'♠',rank:'2'},{suit:'♥',rank:'5'},{suit:'♥',rank:'4'},{suit:'♥',rank:'3'},{suit:'♥',rank:'2'},{suit:'♦',rank:'6'},{suit:'♦',rank:'5'},{suit:'♦',rank:'4'},{suit:'♦',rank:'3'},{suit:'♦',rank:'2'},{suit:'♣',rank:'3'},{suit:'♣',rank:'2'}]}
+];
+function getDailyHandIndex(){
+  let d=new Date();
+  let dayOfYear=Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);
+  return dayOfYear%FAMOUS_HANDS.length;
+}
+function isDailyHandCompleted(){
+  let key='bridge-daily-hand-'+new Date().toISOString().slice(0,10);
+  return localStorage.getItem(key)==='1';
+}
+function completeDailyHand(){
+  let key='bridge-daily-hand-'+new Date().toISOString().slice(0,10);
+  localStorage.setItem(key,'1');
+}
+
+// ============ FEATURE 4: Practice Mode Stats (📊 练习统计) ============
+function recordModeStats(mode,made,score){
+  let stats=JSON.parse(localStorage.getItem('bridge-mode-stats')||'{}');
+  if(!stats[mode])stats[mode]={played:0,won:0,totalScore:0};
+  stats[mode].played++;
+  if(made)stats[mode].won++;
+  stats[mode].totalScore+=score;
+  localStorage.setItem('bridge-mode-stats',JSON.stringify(stats));
+}
+function getModeStats(mode){
+  let stats=JSON.parse(localStorage.getItem('bridge-mode-stats')||'{}');
+  return stats[mode]||{played:0,won:0,totalScore:0};
+}
+function getCurrentMode(){
+  if(G.dailyMode)return'daily';
+  if(G.defenseMode)return'defense';
+  if(G.tournamentMode)return'tournament';
+  if(G.justPlayMode)return'justPlay';
+  return'normal';
+}
+
+// ============ FEATURE 5: Quick Play Button (⚡ 快速开始) ============
+function quickPlay(){
+  try{document.getElementById('btn-go').style.display='none'}catch(e){}
+  try{document.getElementById('btn-story').style.display='none'}catch(e){}
+  try{document.getElementById('btn-just-play').style.display='none'}catch(e){}
+  try{document.getElementById('btn-defense').style.display='none'}catch(e){}
+  try{document.getElementById('btn-lead-trainer').style.display='none'}catch(e){}
+  try{document.getElementById('btn-dc').style.display='none'}catch(e){}
+  try{document.getElementById('btn-conv').style.display='none'}catch(e){}
+  try{document.getElementById('btn-endgame').style.display='none'}catch(e){}
+  try{document.getElementById('btn-tour').style.display='none'}catch(e){}
+  try{document.getElementById('btn-history').style.display='none'}catch(e){}
+  try{document.getElementById('btn-perf').style.display='none'}catch(e){}
+  try{document.getElementById('btn-quick').style.display='none'}catch(e){}
+  init();G.justPlayMode=true;G.round=1;resetPlayedCards();deal();
+  G.replayHands={N:G.hands.N.slice(),S:G.hands.S.slice(),E:G.hands.E.slice(),W:G.hands.W.slice()};
+  let ac=autoSelectContract();
+  G.contract=ac.contract;G.declarer='S';G.dummy='N';G.trumpSuit=ac.trumpSuit;G.trump=ac.trump;
+  G.trickNum=0;G.nsTricks=0;G.ewTricks=0;G.doubled=0;
+  document.getElementById('i-contract').textContent='定约：'+G.contract;
+  document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
+  document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
+  document.getElementById('i-round').textContent='⚡ 快速开始';
+  setS('⚡ '+ac.reason);updateLabels();renderHands();setTimeout(startPlay,spd(800));
 }
 
 </script>
