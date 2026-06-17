@@ -2102,6 +2102,8 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tool-btn" id="btn-hint-level" onclick="cycleHintLevel()" title="提示"><span class="hint-bulb">💡</span><span id="hint-level-label" style="font-size:10px;margin-left:2px"></span></span>
       <span class="tool-btn" id="btn-help" onclick="replayOnboarding()" title="帮助">❓</span>
       <span class="tool-btn" id="btn-undo" onclick="if(canUndo())undoLastPlay()" title="撤销出牌">↩️</span>
+      <span class="tool-btn" id="btn-dict" onclick="showDictionary()" title="桥牌词典">📖</span>
+      <span class="tool-btn" id="btn-conv-card" onclick="showConventionCard()" title="约定卡">🃏</span>
       <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
     </div>
   </div>
@@ -2487,6 +2489,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     <button id="btn-tour" onclick="openTournament()">🏆 锦标赛</button>
     <button id="btn-history" onclick="openHistory()">📜 历史</button>
     <button id="btn-perf" onclick="openPerf()">📊 数据</button>
+    <button id="btn-rubber" onclick="startRubberBridge()">🎲 盘式桥牌</button>
     <button id="btn-quick" onclick="quickPlay()" style="padding:16px 40px;border:none;border-radius:16px;font-size:18px;font-weight:800;background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;cursor:pointer;box-shadow:0 6px 24px rgba(255,109,0,.4);margin:12px 0">⚡ 快速开始</button>
   </div>
   <div id="onboarding">
@@ -12588,6 +12591,164 @@ function initSettingsUI(){
   let sp=getGameSpeed();
   let slider=document.getElementById('speed-slider');
   if(slider){slider.value=sp;let sv=document.getElementById('speed-val');if(sv)sv.textContent=sp+'x';}
+}
+
+// ============ FEATURE: RUBBER BRIDGE MODE (🎲 盘式桥牌) ============
+var RUBBER={nsGames:0,ewGames:0,nsScore:0,ewScore:0,vulnNS:false,vulnEW:false,active:false};
+
+function startRubberBridge(){
+  RUBBER={nsGames:0,ewGames:0,nsScore:0,ewScore:0,vulnNS:false,vulnEW:false,active:true};
+  document.getElementById('btn-go').style.display='none';
+  document.getElementById('btn-story').style.display='none';
+  document.getElementById('btn-just-play').style.display='none';
+  document.getElementById('btn-defense').style.display='none';
+  document.getElementById('btn-lead-trainer').style.display='none';
+  document.getElementById('btn-dc').style.display='none';
+  document.getElementById('btn-conv').style.display='none';
+  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-tour').style.display='none';
+  document.getElementById('btn-history').style.display='none';
+  document.getElementById('btn-perf').style.display='none';
+  document.getElementById('btn-quick').style.display='none';
+  document.getElementById('btn-rubber').style.display='none';
+  init();G.rubberMode=true;G.round=1;deal();G.justPlayMode=true;
+  G.replayHands={N:G.hands.N.slice(),S:G.hands.S.slice(),E:G.hands.E.slice(),W:G.hands.W.slice()};
+  let ac=autoSelectContract();
+  G.contract=ac.contract;G.declarer='S';G.dummy='N';G.trumpSuit=ac.trumpSuit;G.trump=ac.trump;
+  G.trickNum=0;G.nsTricks=0;G.ewTricks=0;G.doubled=0;
+  G.vulnNS=RUBBER.vulnNS;G.vulnEW=RUBBER.vulnEW;
+  updateRubberDisplay();
+  setS('🎲 盘式桥牌 — '+ac.reason);updateLabels();renderHands();setTimeout(startPlay,spd(800));
+}
+
+function updateRubberDisplay(){
+  document.getElementById('i-round').textContent='🎲 盘式 | NS:'+RUBBER.nsGames+'局 EW:'+RUBBER.ewGames+'局';
+}
+
+function recordRubberResult(made,score){
+  if(!G.rubberMode)return;
+  let team=(G.declarer==='N'||G.declarer==='S')?'NS':'EW';
+  if(made){
+    if(team==='NS'){RUBBER.nsScore+=score;if(RUBBER.nsScore>=100){RUBBER.nsGames++;RUBBER.vulnNS=true;RUBBER.nsScore=0}}
+    else{RUBBER.ewScore+=score;if(RUBBER.ewScore>=100){RUBBER.ewGames++;RUBBER.vulnEW=true;RUBBER.ewScore=0}}
+  }
+  if(RUBBER.nsGames>=2){showLearnToast('🏆 盘式结束','南北赢得盘式桥牌！',4000);RUBBER.active=false}
+  else if(RUBBER.ewGames>=2){showLearnToast('🏆 盘式结束','东西赢得盘式桥牌！',4000);RUBBER.active=false}
+  updateRubberDisplay();
+}
+
+// ============ FEATURE: BRIDGE DICTIONARY (📖 桥牌词典) ============
+var BRIDGE_DICTIONARY=[
+  {term:'HCP',def:'高牌点数。A=4,K=3,Q=2,J=1',cat:'基础'},
+  {term:'定约',def:'叫牌阶段确定的打牌目标，包括阶数和花色',cat:'叫牌'},
+  {term:'将牌',def:'定约指定的王牌花色，可以吃掉其他花色',cat:'打牌'},
+  {term:'首攻',def:'防守方打出的第一张牌',cat:'防守'},
+  {term:'明手',def:'庄家的搭档，牌摊开在桌上',cat:'打牌'},
+  {term:'飞牌',def:'试图用次级大牌赢墩的技术',cat:'技术'},
+  {term:'挤牌',def:'迫使对手放弃赢墩的高级技术',cat:'高级'},
+  {term:'投入',def:'迫使对手出对你有利的牌',cat:'技术'},
+  {term:'Stayman',def:'1NT开叫后用2♣问高花的约定叫',cat:'约定叫'},
+  {term:'Jacoby Transfer',def:'1NT开叫后用2♦转移到♥,2♥转移到♠',cat:'约定叫'},
+  {term:'Blackwood',def:'4NT问搭档A数的约定叫',cat:'约定叫'},
+  {term:'阻击叫',def:'高阶弱牌长套叫牌，干扰对手',cat:'叫牌'},
+  {term:'技术性加倍',def:'表示好牌且对未叫花色有支持',cat:'叫牌'},
+  {term:'负加倍',def:'搭档开叫后对手争叫时的加倍，表示有高花',cat:'约定叫'},
+  {term:'满贯',def:'叫到6阶(小满贯)或7阶(大满贯)',cat:'叫牌'},
+  {term:'局况',def:'决定成局奖分和罚分的倍数',cat:'计分'},
+  {term:'赢墩',def:'一轮四人各出一张牌中最大的一方赢墩',cat:'打牌'},
+  {term:'长套',def:'手中某花色张数最多的花色',cat:'基础'},
+  {term:'短套',def:'手中某花色张数最少的花色',cat:'基础'},
+  {term:'连接张',def:'连续的大牌组合如KQJ',cat:'基础'}
+];
+
+function searchDictionary(query){
+  query=query.toLowerCase();
+  return BRIDGE_DICTIONARY.filter(d=>d.term.toLowerCase().includes(query)||d.def.includes(query));
+}
+
+function showDictionary(){
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">📖 桥牌词典</h3>';
+  html+='<input type="text" placeholder="搜索术语..." oninput="filterDictionary(this.value)" style="width:100%;padding:8px 12px;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.05);color:#fff;font-size:13px;margin-bottom:12px">';
+  html+='<div id="dict-results">';
+  BRIDGE_DICTIONARY.forEach(d=>{
+    html+='<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+    html+='<span style="font-weight:700;color:#ffd54f">'+d.term+'</span>';
+    html+='<span style="font-size:10px;color:rgba(255,255,255,.3);margin-left:8px">'+d.cat+'</span>';
+    html+='<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">'+d.def+'</div>';
+    html+='</div>';
+  });
+  html+='</div></div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+function filterDictionary(q){
+  let results=searchDictionary(q);
+  let html='';
+  results.forEach(d=>{
+    html+='<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+    html+='<span style="font-weight:700;color:#ffd54f">'+d.term+'</span>';
+    html+='<span style="font-size:10px;color:rgba(255,255,255,.3);margin-left:8px">'+d.cat+'</span>';
+    html+='<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">'+d.def+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('dict-results').innerHTML=html;
+}
+
+// ============ FEATURE: HAND GENERATOR (🎰 随机牌局生成器) ============
+function generateSpecificHand(type){
+  let deck=[];
+  S4.forEach(s=>['A','K','Q','J','10','9','8','7','6','5','4','3','2'].forEach(r=>deck.push({suit:s,rank:r})));
+  for(let i=deck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
+
+  if(type==='slam'){
+    let south=deck.slice(0,13);
+    while(countHCP(south)<20){
+      for(let i=deck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
+      south=deck.slice(0,13);
+    }
+  }
+
+  return{S:deck.slice(0,13),W:deck.slice(13,26),N:deck.slice(26,39),E:deck.slice(39,52)};
+}
+
+// ============ FEATURE: IMP SCORING (📊 IMP计分) ============
+function calculateIMP(ourScore,theirScore){
+  let diff=ourScore-theirScore;
+  let impTable=[
+    [20,1],[50,2],[90,3],[130,4],[170,5],[220,6],[270,7],[320,8],[370,9],[430,10],
+    [500,11],[600,12],[750,13],[900,14],[1100,15],[1300,16],[1500,17],[1750,18],[2000,19],[2250,20],
+    [2500,21],[3000,22],[3500,23],[4000,24]
+  ];
+  let absDiff=Math.abs(diff);
+  for(let i=0;i<impTable.length;i++){
+    if(absDiff<=impTable[i][0])return diff>0?impTable[i][1]:-impTable[i][1];
+  }
+  return diff>0?24:-24;
+}
+
+// ============ FEATURE: CONVENTION CARD (📋 约定卡) ============
+function generateConventionCard(){
+  let card='<div style="padding:16px;font-size:12px">';
+  card+='<h3 style="color:#ffd54f;text-align:center;margin-bottom:16px">📋 约定卡</h3>';
+  card+='<table style="width:100%;border-collapse:collapse">';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;color:#ffd54f">开叫</td><td style="padding:6px">含义</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">1♣/♦/♥/♠</td><td style="padding:4px">自然叫，12+HCP，5+张套</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">1NT</td><td style="padding:4px">15-17 HCP，均型牌</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">2♣</td><td style="padding:4px">强开叫，22+ HCP</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">2♦/♥/♠</td><td style="padding:4px">弱二开叫，6张套</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.1)"><td style="padding:6px;color:#ffd54f">约定叫</td><td style="padding:6px">含义</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">2♣ over 1NT</td><td style="padding:4px">Stayman，问高花</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">2♦/♥ over 1NT</td><td style="padding:4px">Jacoby Transfer</td></tr>';
+  card+='<tr style="border-bottom:1px solid rgba(255,255,255,.05)"><td style="padding:4px">4NT</td><td style="padding:4px">Blackwood，问A</td></tr>';
+  card+='<tr><td style="padding:4px">X after partner bid</td><td style="padding:4px">负加倍</td></tr>';
+  card+='</table></div>';
+  return card;
+}
+
+function showConventionCard(){
+  document.getElementById('trick-log').innerHTML=generateConventionCard();
+  document.getElementById('trick-log').classList.add('show');
 }
 
 </script>
