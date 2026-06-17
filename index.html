@@ -2100,9 +2100,20 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
   #eval-bar{width:20px;height:150px}
   #trick-ring{width:44px;height:44px}
 }
+/* ============ LOADING SCREEN ============ */
+#loading-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0a1a0a,#1a3a1a);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;
+  transition:opacity .5s ease}
+#loading-screen.fade-out{opacity:0;pointer-events:none}
+.loading-suits{font-size:48px;letter-spacing:20px;margin-bottom:20px;
+  animation:loadingPulse 2s ease-in-out infinite}
+@keyframes loadingPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.loading-text{color:#ffd54f;font-size:18px;font-weight:700;letter-spacing:2px}
+.loading-sub{color:rgba(255,255,255,.4);font-size:12px;margin-top:8px}
 </style>
 </head>
 <body>
+<div id="loading-screen"><div class="loading-suits">♠♥♦♣</div><div class="loading-text">小桥学牌</div><div class="loading-sub">世界最好的桥牌教学软件</div></div>
 <div id="game">
   <div id="info-bar">
     <div id="info-row1">
@@ -2905,6 +2916,7 @@ function init(){
   try{initProSystem()}catch(e){}
   // AI Features: SRS review reminder + daily plan on first visit of the day
   try{showReviewReminder()}catch(e){}
+  try{getDailyQuote()}catch(e){}
   try{
     let lastDaily=localStorage.getItem('bridge-daily-plan-date');
     let today=new Date().toISOString().slice(0,10);
@@ -13205,7 +13217,74 @@ function getRandomProverb(){
   return BRIDGE_PROVERBS[Math.floor(Math.random()*BRIDGE_PROVERBS.length)];
 }
 
+/* === Feature: Loading Screen === */
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    let ls=document.getElementById('loading-screen');
+    if(ls){ls.classList.add('fade-out');setTimeout(function(){ls.remove()},600)}
+  },800);
+});
+
+/* === Feature: Daily Quote === */
+function getDailyQuote(){
+  let proverbs=getRandomProverb?getRandomProverb():'桥牌是世界最好的游戏';
+  let el=document.getElementById('daily-quote');
+  if(el)el.textContent='💎 '+proverbs;
+}
+
+/* === Feature: Version Badge === */
+var APP_VERSION='2.0.0';
+var APP_NAME='小桥学牌';
+
+/* === Feature: Quick Actions Menu === */
+function showQuickActions(x,y){
+  let existing=document.getElementById('quick-actions');
+  if(existing)existing.remove();
+  let menu=document.createElement('div');
+  menu.id='quick-actions';
+  menu.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;background:rgba(15,25,15,.96);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;z-index:500;box-shadow:0 12px 40px rgba(0,0,0,.6)';
+  let actions=[
+    {icon:'💡',text:'提示',fn:'toggleSmartHint()'},
+    {icon:'📜',text:'历史',fn:'openHistory()'},
+    {icon:'📊',text:'数据',fn:'openPerf()'},
+    {icon:'👤',text:'档案',fn:'showPlayerProfile()'},
+    {icon:'📖',text:'词典',fn:'showDictionary()'}
+  ];
+  actions.forEach(a=>{
+    let btn=document.createElement('div');
+    btn.style.cssText='padding:8px 16px;cursor:pointer;font-size:13px;color:#fff;border-radius:8px;transition:background .2s';
+    btn.textContent=a.icon+' '+a.text;
+    btn.onmouseover=function(){this.style.background='rgba(255,255,255,.1)'};
+    btn.onmouseout=function(){this.style.background='none'};
+    btn.onclick=function(){eval(a.fn);menu.remove()};
+    menu.appendChild(btn);
+  });
+  document.body.appendChild(menu);
+  setTimeout(function(){menu.remove()},5000);
+}
+document.addEventListener('contextmenu',function(e){
+  if(e.target.closest('#south-cards')||e.target.closest('#table')){
+    e.preventDefault();
+    showQuickActions(e.clientX,e.clientY);
+  }
+});
+
+/* === Feature: Performance Monitor === */
+function getPerformanceMetrics(){
+  let timing=performance.timing;
+  let loadTime=timing.loadEventEnd-timing.navigationStart;
+  let renderTime=timing.domContentLoadedEventEnd-timing.domContentLoadedEventStart;
+  return{
+    loadTime:loadTime,
+    renderTime:renderTime,
+    memoryUsed:performance.memory?Math.round(performance.memory.usedJSHeapSize/1024/1024):null,
+    localStorageSize:JSON.stringify(localStorage).length
+  };
+}
+
 </script>
+<div id="daily-quote" style="text-align:center;font-size:12px;color:rgba(255,255,255,.3);padding:4px 0"></div>
+<div style="text-align:center;font-size:10px;color:rgba(255,255,255,.15);padding:4px">v2.0.0 · 小桥学牌 · 世界最好的桥牌教学软件</div>
 <div id="pro-banner">
   <span>💎 升级Pro版 — 解锁全部108课+AI深度分析+无限训练</span>
   <button onclick="showProModal()">立即升级</button>
