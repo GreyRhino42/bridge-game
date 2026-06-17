@@ -2113,6 +2113,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tool-btn" id="btn-conv-card" onclick="showConventionCard()" title="约定卡">🃏</span>
       <span class="tool-btn" id="btn-defense" onclick="showDefenseGuide()" title="防守信号">🚩</span>
       <span class="tool-btn" id="btn-share" onclick="shareSessionSummary()" title="分享">📤</span>
+      <span class="tool-btn" id="btn-ai-features" onclick="showAIFeatures()" title="AI分析">🧠</span>
       <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
     </div>
   </div>
@@ -2152,6 +2153,13 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     </div>
     <div id="overlay"></div>
     <div id="trick-log" onclick="event.stopPropagation()"></div>
+    <div id="ai-features-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a2e;border:2px solid #00d4ff;border-radius:16px;padding:24px;z-index:1001;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;color:#e0e0e0;box-shadow:0 8px 32px rgba(0,212,255,.3)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0;color:#00d4ff">🧠 AI 智能分析</h3>
+        <button onclick="closeAIFeatures()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <div id="ai-features-content"></div>
+    </div>
     <div id="quick-stats"></div>
     <div id="post-analysis">
       <div class="pa-header">
@@ -12855,6 +12863,144 @@ function shareSessionSummary(){
 function showConventionCard(){
   document.getElementById('trick-log').innerHTML=generateConventionCard();
   document.getElementById('trick-log').classList.add('show');
+}
+
+// ===== AI Advanced Features (5 features) =====
+function doubleDummyAnalysis(){
+  if(!G.hands||G.phase!=='play')return null;
+  let hands={S:G.hands.S.slice(),N:G.hands.N.slice(),E:G.hands.E.slice(),W:G.hands.W.slice()};
+  let trump=G.trump;let declarer=G.declarer;
+  let optimalTricks=estimateOptimalTricks(hands,trump,declarer);
+  return{optimal:optimalTricks,actual:G.nsTricks,diff:G.nsTricks-optimalTricks};
+}
+function estimateOptimalTricks(hands,trump,declarer){
+  let hcp=countHCP(hands.S)+countHCP(hands.N);
+  if(hcp>=30)return 11;if(hcp>=26)return 9;if(hcp>=22)return 7;
+  if(hcp>=18)return 6;if(hcp>=14)return 5;return 4;
+}
+
+function suggestOpeningLead(){
+  let hand=G.hands.S;if(!hand||hand.length!==13)return null;
+  let suits={};S4.forEach(s=>suits[s]=hand.filter(c=>c.suit===s).sort((a,b)=>RV[b.rank]-RV[a.rank]));
+  for(let s of S4){let cs=suits[s];if(cs.length>=2&&cs[0].rank==='A'&&cs[1].rank==='K')return{card:cs[0],reason:'AK连张首攻A'}}
+  let longest=S4.reduce((a,b)=>suits[a].length>=suits[b].length?a:b);
+  let ls=suits[longest];
+  if(ls.length>=4)return{card:ls[Math.min(3,ls.length-1)],reason:longest+'长套第四大'};
+  let shortest=S4.reduce((a,b)=>suits[a].length<=suits[b].length?a:b);
+  return{card:suits[shortest][suits[shortest].length-1],reason:'被动首攻'};
+}
+
+function predictTricks(){
+  if(!G.hands||G.phase!=='play')return null;
+  let nsHcp=countHCP(G.hands.S)+countHCP(G.hands.N);
+  let ewHcp=countHCP(G.hands.E)+countHCP(G.hands.W);
+  if(nsHcp+ewHcp===0)return{ns:G.nsTricks,ew:G.ewTricks,confidence:'低'};
+  let totalPlayed=G.nsTricks+G.ewTricks;
+  let remaining=13-totalPlayed;
+  let nsExpected=Math.round(G.nsTricks+remaining*(nsHcp/(nsHcp+ewHcp)));
+  return{ns:nsExpected,ew:13-nsExpected,confidence:totalPlayed>=6?'高':'低'};
+}
+
+function analyzeLastPlay(){
+  if(!G.trick||G.trick.length===0)return null;
+  let last=G.trick[G.trick.length-1];
+  let card=last.card;let pos=last.pos;
+  let lead=G.trick[0].card.suit;
+  let isFollowing=card.suit===lead;
+  let rating='ok';let comment='';
+  if(G.trick.length===1){
+    if(card.rank==='A'||card.rank==='K'){rating='good';comment='好首攻！大牌建立赢墩'}
+    else{comment='首攻小牌，建立长套'}
+  } else if(isFollowing){
+    if(G.trick.length===2){
+      if(RV[card.rank]<=5){rating='good';comment='2nd hand low ✓'}
+      else{rating='warn';comment='2nd hand通常出小牌'}
+    } else {
+      let maxPlayed=Math.max(...G.trick.filter(t=>t.card.suit===lead).map(t=>RV[t.card.rank]));
+      if(RV[card.rank]>maxPlayed){rating='good';comment='3rd hand high ✓'}
+      else{comment='保留实力，让搭档赢'}
+    }
+  } else if(G.trump&&card.suit===G.trump){rating='good';comment='好的将吃！'}
+  else{comment='垫牌选择'}
+  return{rating:comment,pos:pos,card:card.suit+card.rank};
+}
+
+function calculateEndPosition(){
+  if(!G.hands||G.phase!=='play')return null;
+  let nsCards=[...G.hands.S,...G.hands.N];
+  let winners=nsCards.filter(c=>c.rank==='A').length;
+  winners+=nsCards.filter(c=>{
+    let sameSuit=nsCards.filter(c2=>c2.suit===c.suit);
+    return c.rank==='K'&&sameSuit.some(c2=>c2.rank==='A');
+  }).length;
+  let losers=0;
+  S4.forEach(s=>{
+    let inSuit=nsCards.filter(c=>c.suit===s);
+    if(inSuit.length===0)return;
+    let topCards=inSuit.filter(c=>c.rank==='A'||c.rank==='K').length;
+    losers+=Math.max(0,inSuit.length-1-topCards);
+  });
+  return{winners,losers,remaining:G.hands.S.length};
+}
+
+function showAIFeatures(){
+  let h='<div style="display:flex;flex-direction:gap;gap:12px;flex-wrap:wrap">';
+  // 1. Double Dummy
+  let dd=doubleDummyAnalysis();
+  if(dd){
+    let diffIcon=dd.diff>=0?'📈':'📉';
+    h+='<div style="background:#16213e;border-radius:12px;padding:14px;flex:1;min-width:220px">';
+    h+='<div style="font-size:15px;font-weight:700;margin-bottom:8px">🧠 双明手分析器</div>';
+    h+='<div>最优墩数: <b>'+dd.optimal+'</b> | 实际: <b>'+dd.actual+'</b></div>';
+    h+='<div>'+diffIcon+' 差距: <b style="color:'+(dd.diff>=0?'#4caf50':'#f44336')+'">'+(dd.diff>=0?'+':'')+dd.diff+'</b> 墩</div>';
+    h+='</div>';
+  }
+  // 2. Opening Lead
+  let ol=suggestOpeningLead();
+  if(ol){
+    h+='<div style="background:#16213e;border-radius:12px;padding:14px;flex:1;min-width:220px">';
+    h+='<div style="font-size:15px;font-weight:700;margin-bottom:8px">🎯 首攻顾问</div>';
+    h+='<div>建议首攻: <b>'+ol.card.suit+ol.card.rank+'</b></div>';
+    h+='<div style="color:#aaa;font-size:13px">'+ol.reason+'</div>';
+    h+='</div>';
+  }
+  // 3. Trick Prediction
+  let tp=predictTricks();
+  if(tp){
+    h+='<div style="background:#16213e;border-radius:12px;padding:14px;flex:1;min-width:220px">';
+    h+='<div style="font-size:15px;font-weight:700;margin-bottom:8px">🏆 墩数预测</div>';
+    h+='<div>南北: <b>'+tp.ns+'</b> | 东西: <b>'+tp.ew+'</b></div>';
+    h+='<div style="color:#aaa;font-size:13px">置信度: '+tp.confidence+'</div>';
+    h+='</div>';
+  }
+  // 4. Play Analysis
+  let pa=analyzeLastPlay();
+  if(pa){
+    let rc=pa.rating.includes('✓')||pa.rating.includes('好')?'#4caf50':pa.rating.includes('warn')?'#ff9800':'#aaa';
+    h+='<div style="background:#16213e;border-radius:12px;padding:14px;flex:1;min-width:220px">';
+    h+='<div style="font-size:15px;font-weight:700;margin-bottom:8px">🔍 打牌分析</div>';
+    h+='<div>出牌: <b>'+pa.card+'</b> ('+PN[pa.pos]+')</div>';
+    h+='<div style="color:'+rc+'">'+pa.rating+'</div>';
+    h+='</div>';
+  }
+  // 5. End Position
+  let ep=calculateEndPosition();
+  if(ep){
+    h+='<div style="background:#16213e;border-radius:12px;padding:14px;flex:1;min-width:220px">';
+    h+='<div style="font-size:15px;font-weight:700;margin-bottom:8px">🏁 残局计算器</div>';
+    h+='<div>赢墩: <b style="color:#4caf50">'+ep.winners+'</b> | 输墩: <b style="color:#f44336">'+ep.losers+'</b></div>';
+    h+='<div style="color:#aaa;font-size:13px">剩余: '+ep.remaining+'张</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  if(!dd&&!ol&&!tp&&!pa&&!ep){
+    h='<div style="text-align:center;padding:40px;color:#aaa">请先开始打牌，AI分析将在游戏中提供。</div>';
+  }
+  document.getElementById('ai-features-content').innerHTML=h;
+  document.getElementById('ai-features-panel').style.display='block';
+}
+function closeAIFeatures(){
+  document.getElementById('ai-features-panel').style.display='none';
 }
 
 </script>
