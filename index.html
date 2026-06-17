@@ -800,6 +800,12 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;color:#ff
   font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .2s}
 #settings-close:hover{background:rgba(255,255,255,.1);color:#fff}
 
+/* ============ TRICK VISUALIZATION ============ */
+#trick-viz{display:flex;gap:20px;justify-content:center;padding:4px}
+.trick-viz-team{text-align:center}
+.trick-viz-count{font-size:20px;font-weight:800}
+.trick-viz-label{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase}
+
 /* ============ PRO SUBSCRIPTION SYSTEM ============ */
 .pro-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;
   background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;letter-spacing:.5px;vertical-align:middle}
@@ -2325,6 +2331,20 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <div class="setting-label">🖥️ 显示模式</div>
       <div class="setting-options">
         <div class="setting-opt" onclick="toggleFullscreen()">切换全屏</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">📤📥 数据管理</div>
+      <div class="setting-options">
+        <div class="setting-opt" onclick="exportGameData()">📤 导出数据</div>
+        <div class="setting-opt" onclick="importGameData()">📥 导入数据</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">ℹ️ 关于</div>
+      <div class="setting-options">
+        <div class="setting-opt" onclick="showAboutPage()">查看关于页面</div>
+        <div class="setting-opt" onclick="showKeyboardGuide()">⌨️ 快捷键指南</div>
       </div>
     </div>
   </div>
@@ -5588,6 +5608,10 @@ function finishPlay(){
     let mode=getCurrentMode();
     recordModeStats(mode,made,bonus);
   }catch(e){}
+
+  // Win streak tracker & best hand
+  try{updateWinStreak(made)}catch(e){}
+  try{updateBestHand(bonus,made)}catch(e){}
 
   // Show post-game analysis after a short delay
   setTimeout(function(){
@@ -13280,6 +13304,177 @@ function getPerformanceMetrics(){
     memoryUsed:performance.memory?Math.round(performance.memory.usedJSHeapSize/1024/1024):null,
     localStorageSize:JSON.stringify(localStorage).length
   };
+}
+
+/* ============ AI OPPONENT PERSONALITIES ============ */
+var AI_PERSONALITIES={
+  aggressive:{name:'激进型',style:'喜欢争叫和惩罚',bidFreq:0.7,riskTolerance:0.8},
+  conservative:{name:'保守型',style:'稳健叫牌，安全打法',bidFreq:0.3,riskTolerance:0.3},
+  balanced:{name:'均衡型',style:'标准叫牌，合理打法',bidFreq:0.5,riskTolerance:0.5},
+  tricky:{name:'诡计型',style:'喜欢心理战术',bidFreq:0.6,riskTolerance:0.7}
+};
+function getRandomPersonality(){
+  let keys=Object.keys(AI_PERSONALITIES);
+  return AI_PERSONALITIES[keys[Math.floor(Math.random()*keys.length)]];
+}
+
+/* ============ BID HISTORY PANEL ============ */
+function showBidHistory(){
+  if(!G.bids||G.bids.length===0)return;
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">📜 叫牌历史</h3>';
+  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center;font-size:12px">';
+  html+='<div style="color:rgba(255,255,255,.4);padding:4px">南</div><div style="color:rgba(255,255,255,.4);padding:4px">西</div><div style="color:rgba(255,255,255,.4);padding:4px">北</div><div style="color:rgba(255,255,255,.4);padding:4px">东</div>';
+  let col=0;
+  G.bids.forEach(function(b){
+    let color=b.bid==='Pass'?'rgba(255,255,255,.3)':b.bid==='X'||b.bid==='XX'?'#ef5350':'#ffd54f';
+    html+='<div style="padding:4px;color:'+color+';font-weight:600">'+b.bid+'</div>';
+    col++;if(col>=4){col=0;html+='<div></div><div></div><div></div><div></div>'}
+  });
+  html+='</div></div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+/* ============ GAME SPEED SLIDER PANEL ============ */
+function showSpeedControl(){
+  let speed=getGameSpeed();
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">⏩ 出牌速度</h3>';
+  html+='<input type="range" min="0.5" max="3" step="0.5" value="'+speed+'" oninput="setGameSpeed(parseFloat(this.value));document.getElementById(\'speed-val\').textContent=this.value+\'x\'" style="width:100%">';
+  html+='<div style="text-align:center;margin-top:8px;font-size:18px;font-weight:700;color:#ffd54f" id="speed-val">'+speed+'x</div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3)"><span>慢</span><span>快</span></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+/* ============ KEYBOARD SHORTCUTS GUIDE ============ */
+function showKeyboardGuide(){
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">⌨️ 快捷键指南</h3>';
+  var shortcuts=[
+    {key:'1-9, 0',desc:'按位置出牌(第1-10张)'},
+    {key:'Space',desc:'出第一张合法牌'},
+    {key:'H',desc:'开关智能提示'},
+    {key:'T',desc:'开关墩记录'},
+    {key:'Esc',desc:'关闭弹窗'},
+    {key:'右键',desc:'快捷操作菜单'}
+  ];
+  shortcuts.forEach(function(s){
+    html+='<div style="display:flex;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+    html+='<span style="padding:2px 8px;background:rgba(255,255,255,.08);border-radius:4px;font-size:12px;font-weight:600;color:#ffd54f;min-width:60px;text-align:center">'+s.key+'</span>';
+    html+='<span style="font-size:12px;color:rgba(255,255,255,.7)">'+s.desc+'</span></div>';
+  });
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+/* ============ WIN STREAK TRACKER ============ */
+function updateWinStreak(made){
+  var stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  if(made){
+    stats.currentStreak=(stats.currentStreak||0)+1;
+    if(stats.currentStreak>(stats.maxStreak||0))stats.maxStreak=stats.currentStreak;
+    if(stats.currentStreak>=3)showLearnToast('🔥 '+stats.currentStreak+'连胜！','太厉害了！',2000);
+  } else {
+    stats.currentStreak=0;
+  }
+  localStorage.setItem('bridge-play-stats',JSON.stringify(stats));
+}
+
+/* ============ BEST HAND EVER ============ */
+function updateBestHand(score,made){
+  if(!made)return;
+  var best=parseInt(localStorage.getItem('bridge-best-score')||'0');
+  if(score>best){
+    localStorage.setItem('bridge-best-score',score.toString());
+    showLearnToast('🏆 新纪录！','得分: '+score,3000);
+  }
+}
+
+/* ============ THEME PREVIEW ============ */
+function showThemePreview(){
+  var html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🎨 选择主题</h3>';
+  var themes=[
+    {id:'dark',name:'暗黑模式',colors:['#0a140a','#1a2a1a','#ffd54f']},
+    {id:'light',name:'明亮模式',colors:['#f5f5f5','#fff','#1976d2']},
+    {id:'classic',name:'经典绿',colors:['#1a472a','#2d5a3f','#ffd54f']},
+    {id:'midnight',name:'午夜蓝',colors:['#0a0a1a','#1a1a3a','#7c4dff']}
+  ];
+  themes.forEach(function(t){
+    html+='<div onclick="setTheme(\''+t.id+'\')" style="display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:8px;background:linear-gradient(135deg,'+t.colors[0]+','+t.colors[1]+');border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1)">';
+    html+='<div style="width:24px;height:24px;border-radius:50%;background:'+t.colors[2]+'"></div>';
+    html+='<div style="color:#fff;font-size:13px">'+t.name+'</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+/* ============ EXPORT DATA ============ */
+function exportGameData(){
+  var data={
+    stats:JSON.parse(localStorage.getItem('bridge-play-stats')||'{}'),
+    elo:getELO(),
+    pro:isPro(),
+    lessonStars:JSON.parse(localStorage.getItem('bridge-lesson-stars')||'{}'),
+    srs:getSRS(),
+    modeStats:JSON.parse(localStorage.getItem('bridge-mode-stats')||'{}'),
+    favorites:JSON.parse(localStorage.getItem('bridge-favorites')||'[]'),
+    exportDate:new Date().toISOString(),
+    version:APP_VERSION
+  };
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='bridge-data-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  showLearnToast('📤 导出成功','数据已下载',2000);
+}
+
+/* ============ IMPORT DATA ============ */
+function importGameData(){
+  var input=document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange=function(e){
+    var file=e.target.files[0];
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        var data=JSON.parse(ev.target.result);
+        if(data.stats)localStorage.setItem('bridge-play-stats',JSON.stringify(data.stats));
+        if(data.elo)localStorage.setItem('bridge-elo',data.elo.toString());
+        if(data.lessonStars)localStorage.setItem('bridge-lesson-stars',JSON.stringify(data.lessonStars));
+        if(data.srs)localStorage.setItem('bridge-srs',JSON.stringify(data.srs));
+        if(data.modeStats)localStorage.setItem('bridge-mode-stats',JSON.stringify(data.modeStats));
+        showLearnToast('📥 导入成功','数据已恢复',3000);
+      }catch(e){showLearnToast('❌ 导入失败','文件格式错误',3000)}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+/* ============ ABOUT PAGE ============ */
+function showAboutPage(){
+  var html='<div style="padding:20px;text-align:center">';
+  html+='<div style="font-size:48px;margin-bottom:8px">♠♥♦♣</div>';
+  html+='<h2 style="color:#ffd54f">小桥学牌</h2>';
+  html+='<div style="color:rgba(255,255,255,.5);font-size:12px;margin-bottom:16px">v'+APP_VERSION+' · 世界最好的桥牌教学软件</div>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;text-align:left;max-width:320px;margin:0 auto">';
+  html+='<p>基于刻意练习理论，融合全球最佳游戏设计实践，打造世界最专业的中文桥牌教学平台。</p>';
+  html+='<p>功能特色：</p>';
+  html+='<ul style="padding-left:20px">';
+  html+='<li>108课完整课程体系</li>';
+  html+='<li>AI教练"小桥"全程陪伴</li>';
+  html+='<li>8种游戏模式</li>';
+  html+='<li>专业牌局分析引擎</li>';
+  html+='<li>间隔重复学习系统</li>';
+  html+='<li>ELO等级分系统</li>';
+  html+='</ul>';
+  html+='<p style="margin-top:12px;color:rgba(255,255,255,.4)">GitHub: greyrhino42/bridge-game</p>';
+  html+='</div></div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
 }
 
 </script>
