@@ -2089,6 +2089,17 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 #strength-meter.show{display:flex;align-items:center;gap:8px}
 .str-bar{width:60px;height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
 .str-fill{height:100%;border-radius:3px;transition:width .5s ease}
+/* ============ FEATURE: MOBILE TOUCH OPTIMIZATION ============ */
+@media(max-width:768px){
+  .card{min-width:44px;min-height:44px}
+  button{min-height:44px}
+  .tool-btn{min-width:44px;min-height:44px;font-size:16px}
+  #south-cards .card{margin:0 2px}
+  .lt-card-btn,.conv-opt,.eg-card-opt{min-height:44px;padding:10px 16px}
+  #pro-banner{font-size:12px;padding:8px 16px}
+  #eval-bar{width:20px;height:150px}
+  #trick-ring{width:44px;height:44px}
+}
 </style>
 </head>
 <body>
@@ -2123,6 +2134,8 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tool-btn" id="btn-share" onclick="shareSessionSummary()" title="分享">📤</span>
       <span class="tool-btn" id="btn-ai-features" onclick="showAIFeatures()" title="AI分析">🧠</span>
       <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
+      <span class="tool-btn" id="btn-profile" onclick="showPlayerProfile()" title="我的档案">👤</span>
+      <span class="tool-btn" id="btn-share-card" onclick="downloadShareCard()" title="分享卡">🎴</span>
     </div>
   </div>
   <div id="strength-meter"></div>
@@ -2755,6 +2768,91 @@ function updateLabels(){
 }
 
 // -- Game Logic --
+// ============ FEATURE: PWA SUPPORT ============
+function initPWA(){
+  if('serviceWorker' in navigator){
+    let manifest={
+      name:'小桥学牌',
+      short_name:'桥牌',
+      description:'世界最好的桥牌教学软件',
+      start_url:window.location.href,
+      display:'standalone',
+      background_color:'#0a140a',
+      theme_color:'#ffd54f',
+      icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">♠</text></svg>',sizes:'any',type:'image/svg+xml'}]
+    };
+    let blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+    let url=URL.createObjectURL(blob);
+    let link=document.createElement('link');
+    link.rel='manifest';link.href=url;
+    document.head.appendChild(link);
+  }
+}
+// ============ FEATURE: OFFLINE SUPPORT ============
+function initOfflineSupport(){
+  if('caches' in window){
+    caches.open('bridge-game-v1').then(cache=>{
+      cache.add(window.location.href);
+    });
+  }
+}
+// ============ FEATURE: SOCIAL SHARE CARDS ============
+function generateShareCard(){
+  let canvas=document.createElement('canvas');
+  canvas.width=800;canvas.height=500;
+  let ctx=canvas.getContext('2d');
+  let grad=ctx.createLinearGradient(0,0,800,500);
+  grad.addColorStop(0,'#0a1a0a');grad.addColorStop(1,'#1a3a1a');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,800,500);
+  ctx.fillStyle='rgba(255,213,79,.05)';ctx.font='120px serif';
+  ctx.fillText('♠',20,480);ctx.fillText('♥',650,120);ctx.fillText('♦',680,480);ctx.fillText('♣',20,120);
+  ctx.fillStyle='#ffd54f';ctx.font='bold 36px sans-serif';
+  ctx.textAlign='center';ctx.fillText('♠♥♦♣ 小桥学牌',400,80);
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let elo=getELO();let title=getELOTitle(elo);
+  ctx.font='20px sans-serif';ctx.fillStyle='#fff';
+  ctx.fillText('段位: '+title+' ('+elo+'分)',400,140);
+  ctx.fillText('已打 '+(stats.totalHands||0)+' 手 | 胜率 '+((stats.totalHands?Math.round(stats.totalWon/stats.totalHands*100):0))+'%',400,180);
+  ctx.fillText('连续打卡 '+(stats.streak||0)+' 天',400,220);
+  ctx.fillStyle='#ffd54f';ctx.font='bold 24px sans-serif';
+  ctx.fillText('来挑战我吧！',400,300);
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='16px sans-serif';
+  ctx.fillText('greyrhino42.github.io/bridge-game/',400,340);
+  ctx.textAlign='left';
+  return canvas.toDataURL('image/png');
+}
+function downloadShareCard(){
+  let dataUrl=generateShareCard();
+  let a=document.createElement('a');
+  a.href=dataUrl;a.download='bridge-share.png';
+  a.click();
+}
+// ============ FEATURE: PLAYER PROFILE ============
+function showPlayerProfile(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let elo=getELO();let title=getELOTitle(elo);
+  let streak=stats.streak||0;
+  let total=stats.totalHands||0;
+  let won=stats.totalWon||0;
+  let winRate=total>0?Math.round(won/total*100):0;
+  let progress=getOverallProgress();
+  let srs=getSRS();
+  let srsCount=Object.keys(srs).length;
+  let html='<div style="padding:20px;text-align:center">';
+  html+='<div style="font-size:48px;margin-bottom:8px">👤</div>';
+  html+='<h2 style="color:#ffd54f;margin-bottom:4px">我的档案</h2>';
+  html+='<div style="font-size:14px;color:#64b5f6;margin-bottom:16px">'+title+' · '+elo+'分</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;text-align:left;margin-bottom:16px">';
+  html+='<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:20px;font-weight:800;color:#ffd54f">'+total+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">总局数</div></div>';
+  html+='<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:20px;font-weight:800;color:#81c784">'+winRate+'%</div><div style="font-size:11px;color:rgba(255,255,255,.4)">胜率</div></div>';
+  html+='<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:20px;font-weight:800;color:#ff9800">'+streak+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">连续天数</div></div>';
+  html+='<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:20px;font-weight:800;color:#ce93d8">'+progress+'%</div><div style="font-size:11px;color:rgba(255,255,255,.4)">课程进度</div></div>';
+  html+='<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:20px;font-weight:800;color:#4fc3f7">'+srsCount+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">已学概念</div></div>';
+  html+='<div style="padding:10px;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:20px;font-weight:800;color:#ef5350">'+(isPro()?'💎':'Free')+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">会员状态</div></div>';
+  html+='</div></div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
 function init(){
   G={
     hands:{S:[],W:[],N:[],E:[]},
@@ -2795,6 +2893,8 @@ function init(){
   try{updateProgressDisplay()}catch(e){}
   // Apply reduced motion preference
   try{updateReduceMotionBtn()}catch(e){}
+  try{initPWA()}catch(e){}
+  try{initOfflineSupport()}catch(e){}
   // Apply colorblind mode preference
   try{initColorblindMode()}catch(e){}
   // Update quick stats display
