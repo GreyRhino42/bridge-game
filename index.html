@@ -1888,6 +1888,14 @@ body.card-lg .card.sm .s{font-size:14px}
 #btn-history{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
   background:linear-gradient(135deg,#546e7a,#37474f);color:#fff;font-weight:700;transition:all .2s ease}
 #btn-history:hover{background:linear-gradient(135deg,#78909c,#546e7a);transform:translateY(-2px)}
+#btn-suit-combo{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#00695c,#004d40);color:#fff;font-weight:700;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(0,77,64,.4)}
+#btn-suit-combo:hover{background:linear-gradient(135deg,#00897b,#00695c);transform:translateY(-2px)}
+#btn-defense-lessons{padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;
+  background:linear-gradient(135deg,#33691e,#1b5e20);color:#fff;font-weight:700;
+  transition:all .2s ease;box-shadow:0 3px 12px rgba(27,94,32,.4)}
+#btn-defense-lessons:hover{background:linear-gradient(135deg,#558b2f,#33691e);transform:translateY(-2px)}
 /* Performance Dashboard */
 #perf-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center}
 #perf-overlay.show{display:flex}
@@ -2507,6 +2515,8 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     <button id="btn-tour" onclick="openTournament()">🏆 锦标赛</button>
     <button id="btn-history" onclick="openHistory()">📜 历史</button>
     <button id="btn-perf" onclick="openPerf()">📊 数据</button>
+    <button id="btn-suit-combo" onclick="showSuitComboTrainer()">🎴 花色组合</button>
+    <button id="btn-defense-lessons" onclick="showDefenseLessons()">🛡️ 防守课程</button>
     <button id="btn-rubber" onclick="startRubberBridge()">🎲 盘式桥牌</button>
     <button id="btn-quick" onclick="quickPlay()" style="padding:16px 40px;border:none;border-radius:16px;font-size:18px;font-weight:800;background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;cursor:pointer;box-shadow:0 6px 24px rgba(255,109,0,.4);margin:12px 0">⚡ 快速开始</button>
   </div>
@@ -13001,6 +13011,98 @@ function showAIFeatures(){
 }
 function closeAIFeatures(){
   document.getElementById('ai-features-panel').style.display='none';
+}
+
+// === Feature 1: Bidding Sequence Trainer V2 ===
+var ADVANCED_BID_DRILLS=[
+  {title:'2/1 Game Force',sequence:[{pos:'S',bid:'1♥'},{pos:'W',bid:'Pass'},{pos:'N',bid:'2♦'},{pos:'E',bid:'Pass'}],
+   question:'搭档2/1逼叫到局，你的再叫？',options:['2♥','2♠','2NT','3♦'],correct:0,
+   explanation:'2/1后，简单再叫原花色=6张套，12-14点'},
+  {title:'Jacoby 2NT',sequence:[{pos:'S',bid:'1♠'},{pos:'W',bid:'Pass'},{pos:'N',bid:'2NT'},{pos:'E',bid:'Pass'}],
+   question:'搭档Jacoby 2NT(4+张支持,13+点)，你的再叫？',options:['3♠','3♣(短套)','3NT','4♠'],correct:1,
+   explanation:'Jacoby 2NT后，叫短套花色显示单缺，帮助搭档评估满贯'},
+  {title:'Fourth Suit Forcing',sequence:[{pos:'S',bid:'1♣'},{pos:'W',bid:'Pass'},{pos:'N',bid:'1♥'},{pos:'E',bid:'Pass'},{pos:'S',bid:'1♠'},{pos:'W',bid:'Pass'},{pos:'N',bid:'2♦'}],
+   question:'搭档叫了第四花色(逼叫)，你的再叫？',options:['2NT','3♣','2♠','Pass'],correct:0,
+   explanation:'第四花色逼叫后，有止张叫NT，有配合加叫，否则叫原花色'}
+];
+
+// === Feature 2: Suit Combination Trainer ===
+var SUIT_COMBOS=[
+  {name:'飞Q',dummy:['A','J','3'],hand:['K','10','5','2'],optimal:'从手出小到J飞，如果Q在右边则成功'},
+  {name:'双飞',dummy:['A','J','9'],hand:['K','10','4','2'],optimal:'先出10飞，再出J飞，两次机会'},
+  {name:'安全打法',dummy:['A','K','3'],hand:['Q','J','10','2'],optimal:'先兑现A再K，安全拿到全部'},
+  {name:'挤牌结构',dummy:['A','K'],hand:['Q','J'],optimal:'连续兑现大牌，观察对手丢牌'}
+];
+
+function showSuitComboTrainer(){
+  let combo=SUIT_COMBOS[Math.floor(Math.random()*SUIT_COMBOS.length)];
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f">🎴 花色组合: '+combo.name+'</h3>';
+  html+='<div style="margin:12px 0"><div style="color:#64b5f6;font-size:12px">明手:</div>';
+  html+='<div style="font-size:18px;letter-spacing:4px">'+combo.dummy.map(r=>'♠'+r).join(' ')+'</div></div>';
+  html+='<div style="margin:12px 0"><div style="color:#81c784;font-size:12px">你的手:</div>';
+  html+='<div style="font-size:18px;letter-spacing:4px">'+combo.hand.map(r=>'♠'+r).join(' ')+'</div></div>';
+  html+='<div style="padding:10px;background:rgba(255,213,79,.1);border-radius:8px;margin-top:12px">';
+  html+='<div style="color:#ffd54f;font-size:12px">💡 最佳打法:</div>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:4px">'+combo.optimal+'</div></div></div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// === Feature 3: Defensive Play Lessons ===
+var DEFENSE_LESSONS=[
+  {title:'2nd Hand Low',desc:'当你是第二个出牌时，通常出最小的牌',key:'保存大牌用于关键时刻'},
+  {title:'3rd Hand High',desc:'当你是第三个出牌时，尝试出最大的牌赢墩',key:'让搭档知道你的大牌位置'},
+  {title:'Attitude Signal',desc:'搭档出大牌时，出大牌=欢迎，出小牌=不欢迎',key:'帮助搭档判断花色'},
+  {title:'Count Signal',desc:'先大后小=偶数张，先小后大=奇数张',key:'让搭档计算你的张数'},
+  {title:'Discard Strategy',desc:'垫牌时优先垫掉短套，保留长套',key:'长套可能建立赢墩'}
+];
+
+function showDefenseLessons(){
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🛡️ 防守课程</h3>';
+  DEFENSE_LESSONS.forEach((l,i)=>{
+    html+='<div style="padding:10px;margin-bottom:8px;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid #4caf50">';
+    html+='<div style="font-weight:700;color:#81c784">'+(i+1)+'. '+l.title+'</div>';
+    html+='<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px">'+l.desc+'</div>';
+    html+='<div style="font-size:11px;color:#64b5f6;margin-top:2px">💡 '+l.key+'</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// === Feature 4: Scoring Calculator ===
+function calculateBridgeScore(contract,vulnerable,made,overtricks){
+  let lv=+contract[0];let suit=contract.slice(1);
+  let perTrick={'♣':20,'♦':20,'♥':30,'♠':30,'NT':40}[suit]||20;
+  let bonus=0;let score=0;
+  if(made){
+    score=lv*perTrick+(suit==='NT'?(lv-1)*30:0)+overtricks*perTrick;
+    if(score>=100)bonus+=vulnerable?500:300;else bonus+=50;
+    if(lv>=6)bonus+=vulnerable?1250:500;
+    if(lv>=7)bonus+=vulnerable?2000:1000;
+  } else {
+    let down=Math.abs(overtricks);
+    score=-(vulnerable?100:50)+(down-1)*(vulnerable?100:50);
+  }
+  return{trickScore:score,bonus:bonus,total:score+bonus};
+}
+
+// === Feature 5: Bridge Proverbs & Wisdom ===
+var BRIDGE_PROVERBS=[
+  '八飞九不飞 — 8张牌飞牌,9张不飞',
+  '有将定约数输张,无将定约数赢张',
+  '安全打法优于飞牌 — 确定的赢墩比赌博好',
+  '首攻决定命运 — 首攻是最重要的单张决策',
+  '叫牌是桥牌的灵魂 — 好的叫牌比好的打牌更重要',
+  '防守是桥牌最难的部分 — 需要搭档配合',
+  '大牌赢墩,长套赢墩 — 建立长套是关键',
+  '将牌控制赢比赛 — 何时用将牌是门艺术',
+  '从错误中学习 — 每次失误都是进步的机会',
+  '耐心是美德 — 不要急于出牌,先规划'
+];
+
+function getRandomProverb(){
+  return BRIDGE_PROVERBS[Math.floor(Math.random()*BRIDGE_PROVERBS.length)];
 }
 
 </script>
