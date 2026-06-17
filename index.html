@@ -2074,6 +2074,13 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 @keyframes cardEnter{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
 .trick-card{animation:trickLand .25s ease-out}
 @keyframes trickLand{from{transform:scale(1.3);opacity:.5}to{transform:scale(1);opacity:1}}
+/* ============ FEATURE: HAND STRENGTH METER ============ */
+#strength-meter{position:fixed;top:50px;left:50%;transform:translateX(-50%);padding:4px 16px;
+  border-radius:20px;font-size:12px;font-weight:600;z-index:50;display:none;
+  backdrop-filter:blur(8px);white-space:nowrap}
+#strength-meter.show{display:flex;align-items:center;gap:8px}
+.str-bar{width:60px;height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.str-fill{height:100%;border-radius:3px;transition:width .5s ease}
 </style>
 </head>
 <body>
@@ -2104,9 +2111,12 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tool-btn" id="btn-undo" onclick="if(canUndo())undoLastPlay()" title="撤销出牌">↩️</span>
       <span class="tool-btn" id="btn-dict" onclick="showDictionary()" title="桥牌词典">📖</span>
       <span class="tool-btn" id="btn-conv-card" onclick="showConventionCard()" title="约定卡">🃏</span>
+      <span class="tool-btn" id="btn-defense" onclick="showDefenseGuide()" title="防守信号">🚩</span>
+      <span class="tool-btn" id="btn-share" onclick="shareSessionSummary()" title="分享">📤</span>
       <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
     </div>
   </div>
+  <div id="strength-meter"></div>
   <div id="table">
     <div id="eval-bar"><span id="eval-ns">N</span><div id="eval-fill" style="height:50%"></div><span id="eval-ew">S</span></div>
     <div id="hand-goal"></div>
@@ -12744,6 +12754,102 @@ function generateConventionCard(){
   card+='<tr><td style="padding:4px">X after partner bid</td><td style="padding:4px">负加倍</td></tr>';
   card+='</table></div>';
   return card;
+}
+
+/* ============ FEATURE: TRICK PROBABILITY CALCULATOR ============ */
+function estimateTrickPotential(){
+  if(!G.hands||!G.hands.S)return{};
+  let combined=[...G.hands.S,...G.hands.N];
+  let hcp=countHCP(combined);
+  let suitLengths={};
+  S4.forEach(s=>{
+    suitLengths[s]=combined.filter(c=>c.suit===s).length;
+  });
+  let topCards=combined.filter(c=>c.rank==='A'||c.rank==='K').length;
+  let potential=Math.min(13,Math.floor(hcp/3)+topCards);
+  return{hcp,topCards,suitLengths,estimatedTricks:potential};
+}
+
+/* ============ FEATURE: DEFENSIVE SIGNAL GUIDE ============ */
+var DEFENSE_SIGNALS=[
+  {signal:'态度信号',when:'搭档出牌时',how:'大牌=欢迎,小牌=不欢迎',example:'搭档出♠A,你出♠3=不欢迎♠'},
+  {signal:'计数信号',when:'对手出牌时',how:'先大后小=偶数张,先小后大=奇数张',example:'对手出♦,你先出♦9再出♦2=偶数张♦'},
+  {signal:'花色选择信号',when:'将吃或垫牌时',how:'高牌=要求出高级花色,低牌=要求出低级花色',example:'垫♥A=要求出♥以外的高级花色'},
+  {signal:'Smith Echo',when:'首攻后',how:'首攻花色先大后小=喜欢首攻花色',example:'首攻♠,你出♠9再出♠2=希望继续♠'}
+];
+
+function showDefenseGuide(){
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🚩 防守信号指南</h3>';
+  DEFENSE_SIGNALS.forEach(s=>{
+    html+='<div style="padding:10px;margin-bottom:8px;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid #4caf50">';
+    html+='<div style="font-weight:700;color:#81c784;font-size:13px">'+s.signal+'</div>';
+    html+='<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">何时: '+s.when+'</div>';
+    html+='<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">方法: '+s.how+'</div>';
+    html+='<div style="font-size:11px;color:#64b5f6;margin-top:2px">示例: '+s.example+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+/* ============ FEATURE: HAND STRENGTH METER ============ */
+function updateStrengthMeter(){
+  if(!G.hands||!G.hands.S||G.phase!=='play')return;
+  let combined=countHCP(G.hands.S)+countHCP(G.hands.N);
+  let meter=document.getElementById('strength-meter');
+  if(!meter)return;
+  let pct=Math.min(100,combined/40*100);
+  let color=combined>=26?'#4caf50':combined>=20?'#ffd54f':combined>=15?'#ff9800':'#ef5350';
+  let label=combined>=26?'成局':combined>=20?'部分分数':combined>=15?'竞叫':'防守';
+  meter.innerHTML='💪 '+combined+' HCP <div class="str-bar"><div class="str-fill" style="width:'+pct+'%;background:'+color+'"></div></div> '+label;
+  meter.classList.add('show');
+}
+
+/* ============ FEATURE: QUICK BID EXPLANATION ============ */
+function explainBid(bidStr,pos){
+  if(!bidStr||bidStr==='Pass')return'不叫';
+  if(bidStr==='X')return'加倍 — 惩罚性或技术性';
+  if(bidStr==='XX')return'再加倍 — 对定约有信心';
+  let lv=+bidStr[0];let suit=bidStr.slice(1);
+  let suitName=suit==='NT'?'无将':SN[suit];
+  let explanations={
+    '1NT':'15-17 HCP,均型牌',
+    '2NT':'20-21 HCP,均型牌',
+    '2♣':'强开叫,22+ HCP',
+    '2♦':'弱二开叫,6张♦',
+    '2♥':'弱二开叫,6张♥',
+    '2♠':'弱二开叫,6张♠'
+  };
+  return explanations[bidStr]||(lv+'阶'+suitName+'叫品');
+}
+
+/* ============ FEATURE: END-OF-SESSION SHARE ============ */
+function generateSessionShareText(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let elo=getELO();
+  let title=getELOTitle(elo);
+  let streak=stats.streak||0;
+  let total=stats.totalHands||0;
+  let winRate=total>0?Math.round(stats.totalWon/total*100):0;
+  let progress=getOverallProgress();
+
+  let t='♠♥♦♣ 小桥学牌 — 我的桥牌之旅\n';
+  t+='━━━━━━━━━━━━━━━━\n';
+  t+='♟️ 段位: '+title+' ('+elo+'分)\n';
+  t+='🃏 已打 '+total+' 手 | 胜率 '+winRate+'%\n';
+  t+='🔥 连续打卡 '+streak+' 天\n';
+  t+='📚 课程进度 '+progress+'%\n';
+  t+='━━━━━━━━━━━━━━━━\n';
+  t+='来挑战我吧！\n';
+  t+='greyrhino42.github.io/bridge-game/';
+  return t;
+}
+function shareSessionSummary(){
+  let text=generateSessionShareText();
+  if(navigator.clipboard)navigator.clipboard.writeText(text).then(function(){
+    try{showLearnToast('📤 已复制','本局总结已复制到剪贴板',2000)}catch(e){}
+  });
 }
 
 function showConventionCard(){
