@@ -2204,6 +2204,46 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 .guide-tooltip .tt-dot.done{background:rgba(255,213,79,.3)}
 .guide-progress{position:fixed;top:8px;left:50%;transform:translateX(-50%);padding:4px 16px;border-radius:20px;font-size:11px;background:rgba(255,213,79,.15);border:1px solid rgba(255,213,79,.3);color:#ffd54f;z-index:603;display:none}
 .guide-progress.show{display:block}
+/* ============ HERO LAYOUT ============ */
+#status-main{text-align:center;padding:20px 16px}
+#hero-title{font-size:28px;line-height:1.2;margin-bottom:4px}
+#hero-title span{font-size:20px;font-weight:700;color:#ffd54f;letter-spacing:2px}
+#hero-subtitle{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:20px}
+#hero-actions{display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto}
+.hero-btn{border:none;border-radius:12px;cursor:pointer;font-weight:700;transition:all .2s}
+.hero-btn.primary{padding:16px 32px;font-size:18px;background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;box-shadow:0 6px 24px rgba(255,109,0,.4)}
+.hero-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,109,0,.5)}
+.hero-btn.secondary{padding:12px 20px;font-size:14px;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.08)}
+.hero-btn.secondary:hover{background:rgba(255,255,255,.1)}
+.hero-btn.outline{padding:10px 20px;font-size:13px;background:none;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.08)}
+.hero-btn.outline:hover{color:#ffd54f;border-color:rgba(255,213,79,.3)}
+.hero-row{display:flex;gap:10px}
+.hero-row .hero-btn{flex:1}
+/* ============ DRAWER MENU ============ */
+#drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;backdrop-filter:blur(4px)}
+#drawer-overlay.show{display:block}
+#drawer-panel{position:fixed;top:0;right:-320px;width:300px;height:100%;background:rgba(10,20,10,.98);border-left:1px solid rgba(255,255,255,.08);z-index:301;transition:right .3s ease;overflow-y:auto;box-shadow:-8px 0 24px rgba(0,0,0,.3)}
+#drawer-panel.show{right:0}
+.drawer-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.drawer-header h3{color:#ffd54f;font-size:16px}
+.drawer-header button{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer}
+.drawer-body{padding:8px 12px}
+.drawer-section{margin-bottom:8px}
+.drawer-section-title{padding:8px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px}
+.drawer-item{display:block;width:100%;text-align:left;padding:10px 12px;border:none;border-radius:8px;background:none;color:rgba(255,255,255,.7);font-size:13px;cursor:pointer;transition:all .15s}
+.drawer-item:hover{background:rgba(255,255,255,.06);color:#ffd54f}
+/* ============ GAME STATUS ============ */
+#status-game{display:none;text-align:center;padding:6px 12px}
+#status-game.show{display:block}
+#stxt-game{font-weight:600;font-size:13px}
+/* ============ CLEAN TOOLBAR ============ */
+#info-row2{display:flex;gap:8px;padding:6px 12px;justify-content:center}
+#info-row2 .tool-btn{font-size:18px;padding:6px 10px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.04);transition:all .15s}
+#info-row2 .tool-btn:hover{background:rgba(255,255,255,.1)}
+/* Hide hero during game */
+body.in-game #status-main{display:none}
+body.in-game #status-game{display:block}
+body.in-game #hero-actions{display:none}
 </style>
 </head>
 <body>
@@ -2233,30 +2273,10 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tag" id="i-progress" style="font-size:12px;background:rgba(76,175,80,.15);border-color:rgba(76,175,80,.25);color:#81c784;display:none">📚 课程进度: 0%</span>
     </div>
     <div id="info-row2">
-      <span class="tool-btn" id="btn-score-toggle" onclick="toggleScoreHistory()" title="记分板">📊</span>
-      <span class="tool-btn" id="btn-sound" onclick="toggleSound()" title="音效">🔊</span>
-      <span class="tool-btn" id="btn-settings" onclick="openSettings()" title="设置">⚙️</span>
-      <span class="tool-btn" id="btn-lessons" onclick="openLessons()" title="课程">📚</span>
-      <span class="tool-btn" id="btn-tutorial" onclick="openTutorial()" title="学习模式">🎓</span>
-      <span class="tool-btn" id="btn-cheat" onclick="openCheatSheet()" title="叫牌表">📋</span>
-      <span class="tool-btn" id="btn-practice" onclick="openPractice()" title="练习">🎯</span>
-      <span class="tool-btn" id="btn-scenario" onclick="openScenarioLib()" title="场景库">📚</span>
-      <span class="tool-btn" id="btn-stats" onclick="openStats()" title="分析">📊</span>
-      <span class="tool-btn" id="btn-daily" onclick="openDailyChallenge()" title="挑战">🏆</span>
-      <span class="tool-btn" id="btn-hint-level" onclick="cycleHintLevel()" title="提示"><span class="hint-bulb">💡</span><span id="hint-level-label" style="font-size:10px;margin-left:2px"></span></span>
-      <span class="tool-btn" id="btn-help" onclick="replayOnboarding()" title="帮助">❓</span>
-      <span class="tool-btn" id="btn-undo" onclick="if(canUndo())undoLastPlay()" title="撤销出牌">↩️</span>
-      <span class="tool-btn" id="btn-dict" onclick="showDictionary()" title="桥牌词典">📖</span>
-      <span class="tool-btn" id="btn-conv-card" onclick="showConventionCard()" title="约定卡">🃏</span>
-      <span class="tool-btn" id="btn-defense" onclick="showDefenseGuide()" title="防守信号">🚩</span>
-      <span class="tool-btn" id="btn-share" onclick="shareSessionSummary()" title="分享">📤</span>
-      <span class="tool-btn" id="btn-ai-features" onclick="showAIFeatures()" title="AI分析">🧠</span>
-      <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
-      <span class="tool-btn" id="btn-profile" onclick="showPlayerProfile()" title="我的档案">👤</span>
-      <span class="tool-btn" id="btn-share-card" onclick="downloadShareCard()" title="分享卡">🎴</span>
-      <span class="tool-btn" id="btn-weakness" onclick="showWeaknessDiagnosis()" title="弱点诊断">🎯</span>
-      <span class="tool-btn" id="btn-adaptive" onclick="showAdaptivePlan()" title="自适应训练">📋</span>
-      <span class="tool-btn" id="btn-defense-puzzle" onclick="showDefensePuzzles()" title="防守谜题">🛡️</span>
+      <span class="tool-btn" onclick="toggleSmartHint()" title="提示">💡</span>
+      <span class="tool-btn" onclick="if(canUndo())undoLastPlay()" title="撤销">↩️</span>
+      <span class="tool-btn" onclick="openHistory()" title="历史">📜</span>
+      <span class="tool-btn" onclick="toggleDrawer()" title="菜单">☰</span>
     </div>
   </div>
   <div id="strength-meter"></div>
@@ -2682,23 +2702,74 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     <div id="sc-detail-modal" onclick="event.stopPropagation()"></div>
   </div>
   <div id="status">
-    <span id="stxt"></span>
-    <button id="btn-go" onclick="startGame()">开始游戏</button>
-    <button id="btn-story" class="story-btn" onclick="openLevelMap()">🎮 故事模式</button>
-    <button id="btn-just-play" onclick="startJustPlay()">🎯 只打牌</button>
-    <button id="btn-defense" onclick="startDefenseMode()">🛡️ 防守模式</button>
-    <button id="btn-lead-trainer" onclick="openLeadTrainer()">🎯 首攻训练</button>
-    <button id="btn-dc" onclick="openDaily()">📅 每日挑战</button>
-    <button id="btn-conv" onclick="openConvention()">📋 约定叫</button>
-    <button id="btn-endgame" onclick="openEndgame()">🏁 残局</button>
-    <button id="btn-puzzle" onclick="openPuzzle()" style="padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;font-weight:700;transition:all .2s">🧩 做庄谜题</button>
-    <button id="btn-tour" onclick="openTournament()">🏆 锦标赛</button>
-    <button id="btn-history" onclick="openHistory()">📜 历史</button>
-    <button id="btn-perf" onclick="openPerf()">📊 数据</button>
-    <button id="btn-suit-combo" onclick="showSuitComboTrainer()">🎴 花色组合</button>
-    <button id="btn-defense-lessons" onclick="showDefenseLessons()">🛡️ 防守课程</button>
-    <button id="btn-rubber" onclick="startRubberBridge()">🎲 盘式桥牌</button>
-    <button id="btn-quick" onclick="quickPlay()" style="padding:16px 40px;border:none;border-radius:16px;font-size:18px;font-weight:800;background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000;cursor:pointer;box-shadow:0 6px 24px rgba(255,109,0,.4);margin:12px 0">⚡ 快速开始</button>
+    <div id="status-main">
+      <div id="hero-title">♠♥♦♣<br><span>小桥学牌</span></div>
+      <div id="hero-subtitle">世界最好的桥牌教学软件</div>
+      <div id="hero-actions">
+        <button id="btn-quick" onclick="quickPlay()" class="hero-btn primary">⚡ 快速开始</button>
+        <div class="hero-row">
+          <button id="btn-story" class="hero-btn secondary" onclick="openLevelMap()">🎮 故事</button>
+          <button id="btn-defense" class="hero-btn secondary" onclick="startDefenseMode()">🛡️ 防守</button>
+        </div>
+        <button onclick="toggleDrawer()" class="hero-btn outline">📂 更多功能</button>
+      </div>
+      <span id="stxt"></span>
+    </div>
+    <div id="status-game" style="display:none">
+      <span id="stxt-game"></span>
+    </div>
+  </div>
+  <div id="drawer-overlay" onclick="toggleDrawer()"></div>
+  <div id="drawer-panel">
+    <div class="drawer-header">
+      <h3>📂 功能菜单</h3>
+      <button onclick="toggleDrawer()">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <div class="drawer-section-title">📚 学习</div>
+        <button class="drawer-item" onclick="openLessons();toggleDrawer()">📖 108课课程</button>
+        <button class="drawer-item" onclick="openLeadTrainer();toggleDrawer()">🎯 首攻训练</button>
+        <button class="drawer-item" onclick="openConvention();toggleDrawer()">📋 约定叫训练</button>
+        <button class="drawer-item" onclick="openPuzzle();toggleDrawer()">🧩 做庄谜题</button>
+        <button class="drawer-item" onclick="openEndgame();toggleDrawer()">🏁 残局技巧</button>
+        <button class="drawer-item" onclick="showSuitComboTrainer();toggleDrawer()">🎴 花色组合</button>
+        <button class="drawer-item" onclick="showDefenseLessons();toggleDrawer()">🛡️ 防守课程</button>
+        <button class="drawer-item" onclick="showDefensePuzzles();toggleDrawer()">🛡️ 防守谜题</button>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">🏆 挑战</div>
+        <button class="drawer-item" onclick="openDaily();toggleDrawer()">📅 每日挑战</button>
+        <button class="drawer-item" onclick="openTournament();toggleDrawer()">🏆 锦标赛</button>
+        <button class="drawer-item" onclick="startRubberBridge();toggleDrawer()">🎲 盘式桥牌</button>
+        <button class="drawer-item" onclick="startJustPlay();toggleDrawer()">🎯 只打牌</button>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">📊 分析</div>
+        <button class="drawer-item" onclick="openHistory();toggleDrawer()">📜 牌局历史</button>
+        <button class="drawer-item" onclick="openPerf();toggleDrawer()">📊 数据仪表盘</button>
+        <button class="drawer-item" onclick="showWeaknessDiagnosis();toggleDrawer()">🎯 弱点诊断</button>
+        <button class="drawer-item" onclick="showAdaptivePlan();toggleDrawer()">📋 自适应训练</button>
+        <button class="drawer-item" onclick="showPlayerProfile();toggleDrawer()">👤 我的档案</button>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">🔧 工具</div>
+        <button class="drawer-item" onclick="showDictionary();toggleDrawer()">📖 桥牌词典</button>
+        <button class="drawer-item" onclick="showConventionCard();toggleDrawer()">🃏 约定卡</button>
+        <button class="drawer-item" onclick="showDefenseGuide();toggleDrawer()">🚩 防守信号</button>
+        <button class="drawer-item" onclick="showAIFeatures();toggleDrawer()">🧠 AI分析</button>
+        <button class="drawer-item" onclick="showCardCounter();toggleDrawer()">🔢 记牌器</button>
+        <button class="drawer-item" onclick="showBidHistory();toggleDrawer()">📜 叫牌历史</button>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">⚙️ 设置</div>
+        <button class="drawer-item" onclick="openSettings();toggleDrawer()">⚙️ 游戏设置</button>
+        <button class="drawer-item" onclick="shareSessionSummary();toggleDrawer()">📤 分享</button>
+        <button class="drawer-item" onclick="downloadShareCard();toggleDrawer()">🎴 分享卡</button>
+        <button class="drawer-item" onclick="showProModal()">💎 升级Pro</button>
+        <button class="drawer-item" onclick="startGuide('welcome');toggleDrawer()">📖 重新查看教程</button>
+      </div>
+    </div>
   </div>
   <div id="onboarding">
     <div class="ob-card">
@@ -2809,7 +2880,7 @@ function mkSm(c){
   return el;
 }
 
-function setS(t){document.getElementById('stxt').textContent=t}
+function setS(t){document.getElementById('stxt').textContent=t;try{document.getElementById('stxt-game').textContent=t}catch(e){}}
 function showEl(id,v){document.getElementById(id).classList.toggle('show',v)}
 function showClass(el,v){el.classList.toggle('visible',v)}
 function showById(id,v){document.getElementById(id).classList.toggle('visible',v)}
@@ -3083,23 +3154,12 @@ function init(){
     }
   }catch(e){}
   // Check for saved progress and offer resume
-  try{
-    if(hasSavedProgress()&&!G.justPlayMode&&!G.replayHands){
+  try{if(hasSavedProgress()&&!G.justPlayMode&&!G.replayHands){
       resumeSavedProgress();
     }
   }catch(e){}
-  document.getElementById('btn-go').style.display='';
-  document.getElementById('btn-story').style.display='';
-  document.getElementById('btn-just-play').style.display='';
-  document.getElementById('btn-defense').style.display='';
-  document.getElementById('btn-lead-trainer').style.display='';
-  document.getElementById('btn-dc').style.display='';
-  document.getElementById('btn-conv').style.display='';
-  document.getElementById('btn-puzzle').style.display='';document.getElementById('btn-endgame').style.display='';
-  document.getElementById('btn-tour').style.display='';
-  document.getElementById('btn-history').style.display='';
-  document.getElementById('btn-perf').style.display='';
-  setS('点击"开始游戏"开始');
+  document.body.classList.remove('in-game');
+  setS('点击按钮开始');
   clearTrick();
   hideDummy();
   renderHands();
@@ -3173,16 +3233,7 @@ function deal(){
 
 function startGame(){
   try{trackEvent('game','start','story')}catch(e){}
-  document.getElementById('btn-go').style.display='none';
-  document.getElementById('btn-just-play').style.display='none';
-  document.getElementById('btn-defense').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';
-  document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
-  document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';
-  document.getElementById('btn-perf').style.display='none';
+  document.body.classList.add('in-game');
   resetPlayedCards();
   deal();
   G.justPlayMode=false;
@@ -8718,15 +8769,7 @@ function beginStoryLevel(levelId){
   G.humanSeat=s.humanPlaysAs||'S';
 
   // Update UI
-  document.getElementById('btn-go').style.display='none';
-  document.getElementById('btn-story').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';
-  document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
-  document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';
-  document.getElementById('btn-perf').style.display='none';
+  document.body.classList.add('in-game');
   document.getElementById('i-contract').textContent='定约：'+G.contract;
   document.getElementById('i-tricks').textContent='南北: 0 | 东西: 0';
   document.getElementById('i-trump').textContent='将牌：'+(G.trump?SN[G.trump]:'无');
@@ -9008,16 +9051,7 @@ function completeStoryLevel(){
 
   // Restore UI
   G.storyMode=false;
-  document.getElementById('btn-go').style.display='';
-  document.getElementById('btn-story').style.display='';
-  document.getElementById('btn-defense').style.display='';
-  document.getElementById('btn-lead-trainer').style.display='';
-  document.getElementById('btn-dc').style.display='';
-  document.getElementById('btn-conv').style.display='';
-  document.getElementById('btn-puzzle').style.display='';document.getElementById('btn-endgame').style.display='';
-  document.getElementById('btn-tour').style.display='';
-  document.getElementById('btn-history').style.display='';
-  document.getElementById('btn-perf').style.display='';
+  document.body.classList.remove('in-game');
   G.humanSeat='S';
 
   // Check level up
@@ -9079,19 +9113,10 @@ function exitStoryMode(){
   document.getElementById('story-overlay').classList.remove('show');
   document.getElementById('xp-bar').classList.remove('show');
   document.getElementById('level-complete-overlay').classList.remove('show');
-  document.getElementById('btn-go').style.display='';
-  document.getElementById('btn-story').style.display='';
-  document.getElementById('btn-defense').style.display='';
-  document.getElementById('btn-lead-trainer').style.display='';
-  document.getElementById('btn-dc').style.display='';
-  document.getElementById('btn-conv').style.display='';
-  document.getElementById('btn-puzzle').style.display='';document.getElementById('btn-endgame').style.display='';
-  document.getElementById('btn-tour').style.display='';
-  document.getElementById('btn-history').style.display='';
-  document.getElementById('btn-perf').style.display='';
+  document.body.classList.remove('in-game');
   G.humanSeat='S';
   init();
-  setS('点击"开始游戏"开始');
+  setS('点击按钮开始');
 }
 
 // ---- XP Bar ----
@@ -9753,18 +9778,7 @@ function autoSelectContract(){
 // ---- Start Just Declare Mode ----
 function startJustPlay(){
   try{trackEvent('game','start','just_play')}catch(e){}
-  // Hide buttons
-  document.getElementById('btn-go').style.display='none';
-  document.getElementById('btn-story').style.display='none';
-  document.getElementById('btn-just-play').style.display='none';
-  document.getElementById('btn-defense').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';
-  document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
-  document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';
-  document.getElementById('btn-perf').style.display='none';
+  document.body.classList.add('in-game');
 
   // Clean up any existing state
   document.getElementById('score-popup').classList.remove('show');
@@ -9817,17 +9831,7 @@ function startJustPlay(){
 function startDefenseMode(){
   try{showFeatureDiscovery('defense_mode')}catch(e){}
   try{trackEvent('game','start','defense')}catch(e){}
-  document.getElementById('btn-go').style.display='none';
-  document.getElementById('btn-story').style.display='none';
-  document.getElementById('btn-just-play').style.display='none';
-  document.getElementById('btn-defense').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';
-  document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
-  document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';
-  document.getElementById('btn-perf').style.display='none';
+  document.body.classList.add('in-game');
   document.getElementById('score-popup').classList.remove('show');
   document.getElementById('post-analysis').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
@@ -10342,11 +10346,7 @@ function openDaily(){
 function closeDaily(){document.getElementById('dc-overlay').classList.remove('show')}
 function startDailyChallenge(){
   closeDaily();
-  document.getElementById('btn-go').style.display='none';document.getElementById('btn-story').style.display='none';
-  document.getElementById('btn-just-play').style.display='none';document.getElementById('btn-defense').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';document.getElementById('btn-perf').style.display='none';
+  document.body.classList.add('in-game');
   init();G.dailyMode=true;G.round=1;
   try{updatePlayStreak();showStreakBadge()}catch(e){}
   let seed=getDailySeed(),rng=seededRandom(seed),deck=[];
@@ -11330,17 +11330,7 @@ function startTournament(){
   try{showFeatureDiscovery('tournament')}catch(e){}
   closeTournament();
   TOUR.scores=[];TOUR.results=[];TOUR.current=0;TOUR.total=0;
-  document.getElementById('btn-go').style.display='none';
-  document.getElementById('btn-story').style.display='none';
-  document.getElementById('btn-just-play').style.display='none';
-  document.getElementById('btn-defense').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';
-  document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
-  document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';
-  document.getElementById('btn-perf').style.display='none';
+  document.body.classList.add('in-game');
 
   try{updatePlayStreak();showStreakBadge()}catch(e){}
   playTournamentHand();
@@ -13473,18 +13463,7 @@ function getCurrentMode(){
 
 // ============ FEATURE 5: Quick Play Button (⚡ 快速开始) ============
 function quickPlay(){
-  try{document.getElementById('btn-go').style.display='none'}catch(e){}
-  try{document.getElementById('btn-story').style.display='none'}catch(e){}
-  try{document.getElementById('btn-just-play').style.display='none'}catch(e){}
-  try{document.getElementById('btn-defense').style.display='none'}catch(e){}
-  try{document.getElementById('btn-lead-trainer').style.display='none'}catch(e){}
-  try{document.getElementById('btn-dc').style.display='none'}catch(e){}
-  try{document.getElementById('btn-conv').style.display='none'}catch(e){}
-  try{document.getElementById('btn-puzzle').style.display='none'}catch(e){}try{document.getElementById('btn-endgame').style.display='none'}catch(e){}
-  try{document.getElementById('btn-tour').style.display='none'}catch(e){}
-  try{document.getElementById('btn-history').style.display='none'}catch(e){}
-  try{document.getElementById('btn-perf').style.display='none'}catch(e){}
-  try{document.getElementById('btn-quick').style.display='none'}catch(e){}
+  document.body.classList.add('in-game');
   init();G.justPlayMode=true;G.round=1;resetPlayedCards();deal();
   G.replayHands={N:G.hands.N.slice(),S:G.hands.S.slice(),E:G.hands.E.slice(),W:G.hands.W.slice()};
   let ac=autoSelectContract();
@@ -13769,19 +13748,7 @@ var RUBBER={nsGames:0,ewGames:0,nsScore:0,ewScore:0,vulnNS:false,vulnEW:false,ac
 
 function startRubberBridge(){
   RUBBER={nsGames:0,ewGames:0,nsScore:0,ewScore:0,vulnNS:false,vulnEW:false,active:true};
-  document.getElementById('btn-go').style.display='none';
-  document.getElementById('btn-story').style.display='none';
-  document.getElementById('btn-just-play').style.display='none';
-  document.getElementById('btn-defense').style.display='none';
-  document.getElementById('btn-lead-trainer').style.display='none';
-  document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
-  document.getElementById('btn-tour').style.display='none';
-  document.getElementById('btn-history').style.display='none';
-  document.getElementById('btn-perf').style.display='none';
-  document.getElementById('btn-quick').style.display='none';
-  document.getElementById('btn-rubber').style.display='none';
+  document.body.classList.add('in-game');
   init();G.rubberMode=true;G.round=1;deal();G.justPlayMode=true;
   G.replayHands={N:G.hands.N.slice(),S:G.hands.S.slice(),E:G.hands.E.slice(),W:G.hands.W.slice()};
   let ac=autoSelectContract();
@@ -14674,11 +14641,8 @@ var TUTORIALS={
       {target:'status',title:'👋 欢迎来到小桥学牌！',body:'这是你的主菜单。你可以从这里开始各种游戏模式和训练功能。',pos:'below'},
       {target:'btn-quick',title:'⚡ 快速开始',body:'最简单的开始方式！点击立即开始一局桥牌。',pos:'below'},
       {target:'btn-story',title:'🎮 故事模式',body:'跟随小桥的引导，从零开始学习桥牌。推荐新手使用！',pos:'below'},
-      {target:'btn-just-play',title:'🎯 只打牌',body:'跳过叫牌，直接打牌。练习做庄技巧。',pos:'below'},
       {target:'btn-defense',title:'🛡️ 防守模式',body:'练习防守技巧。桥牌50%时间在防守！',pos:'below'},
-      {target:'btn-puzzle',title:'🧩 做庄谜题',body:'35个专业谜题，涵盖飞牌、挤牌、投入等10种技术。',pos:'above'},
-      {target:'btn-conv',title:'📋 约定叫训练',body:'学习Stayman、Jacoby Transfer等10种约定叫。',pos:'above'},
-      {target:'btn-lead-trainer',title:'🎯 首攻训练',body:'25个首攻场景，学习最重要的防守决策。',pos:'above'}
+      {target:'drawer-panel',title:'📂 更多功能',body:'点击"更多功能"按钮，打开侧边菜单，所有训练和工具都在这里。',pos:'left'}
     ]
   },
   gameplay:{
@@ -14694,10 +14658,8 @@ var TUTORIALS={
   analysis:{
     name:'分析工具教程',
     steps:[
-      {target:'btn-history',title:'📜 牌局历史',body:'查看所有已打牌局的详细记录。',pos:'below'},
-      {target:'btn-perf',title:'📊 数据仪表盘',body:'你的整体统计数据：胜率、得分趋势、进步曲线。',pos:'below'},
-      {target:'btn-weakness',title:'🎯 弱点诊断',body:'AI分析你的弱点，告诉你需要加强哪些方面。',pos:'below'},
-      {target:'btn-adaptive',title:'📋 自适应训练',body:'根据弱点自动生成个性化训练计划。',pos:'below'}
+      {target:'info-row2',title:'💡 工具栏',body:'游戏中的工具栏：提示💡、撤销↩️、历史📜 和菜单☰。',pos:'below'},
+      {target:'drawer-panel',title:'📊 分析功能',body:'打开菜单☰，在"分析"分类下找到：牌局历史、数据仪表盘、弱点诊断、自适应训练。',pos:'left'}
     ]
   },
   settings:{
@@ -14861,6 +14823,12 @@ function showFeatureDiscovery(key){
   localStorage.setItem('bridge-discovery',JSON.stringify(done));
   let feat=FEATURE_DISCOVERY[key];
   if(feat)try{showLearnToast(feat.title,feat.text,4000)}catch(e){}
+}
+function toggleDrawer(){
+  let overlay=document.getElementById('drawer-overlay');
+  let panel=document.getElementById('drawer-panel');
+  overlay.classList.toggle('show');
+  panel.classList.toggle('show');
 }
 </script>
 </body>
