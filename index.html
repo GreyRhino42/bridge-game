@@ -2225,6 +2225,9 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <span class="tool-btn" id="xq-toggle" onclick="xqToggle()" title="小桥">🤖</span>
       <span class="tool-btn" id="btn-profile" onclick="showPlayerProfile()" title="我的档案">👤</span>
       <span class="tool-btn" id="btn-share-card" onclick="downloadShareCard()" title="分享卡">🎴</span>
+      <span class="tool-btn" id="btn-weakness" onclick="showWeaknessDiagnosis()" title="弱点诊断">🎯</span>
+      <span class="tool-btn" id="btn-adaptive" onclick="showAdaptivePlan()" title="自适应训练">📋</span>
+      <span class="tool-btn" id="btn-defense-puzzle" onclick="showDefensePuzzles()" title="防守谜题">🛡️</span>
     </div>
   </div>
   <div id="strength-meter"></div>
@@ -11058,6 +11061,126 @@ var PUZZLES=[
  solution:'赢墩：♥AKQJ109=6墩，♦A=1墩，♠A=1墩，♣AK(明手)=2墩，共10墩。交叉将吃：先兑现♠A、♣AK、♦A，然后用将牌交叉将吃♠和♣，最后清将。安全完成！'}
 ];
 
+// ============ DEFENSE PUZZLES ============
+var DEFENSE_PUZZLES=[
+  {cat:'首攻',diff:2,title:'选择首攻-对抗3NT',contract:'3NT',declarer:'W',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+   N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+   E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+   W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+   question:'你是东家，对手打3NT。你该首攻什么？',
+   options:['♠4','♥6','♦9','♣4'],
+   correct:0,
+   explanation:'♠有AKQJ10五张大牌在你方，首攻♠建立长套赢墩。这是最好的进攻花色。'},
+  {cat:'信号',diff:3,title:'态度信号',contract:'4♥',declarer:'N',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+   N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+   E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+   W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+   question:'搭档首攻♠A，你跟♠9(大牌=欢迎)。这意味着什么？',
+   options:['你有♠大牌','你不想要♠','你没有♠','你想换花色'],
+   correct:0,
+   explanation:'态度信号：跟大牌=欢迎，告诉搭档继续攻这个花色。你跟♠9表示你有♠大牌。'},
+  {cat:'首攻',diff:2,title:'首攻连张',contract:'3NT',declarer:'S',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+   N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+   E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+   W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+   question:'你是西家，对手打3NT。你有♠5432和♥5432。首攻什么？',
+   options:['♠2','♥2','♦2','♣2'],
+   correct:3,
+   explanation:'四张小牌时首攻最长花色的最小牌。♣2是最低花色的小牌，最可能建立赢墩。'},
+  {cat:'信号',diff:3,title:'花色选择信号',contract:'4♠',declarer:'W',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+   N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+   E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+   W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+   question:'同伴出A赢墩，你跟大牌表示欢迎，小牌=不欢迎。你的信号是什么？',
+   options:['跟最大牌欢迎','跟最小牌不欢迎','跟中间牌','随意跟牌'],
+   correct:0,
+   explanation:'态度信号基本规则：跟大牌=欢迎(继续攻)，跟小牌=不欢迎(换花色)。'},
+  {cat:'防守',diff:2,title:'防守计算',contract:'3NT',declarer:'N',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+   N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+   E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+   W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+   question:'对手打3NT，你方需要几墩才能击败定约？',
+   options:['3墩','4墩','5墩','6墩'],
+   correct:1,
+   explanation:'3NT需要9墩，你方需要4墩(13-9=4)才能击败定约。'},
+  {cat:'首攻',diff:3,title:'无将首攻选择',contract:'3NT',declarer:'E',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K')],
+   N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+   E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5')],
+   W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+   question:'你是西家，对手打3NT。你有♠32和♣432。首攻什么？',
+   options:['♠3','♥2','♦2','♣2'],
+   correct:3,
+   explanation:'无将定约首攻长套第四大牌。你最长花色是♣(3张)，首攻♣2最合适。'},
+  {cat:'防守',diff:2,title:'防守赢墩计算',contract:'4♠',declarer:'N',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+   N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+   E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+   W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+   question:'对手打4♠，你方需要几墩？',
+   options:['2墩','3墩','4墩','5墩'],
+   correct:1,
+   explanation:'4♠需要10墩，你方需要3墩(13-10=3)击败定约。'},
+  {cat:'信号',diff:3,title:'计数信号',contract:'3NT',declarer:'S',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+   N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+   E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+   W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+   question:'庄家出♦A，你跟♦6(偶数张信号)。这告诉搭档什么？',
+   options:['你有偶数张♦','你有奇数张♦','你喜欢♦','你讨厌♦'],
+   correct:0,
+   explanation:'计数信号：跟大牌=奇数张，跟小牌=偶数张。你跟♦6表示你有偶数张♦。'},
+  {cat:'首攻',diff:2,title:'将牌首攻',contract:'4♥',declarer:'W',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K')],
+   N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+   E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5')],
+   W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+   question:'对手打4♥，你有♥5432。首攻将牌好不好？',
+   options:['好，消将有利','不好，首攻花色','不好，首攻A','看情况'],
+   correct:0,
+   explanation:'当你有4张将牌时，首攻将牌是好策略。这可以缩短明手的将牌，减少交叉将吃机会。'},
+  {cat:'防守',diff:3,title:'防守计划',contract:'3NT',declarer:'N',
+   S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+   N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+   E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+   W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+   question:'对手打3NT，你方AK都在手。防守计划第一步？',
+   options:['先兑现赢墩','先忍让','先出小牌','等信号'],
+   correct:0,
+   explanation:'有AK等确定赢墩时，先兑现赢墩再考虑后续。不要让对手建立长套。'}
+];
+
+function showDefensePuzzles(){
+  let pz=DEFENSE_PUZZLES[Math.floor(Math.random()*DEFENSE_PUZZLES.length)];
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🛡️ 防守谜题 - '+pz.title+'</h3>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:10px">定约：'+pz.contract+' | 庄家：'+pz.declarer+'</div>';
+  html+='<div style="font-size:14px;margin-bottom:12px;line-height:1.5">'+pz.question+'</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:8px">';
+  pz.options.forEach((o,i)=>{
+    html+='<button onclick="checkDefenseAnswer('+i+','+pz.correct+')" style="padding:10px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:14px;cursor:pointer;text-align:left">'+o+'</button>';
+  });
+  html+='</div>';
+  html+='<div id="defense-answer" style="margin-top:12px;font-size:13px;line-height:1.5"></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+function checkDefenseAnswer(chosen,correct){
+  let el=document.getElementById('defense-answer');
+  let pz=DEFENSE_PUZZLES.find(p=>p.correct===correct);
+  if(chosen===correct){
+    el.innerHTML='<div style="padding:10px;background:rgba(76,175,80,.15);border-radius:8px;color:#81c784">✅ 正确！'+(pz?pz.explanation:'')+'</div>';
+  }else{
+    el.innerHTML='<div style="padding:10px;background:rgba(244,67,54,.15);border-radius:8px;color:#ef5350">❌ 错误。'+(pz?pz.explanation:'')+'</div>';
+  }
+}
+
 function openPuzzle(){
   document.getElementById('puzzle-overlay').classList.add('show');
   PUZZLE_SCORE={correct:0,total:0};
@@ -14411,5 +14534,89 @@ document.addEventListener('click',function(e){
   <span class="dismiss" onclick="dismissProBanner()">✕</span>
 </div>
 <div class="brand-watermark">♠♥♦♣ XIAOQIAO BRIDGE ♣♦♥♠</div>
+<script>
+// ============ WEAKNESS DIAGNOSIS & ADAPTIVE TRAINING ============
+function diagnoseWeaknesses(){
+  let weak=[];
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let modeStats=JSON.parse(localStorage.getItem('bridge-mode-stats')||'{}');
+
+  // Check declarer win rate
+  let justPlay=modeStats.justPlay||{};
+  let declRate=justPlay.played>0?justPlay.won/justPlay.played:0.5;
+  if(declRate<0.5)weak.push({area:'做庄',score:Math.round(declRate*100),advice:'多做庄练习，注意赢墩计算'});
+
+  // Check defense win rate
+  let defense=modeStats.defense||{};
+  let defRate=defense.played>0?defense.won/defense.played:0.5;
+  if(defRate<0.4)weak.push({area:'防守',score:Math.round(defRate*100),advice:'加强防守训练，注意信号配合'});
+
+  // Check bidding accuracy
+  let convCorrect=parseInt(localStorage.getItem('bridge-conv-correct')||'0');
+  let convTotal=parseInt(localStorage.getItem('bridge-conv-total')||'0');
+  let convRate=convTotal>0?convCorrect/convTotal:0.5;
+  if(convRate<0.6)weak.push({area:'叫牌',score:Math.round(convRate*100),advice:'复习叫牌约定，多做叫牌训练'});
+
+  // Check opening lead
+  let leadCorrect=parseInt(localStorage.getItem('bridge-lead-correct')||'0');
+  let leadTotal=parseInt(localStorage.getItem('bridge-lead-total')||'0');
+  let leadRate=leadTotal>0?leadCorrect/leadTotal:0.5;
+  if(leadRate<0.5)weak.push({area:'首攻',score:Math.round(leadRate*100),advice:'多做首攻训练，学习连张首攻'});
+
+  // Check ELO trend
+  let elo=getELO();
+  if(elo<1300)weak.push({area:'整体水平',score:elo,advice:'系统学习108课，打好基础'});
+
+  return weak.length>0?weak:[{area:'表现良好',score:80,advice:'继续保持！尝试更高难度'}];
+}
+
+function showWeaknessDiagnosis(){
+  let weak=diagnoseWeaknesses();
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🎯 弱点诊断</h3>';
+  weak.forEach(w=>{
+    let color=w.score>=60?'#81c784':w.score>=40?'#ffb74d':'#ef5350';
+    html+='<div style="padding:10px;margin-bottom:8px;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid '+color+'">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center">';
+    html+='<div style="font-weight:700;color:'+color+'">'+w.area+'</div>';
+    html+='<div style="font-size:14px;font-weight:800;color:'+color+'">'+w.score+'</div></div>';
+    html+='<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">'+w.advice+'</div></div>';
+  });
+  html+='<div style="margin-top:12px;padding:10px;background:rgba(255,213,79,.08);border-radius:8px;font-size:12px;color:#ffd54f">💡 建议：根据弱点制定每日训练计划，重点突破薄弱环节。</div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+function generateAdaptivePlan(){
+  let weak=diagnoseWeaknesses();
+  let plan=[];
+
+  weak.forEach(w=>{
+    if(w.area==='做庄')plan.push({title:'🧩 做庄谜题训练',desc:'完成5个做庄谜题',action:'openPuzzle()'});
+    if(w.area==='防守')plan.push({title:'🛡️ 防守训练',desc:'完成3局防守模式',action:'showDefensePuzzles()'});
+    if(w.area==='叫牌')plan.push({title:'📋 叫牌训练',desc:'完成叫牌约定训练',action:'openConvention()'});
+    if(w.area==='首攻')plan.push({title:'🎯 首攻训练',desc:'完成10个首攻练习',action:'openLeadTrainer()'});
+    if(w.area==='整体水平')plan.push({title:'📚 课程学习',desc:'完成下一课课程',action:''});
+  });
+
+  // Always add daily challenge
+  plan.push({title:'📅 每日挑战',desc:'完成今日挑战',action:'openDaily()'});
+
+  return plan;
+}
+
+function showAdaptivePlan(){
+  let plan=generateAdaptivePlan();
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">📋 自适应训练计划</h3>';
+  plan.forEach((p,i)=>{
+    html+='<div style="padding:10px;margin-bottom:8px;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid #4caf50">';
+    html+='<div style="font-weight:700;font-size:13px">'+(i+1)+'. '+p.title+'</div>';
+    html+='<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:2px">'+p.desc+'</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+</script>
 </body>
 </html>
