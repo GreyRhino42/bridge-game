@@ -10475,6 +10475,53 @@ var CONV_DATA={
        correct:2,
        explanation:'Splinter Bid! 4♠表示♠单缺(短套)，♥好配合+满贯兴趣。'}
     ]
+  },
+  opening:{
+    name:'开叫判断',icon:'🎯',
+    drills:[
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[],yourPos:'S',hcp:'28 HCP',context:'你是发牌人，持28点强牌',
+       options:['1♣','1♠','2♣','2NT'],correct:2,
+       explanation:'22+HCP开叫2♣强开叫。这手28点，毫无疑问2♣。'},
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♦',rank:'Q'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'}],
+       sequence:[],yourPos:'S',hcp:'26 HCP',context:'你是发牌人，26点均型',
+       options:['1♠','1NT','2♣','2NT'],correct:2,
+       explanation:'22+HCP均型牌开叫2♣。26点远超标准。'},
+      {hand:[{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♠',rank:'10'},{suit:'♠',rank:'9'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[],yourPos:'S',hcp:'24 HCP',context:'你是发牌人，24点',
+       options:['1♠','1NT','2♣','2NT'],correct:2,
+       explanation:'22+HCP开叫2♣。24点符合强开叫标准。'}
+    ]
+  },
+  responses:{
+    name:'应叫判断',icon:'💬',
+    drills:[
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[{pos:'N',bid:'1♥'}],yourPos:'S',hcp:'28 HCP',context:'搭档开叫1♥，你持28点',
+       options:['1♠','2♥','3♥','4NT'],correct:3,
+       explanation:'28点+♥配合，直接4NT问A，试探满贯。'},
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[{pos:'N',bid:'1♠'}],yourPos:'S',hcp:'26 HCP',context:'搭档开叫1♠，你持26点',
+       options:['2♠','3♠','4♠','4NT'],correct:3,
+       explanation:'26点+♠配合，4NT问A试探满贯。'},
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[{pos:'N',bid:'1NT'}],yourPos:'S',hcp:'28 HCP',context:'搭档开叫1NT(15-17)，你持28点',
+       options:['2♣','2NT','3NT','4NT'],correct:3,
+       explanation:'28点+搭档15-17=43-45点，远超满贯。4NT问A。'}
+    ]
+  },
+  competitive:{
+    name:'竞叫判断',icon:'⚔️',
+    drills:[
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[{pos:'W',bid:'1♥'}],yourPos:'N',hcp:'28 HCP',context:'右手对手开叫1♥，你持28点',
+       options:['Pass','1♠','X','2♣'],correct:2,
+       explanation:'28点强牌，技术性加倍。之后再叫显示强牌。'},
+      {hand:[{suit:'♠',rank:'A'},{suit:'♠',rank:'K'},{suit:'♠',rank:'Q'},{suit:'♠',rank:'J'},{suit:'♥',rank:'A'},{suit:'♥',rank:'K'},{suit:'♥',rank:'Q'},{suit:'♦',rank:'A'},{suit:'♦',rank:'K'},{suit:'♣',rank:'A'},{suit:'♣',rank:'K'},{suit:'♣',rank:'Q'},{suit:'♣',rank:'J'}],
+       sequence:[{pos:'W',bid:'1♠'},{pos:'N',bid:'X'},{pos:'E',bid:'2♠'}],yourPos:'S',hcp:'28 HCP',context:'搭档加倍，右手加叫2♠，你持28点',
+       options:['Pass','2NT','3♣','3NT'],correct:3,
+       explanation:'28点+搭档技术性加倍(12+点)=40+点。3NT或更高。'}
+    ]
   }
 };
 var CONV={current:'stayman',correct:0,total:0,currentDrill:null};
