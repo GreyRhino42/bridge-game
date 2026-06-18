@@ -2188,10 +2188,39 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 .pz-categories{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
 .pz-cat{padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.6);transition:all .2s}
 .pz-cat.active{background:rgba(255,213,79,.15);border-color:rgba(255,213,79,.4);color:#ffd54f}
+.guide-overlay{position:fixed;inset:0;z-index:600;pointer-events:none}
+.guide-overlay.active{pointer-events:auto;background:rgba(0,0,0,.5)}
+.guide-spotlight{position:absolute;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.6);z-index:601;pointer-events:none;transition:all .4s ease}
+.guide-tooltip{position:absolute;z-index:602;background:rgba(15,25,15,.97);border:2px solid #ffd54f;border-radius:14px;padding:16px 20px;max-width:300px;box-shadow:0 12px 40px rgba(0,0,0,.6);pointer-events:auto}
+.guide-tooltip .tt-title{font-size:15px;font-weight:700;color:#ffd54f;margin-bottom:6px}
+.guide-tooltip .tt-body{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:12px}
+.guide-tooltip .tt-actions{display:flex;gap:8px;justify-content:flex-end}
+.guide-tooltip .tt-btn{padding:6px 16px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.guide-tooltip .tt-next{background:linear-gradient(135deg,#ffd54f,#ff6d00);color:#000}
+.guide-tooltip .tt-skip{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+.guide-tooltip .tt-dots{display:flex;gap:4px;justify-content:center;margin-bottom:8px}
+.guide-tooltip .tt-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15)}
+.guide-tooltip .tt-dot.active{background:#ffd54f}
+.guide-tooltip .tt-dot.done{background:rgba(255,213,79,.3)}
+.guide-progress{position:fixed;top:8px;left:50%;transform:translateX(-50%);padding:4px 16px;border-radius:20px;font-size:11px;background:rgba(255,213,79,.15);border:1px solid rgba(255,213,79,.3);color:#ffd54f;z-index:603;display:none}
+.guide-progress.show{display:block}
 </style>
 </head>
 <body>
 <div id="loading-screen"><div class="loading-suits">♠♥♦♣</div><div class="loading-text">小桥学牌</div><div class="loading-sub">世界最好的桥牌教学软件</div></div>
+<div id="guide-overlay" class="guide-overlay">
+  <div class="guide-spotlight" id="guide-spotlight"></div>
+  <div class="guide-tooltip" id="guide-tooltip">
+    <div class="tt-dots" id="tt-dots"></div>
+    <div class="tt-title" id="tt-title"></div>
+    <div class="tt-body" id="tt-body"></div>
+    <div class="tt-actions">
+      <button class="tt-btn tt-skip" onclick="skipGuide()">跳过</button>
+      <button class="tt-btn tt-next" id="tt-next" onclick="nextGuideStep()">下一步 →</button>
+    </div>
+  </div>
+</div>
+<div id="guide-progress">📖 教程进行中...</div>
 <div id="game">
   <div id="info-bar">
     <div id="info-row1">
@@ -2421,6 +2450,16 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
       <div class="setting-options">
         <div class="setting-opt" onclick="showAboutPage()">查看关于页面</div>
         <div class="setting-opt" onclick="showKeyboardGuide()">⌨️ 快捷键指南</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">📖 教程</div>
+      <div class="setting-options">
+        <div class="setting-opt" onclick="closeSettings();setTimeout(function(){startTutorial('welcome')},300)">欢迎教程</div>
+        <div class="setting-opt" onclick="closeSettings();setTimeout(function(){startTutorial('gameplay')},300)">打牌教程</div>
+        <div class="setting-opt" onclick="closeSettings();setTimeout(function(){startTutorial('analysis')},300)">分析工具教程</div>
+        <div class="setting-opt" onclick="closeSettings();setTimeout(function(){startTutorial('settings')},300)">设置教程</div>
+        <div class="setting-opt" onclick="closeSettings();setTimeout(function(){startTutorial('pro')},300)">Pro功能教程</div>
       </div>
     </div>
   </div>
@@ -3074,6 +3113,7 @@ function init(){
   // Final polish: floating suits + adaptive UI
   try{initFloatingSuits()}catch(e){}
   try{adaptUI()}catch(e){}
+  try{checkAutoGuide()}catch(e){}
 }
 
 // ---- Vulnerability & Score History ----
@@ -9775,6 +9815,7 @@ function startJustPlay(){
 }
 
 function startDefenseMode(){
+  try{showFeatureDiscovery('defense_mode')}catch(e){}
   try{trackEvent('game','start','defense')}catch(e){}
   document.getElementById('btn-go').style.display='none';
   document.getElementById('btn-story').style.display='none';
@@ -10240,6 +10281,7 @@ var LEAD_DRILLS=[
 ];
 
 function openLeadTrainer(){
+  try{showFeatureDiscovery('lead_trainer')}catch(e){}
   document.getElementById('lead-trainer').classList.add('show');
   document.getElementById('overlay').classList.add('show');
   LT.correct=0;LT.total=0;updateLTScore();nextLeadDrill();
@@ -10529,6 +10571,7 @@ var CONV_DATA={
 };
 var CONV={current:'stayman',correct:0,total:0,currentDrill:null};
 function openConvention(){
+  try{showFeatureDiscovery('convention_trainer')}catch(e){}
   document.getElementById('conv-overlay').classList.add('show');
   CONV.correct=0;CONV.total=0;updateConvScore();
   renderConvTabs();nextConventionDrill();
@@ -11182,6 +11225,7 @@ function checkDefenseAnswer(chosen,correct){
 }
 
 function openPuzzle(){
+  try{showFeatureDiscovery('puzzle_engine')}catch(e){}
   document.getElementById('puzzle-overlay').classList.add('show');
   PUZZLE_SCORE={correct:0,total:0};
   renderPuzzleCategories();
@@ -11283,6 +11327,7 @@ function openTournament(){
 function closeTournament(){document.getElementById('tour-overlay').classList.remove('show')}
 
 function startTournament(){
+  try{showFeatureDiscovery('tournament')}catch(e){}
   closeTournament();
   TOUR.scores=[];TOUR.results=[];TOUR.current=0;TOUR.total=0;
   document.getElementById('btn-go').style.display='none';
@@ -14571,6 +14616,7 @@ function diagnoseWeaknesses(){
 }
 
 function showWeaknessDiagnosis(){
+  try{showFeatureDiscovery('weakness_diagnosis')}catch(e){}
   let weak=diagnoseWeaknesses();
   let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🎯 弱点诊断</h3>';
   weak.forEach(w=>{
@@ -14606,6 +14652,7 @@ function generateAdaptivePlan(){
 }
 
 function showAdaptivePlan(){
+  try{showFeatureDiscovery('adaptive_plan')}catch(e){}
   let plan=generateAdaptivePlan();
   let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">📋 自适应训练计划</h3>';
   plan.forEach((p,i)=>{
@@ -14616,6 +14663,204 @@ function showAdaptivePlan(){
   html+='</div>';
   document.getElementById('trick-log').innerHTML=html;
   document.getElementById('trick-log').classList.add('show');
+}
+
+// ============ TUTORIAL SYSTEM ============
+var TUTORIAL_KEY='bridge-tutorials-done';
+var TUTORIALS={
+  welcome:{
+    name:'欢迎教程',
+    steps:[
+      {target:'status',title:'👋 欢迎来到小桥学牌！',body:'这是你的主菜单。你可以从这里开始各种游戏模式和训练功能。',pos:'below'},
+      {target:'btn-quick',title:'⚡ 快速开始',body:'最简单的开始方式！点击立即开始一局桥牌。',pos:'below'},
+      {target:'btn-story',title:'🎮 故事模式',body:'跟随小桥的引导，从零开始学习桥牌。推荐新手使用！',pos:'below'},
+      {target:'btn-just-play',title:'🎯 只打牌',body:'跳过叫牌，直接打牌。练习做庄技巧。',pos:'below'},
+      {target:'btn-defense',title:'🛡️ 防守模式',body:'练习防守技巧。桥牌50%时间在防守！',pos:'below'},
+      {target:'btn-puzzle',title:'🧩 做庄谜题',body:'35个专业谜题，涵盖飞牌、挤牌、投入等10种技术。',pos:'above'},
+      {target:'btn-conv',title:'📋 约定叫训练',body:'学习Stayman、Jacoby Transfer等10种约定叫。',pos:'above'},
+      {target:'btn-lead-trainer',title:'🎯 首攻训练',body:'25个首攻场景，学习最重要的防守决策。',pos:'above'}
+    ]
+  },
+  gameplay:{
+    name:'打牌教程',
+    steps:[
+      {target:'hand-goal',title:'🎯 目标提示',body:'每手牌开始时，这里显示你的目标：需要赢几墩完成定约。',pos:'below'},
+      {target:'eval-bar',title:'📊 局势分析',body:'这个竖条显示当前谁占优势。绿色=你领先，红色=落后。',pos:'right'},
+      {target:'trick-ring',title:'⭕ 墩进度',body:'圆环显示你赢了几墩。金色=完成目标！',pos:'left'},
+      {target:'smart-hint',title:'💡 智能提示',body:'打牌时点击这个按钮，小桥会给你实时建议。',pos:'left'},
+      {target:'strength-meter',title:'💪 牌力仪表',body:'显示你和搭档的合计HCP。越高越强！',pos:'below'}
+    ]
+  },
+  analysis:{
+    name:'分析工具教程',
+    steps:[
+      {target:'btn-history',title:'📜 牌局历史',body:'查看所有已打牌局的详细记录。',pos:'below'},
+      {target:'btn-perf',title:'📊 数据仪表盘',body:'你的整体统计数据：胜率、得分趋势、进步曲线。',pos:'below'},
+      {target:'btn-weakness',title:'🎯 弱点诊断',body:'AI分析你的弱点，告诉你需要加强哪些方面。',pos:'below'},
+      {target:'btn-adaptive',title:'📋 自适应训练',body:'根据弱点自动生成个性化训练计划。',pos:'below'}
+    ]
+  },
+  settings:{
+    name:'设置教程',
+    steps:[
+      {target:'settings-modal',title:'⚙️ 游戏设置',body:'在这里你可以调整游戏的各项设置。',pos:'center'},
+      {target:null,title:'🎨 主题切换',body:'4种主题可选：暗黑、明亮、经典绿、午夜蓝。',pos:'center'},
+      {target:null,title:'🔊 音效控制',body:'开关游戏音效和背景音乐。',pos:'center'},
+      {target:null,title:'⏩ 出牌速度',body:'调整AI出牌速度，从0.5x到3x。',pos:'center'}
+    ]
+  },
+  pro:{
+    name:'Pro功能教程',
+    steps:[
+      {target:'pro-banner',title:'💎 Pro版',body:'升级Pro解锁全部108课、AI深度分析、无限训练等功能。',pos:'above'},
+      {target:null,title:'🎁 邀请好友',body:'分享邀请码，双方各得7天Pro体验！',pos:'center'},
+      {target:null,title:'📤 数据导出',body:'导出你的游戏数据，备份或分享给朋友。',pos:'center'}
+    ]
+  }
+};
+
+function getGuideProgress(){
+  return JSON.parse(localStorage.getItem(TUTORIAL_KEY)||'{}');
+}
+function markGuideDone(name){
+  let progress=getGuideProgress();
+  progress[name]=Date.now();
+  localStorage.setItem(TUTORIAL_KEY,JSON.stringify(progress));
+}
+function isGuideDone(name){
+  return!!getGuideProgress()[name];
+}
+
+var guideTut=null;
+var guideStep=0;
+
+function startGuide(name){
+  if(isGuideDone(name)){
+    var progress=getGuideProgress();
+    delete progress[name];
+    localStorage.setItem(TUTORIAL_KEY,JSON.stringify(progress));
+  }
+  let tut=TUTORIALS[name];
+  if(!tut)return;
+  guideTut=tut;
+  guideStep=0;
+  document.getElementById('guide-overlay').classList.add('active');
+  document.getElementById('guide-progress').classList.add('show');
+  showGuideStep();
+}
+
+function showGuideStep(){
+  if(!guideTut||guideStep>=guideTut.steps.length){
+    finishGuide();
+    return;
+  }
+  let step=guideTut.steps[guideStep];
+
+  // Update dots
+  let dots='';
+  for(let i=0;i<guideTut.steps.length;i++){
+    dots+='<div class="tt-dot'+(i===guideStep?' active':i<guideStep?' done':'')+'"></div>';
+  }
+  document.getElementById('tt-dots').innerHTML=dots;
+
+  // Update content
+  document.getElementById('tt-title').textContent=step.title;
+  document.getElementById('tt-body').textContent=step.body;
+  document.getElementById('tt-next').textContent=guideStep>=guideTut.steps.length-1?'完成 ✓':'下一步 →';
+
+  // Position spotlight and tooltip
+  let spotlight=document.getElementById('guide-spotlight');
+  let tooltip=document.getElementById('guide-tooltip');
+
+  tooltip.style.transform='none';
+  if(step.target){
+    let el=document.getElementById(step.target);
+    if(el){
+      let r=el.getBoundingClientRect();
+      spotlight.style.left=(r.left-8)+'px';
+      spotlight.style.top=(r.top-8)+'px';
+      spotlight.style.width=(r.width+16)+'px';
+      spotlight.style.height=(r.height+16)+'px';
+      spotlight.style.display='block';
+
+      // Position tooltip
+      if(step.pos==='below'){
+        tooltip.style.left=r.left+'px';
+        tooltip.style.top=(r.bottom+16)+'px';
+      } else if(step.pos==='above'){
+        tooltip.style.left=r.left+'px';
+        tooltip.style.top=(r.top-tooltip.offsetHeight-16)+'px';
+      } else if(step.pos==='right'){
+        tooltip.style.left=(r.right+16)+'px';
+        tooltip.style.top=r.top+'px';
+      } else if(step.pos==='left'){
+        tooltip.style.left=(r.left-tooltip.offsetWidth-16)+'px';
+        tooltip.style.top=r.top+'px';
+      } else if(step.pos==='center'){
+        tooltip.style.left='50%';
+        tooltip.style.top='50%';
+        tooltip.style.transform='translate(-50%,-50%)';
+      }
+    } else {
+      spotlight.style.display='none';
+      tooltip.style.left='50%';
+      tooltip.style.top='50%';
+      tooltip.style.transform='translate(-50%,-50%)';
+    }
+  } else {
+    spotlight.style.display='none';
+    tooltip.style.left='50%';
+    tooltip.style.top='50%';
+    tooltip.style.transform='translate(-50%,-50%)';
+  }
+}
+
+function nextGuideStep(){
+  guideStep++;
+  showGuideStep();
+}
+
+function skipGuide(){
+  finishGuide();
+}
+
+function finishGuide(){
+  if(guideTut){
+    markGuideDone(guideTut.name);
+  }
+  guideTut=null;
+  guideStep=0;
+  document.getElementById('guide-overlay').classList.remove('active');
+  document.getElementById('guide-progress').classList.remove('show');
+  try{showLearnToast('📖 教程完成','你可以随时在设置中重新查看教程',3000)}catch(e){}
+}
+
+// Auto-start welcome tutorial for first-time users
+function checkAutoGuide(){
+  let progress=getGuideProgress();
+  if(!progress['welcome']){
+    setTimeout(function(){startGuide('welcome')},2000);
+  }
+}
+
+// ============ FEATURE DISCOVERY TOASTS ============
+var FEATURE_DISCOVERY={
+  'defense_mode':{title:'🛡️ 防守模式已解锁！',text:'桥牌50%时间在防守。这个模式帮你练习防守技巧。'},
+  'puzzle_engine':{title:'🧩 做庄谜题已解锁！',text:'35个专业谜题，涵盖10种做庄技术。'},
+  'convention_trainer':{title:'📋 约定叫训练已解锁！',text:'学习Stayman、Jacoby Transfer等10种约定叫。'},
+  'lead_trainer':{title:'🎯 首攻训练已解锁！',text:'25个首攻场景，学习最重要的防守决策。'},
+  'tournament':{title:'🏆 锦标赛模式已解锁！',text:'连续打4副牌，体验正式比赛的感觉。'},
+  'weakness_diagnosis':{title:'🎯 弱点诊断已解锁！',text:'AI分析你的弱点，告诉你需要加强什么。'},
+  'adaptive_plan':{title:'📋 自适应训练已解锁！',text:'根据你的弱点自动生成训练计划。'}
+};
+
+function showFeatureDiscovery(key){
+  let done=JSON.parse(localStorage.getItem('bridge-discovery')||'{}');
+  if(done[key])return;
+  done[key]=Date.now();
+  localStorage.setItem('bridge-discovery',JSON.stringify(done));
+  let feat=FEATURE_DISCOVERY[key];
+  if(feat)try{showLearnToast(feat.title,feat.text,4000)}catch(e){}
 }
 </script>
 </body>
