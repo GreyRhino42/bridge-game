@@ -2148,6 +2148,46 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 .brand-watermark{position:fixed;bottom:4px;left:50%;transform:translateX(-50%);
   font-size:9px;color:rgba(255,255,255,.08);letter-spacing:2px;z-index:1;
   pointer-events:none;white-space:nowrap}
+/* ============ PUZZLE ENGINE ============ */
+#puzzle-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;align-items:center;justify-content:center}
+#puzzle-overlay.show{display:flex}
+#puzzle-panel{background:rgba(10,20,10,.97);border:1px solid rgba(255,213,79,.2);border-radius:20px;
+  padding:0;z-index:410;width:95vw;max-width:800px;max-height:90vh;overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,.7);display:flex;flex-direction:column}
+.pz-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+.pz-header h3{color:#ffd54f;font-size:17px}
+.pz-header button{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer}
+.pz-body{padding:16px 20px;overflow-y:auto;flex:1}
+.pz-info{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.pz-tag{padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.pz-contract{color:#ffd54f;border-color:rgba(255,213,79,.3)}
+.pz-technique{color:#81c784;border-color:rgba(76,175,80,.3)}
+.pz-difficulty{color:#ef5350;border-color:rgba(239,83,80,.3)}
+.pz-hands{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:8px;margin-bottom:12px}
+.pz-hand{text-align:center;padding:8px;border-radius:10px;background:rgba(255,255,255,.02)}
+.pz-hand-label{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:4px;text-transform:uppercase}
+.pz-hand-cards{font-size:12px;line-height:1.8}
+.pz-hand.n{grid-column:2}
+.pz-hand.s{grid-column:2;grid-row:3}
+.pz-hand.w{grid-column:1;grid-row:2}
+.pz-hand.e{grid-column:2;grid-row:2}
+.pz-challenge{padding:12px;background:rgba(255,213,79,.08);border:1px solid rgba(255,213,79,.15);border-radius:10px;margin-bottom:12px}
+.pz-challenge-title{font-size:13px;font-weight:700;color:#ffd54f;margin-bottom:4px}
+.pz-challenge-desc{font-size:12px;color:rgba(255,255,255,.7);line-height:1.5}
+.pz-hint{padding:10px;background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.15);border-radius:8px;font-size:12px;color:#90caf9;display:none;margin-bottom:12px}
+.pz-hint.show{display:block}
+.pz-solution{padding:10px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.15);border-radius:8px;font-size:12px;color:#81c784;display:none;margin-bottom:12px}
+.pz-solution.show{display:block}
+.pz-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pz-actions button{padding:8px 20px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.pz-hint-btn{background:rgba(33,150,243,.15);color:#64b5f6}
+.pz-solve-btn{background:rgba(76,175,80,.15);color:#81c784}
+.pz-next-btn{background:rgba(255,213,79,.15);color:#ffd54f}
+.pz-score{display:flex;justify-content:center;gap:20px;margin-bottom:12px;font-size:13px}
+.pz-score span{padding:4px 12px;border-radius:8px;background:rgba(255,255,255,.05)}
+.pz-categories{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.pz-cat{padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.6);transition:all .2s}
+.pz-cat.active{background:rgba(255,213,79,.15);border-color:rgba(255,213,79,.4);color:#ffd54f}
 </style>
 </head>
 <body>
@@ -2483,6 +2523,26 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     </div>
   </div>
   <!-- Tournament Overlay -->
+  <!-- Puzzle Overlay -->
+  <div id="puzzle-overlay">
+    <div id="puzzle-panel">
+      <div class="pz-header"><h3>🧩 做庄谜题</h3><button onclick="closePuzzle()">✕</button></div>
+      <div class="pz-body">
+        <div class="pz-categories" id="pz-categories"></div>
+        <div class="pz-score"><span>✅ <b id="pz-correct">0</b></span><span>📊 <b id="pz-total">0</b></span><span>🎯 <b id="pz-pct">0%</b></span></div>
+        <div class="pz-info" id="pz-info"></div>
+        <div class="pz-hands" id="pz-hands"></div>
+        <div class="pz-challenge" id="pz-challenge"></div>
+        <div class="pz-hint" id="pz-hint"></div>
+        <div class="pz-solution" id="pz-solution"></div>
+        <div class="pz-actions">
+          <button class="pz-hint-btn" onclick="showPuzzleHint()">💡 提示</button>
+          <button class="pz-solve-btn" onclick="showPuzzleSolution()">📖 看解答</button>
+          <button class="pz-next-btn" onclick="nextPuzzle()">下一题 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="tour-overlay">
     <div id="tour-panel">
       <h2 id="tour-title">🏆 锦标赛模式</h2>
@@ -2589,6 +2649,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     <button id="btn-dc" onclick="openDaily()">📅 每日挑战</button>
     <button id="btn-conv" onclick="openConvention()">📋 约定叫</button>
     <button id="btn-endgame" onclick="openEndgame()">🏁 残局</button>
+    <button id="btn-puzzle" onclick="openPuzzle()" style="padding:8px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;font-weight:700;transition:all .2s">🧩 做庄谜题</button>
     <button id="btn-tour" onclick="openTournament()">🏆 锦标赛</button>
     <button id="btn-history" onclick="openHistory()">📜 历史</button>
     <button id="btn-perf" onclick="openPerf()">📊 数据</button>
@@ -2992,7 +3053,7 @@ function init(){
   document.getElementById('btn-lead-trainer').style.display='';
   document.getElementById('btn-dc').style.display='';
   document.getElementById('btn-conv').style.display='';
-  document.getElementById('btn-endgame').style.display='';
+  document.getElementById('btn-puzzle').style.display='';document.getElementById('btn-endgame').style.display='';
   document.getElementById('btn-tour').style.display='';
   document.getElementById('btn-history').style.display='';
   document.getElementById('btn-perf').style.display='';
@@ -3075,7 +3136,7 @@ function startGame(){
   document.getElementById('btn-lead-trainer').style.display='none';
   document.getElementById('btn-dc').style.display='none';
   document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
   document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';
   document.getElementById('btn-perf').style.display='none';
@@ -8619,7 +8680,7 @@ function beginStoryLevel(levelId){
   document.getElementById('btn-lead-trainer').style.display='none';
   document.getElementById('btn-dc').style.display='none';
   document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
   document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';
   document.getElementById('btn-perf').style.display='none';
@@ -8910,7 +8971,7 @@ function completeStoryLevel(){
   document.getElementById('btn-lead-trainer').style.display='';
   document.getElementById('btn-dc').style.display='';
   document.getElementById('btn-conv').style.display='';
-  document.getElementById('btn-endgame').style.display='';
+  document.getElementById('btn-puzzle').style.display='';document.getElementById('btn-endgame').style.display='';
   document.getElementById('btn-tour').style.display='';
   document.getElementById('btn-history').style.display='';
   document.getElementById('btn-perf').style.display='';
@@ -8981,7 +9042,7 @@ function exitStoryMode(){
   document.getElementById('btn-lead-trainer').style.display='';
   document.getElementById('btn-dc').style.display='';
   document.getElementById('btn-conv').style.display='';
-  document.getElementById('btn-endgame').style.display='';
+  document.getElementById('btn-puzzle').style.display='';document.getElementById('btn-endgame').style.display='';
   document.getElementById('btn-tour').style.display='';
   document.getElementById('btn-history').style.display='';
   document.getElementById('btn-perf').style.display='';
@@ -9657,7 +9718,7 @@ function startJustPlay(){
   document.getElementById('btn-lead-trainer').style.display='none';
   document.getElementById('btn-dc').style.display='none';
   document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
   document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';
   document.getElementById('btn-perf').style.display='none';
@@ -9719,7 +9780,7 @@ function startDefenseMode(){
   document.getElementById('btn-lead-trainer').style.display='none';
   document.getElementById('btn-dc').style.display='none';
   document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
   document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';
   document.getElementById('btn-perf').style.display='none';
@@ -10239,7 +10300,7 @@ function startDailyChallenge(){
   document.getElementById('btn-go').style.display='none';document.getElementById('btn-story').style.display='none';
   document.getElementById('btn-just-play').style.display='none';document.getElementById('btn-defense').style.display='none';
   document.getElementById('btn-lead-trainer').style.display='none';document.getElementById('btn-dc').style.display='none';
-  document.getElementById('btn-conv').style.display='none';document.getElementById('btn-endgame').style.display='none';document.getElementById('btn-tour').style.display='none';
+  document.getElementById('btn-conv').style.display='none';document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';document.getElementById('btn-perf').style.display='none';
   init();G.dailyMode=true;G.round=1;
   try{updatePlayStreak();showStreakBadge()}catch(e){}
@@ -10608,6 +10669,431 @@ function selectEndgameCard(suit,rank){
   try{playSound(isCorrect?'trick':'card')}catch(e){}
 }
 
+// ============ DECLARER PLAY PUZZLE ENGINE ============
+var PUZZLE_CATEGORIES=['全部','飞牌','挤牌','投入','将吃','安全打法','交叉将吃','消去','终局','读牌'];
+var PUZZLE_CURRENT_CAT='全部';
+var PUZZLE_SCORE={correct:0,total:0};
+var PUZZLE_CURRENT=null;
+
+// Helper to create card objects
+function _pc(s,r){return {suit:s,rank:r}}
+function _h(){return Array.from(arguments)}
+
+var PUZZLES=[
+// === 飞牌技术 (Finesse) ===
+{cat:'飞牌',diff:1,title:'基础飞牌',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K')],
+ N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+ E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5')],
+ W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'4♠定约，需要10墩。你有♠AKQJ10五张顶张将牌。请规划做庄路线。',
+ hint:'♠已经是5个铁赢张，不需要飞牌。先清将，再兑现其他花色顶张。数赢墩：♠5+♥3+♦3+♣2=13墩。',
+ solution:'♠AKQJ10=5个赢张，♥AKQ=3个，♦AKQ=3个，♣AK=2个，共13墩。做庄路线：先用♠清5轮将牌，然后兑现♥AKQ、♦AKQ、♣AK即可轻松完成定约，还有3个超额赢墩。'},
+
+{cat:'飞牌',diff:2,title:'双向飞牌选择',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','5'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','4'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','4')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','6'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'3NT定约，需要9墩。你有♦AKQJ10五连张大牌。怎样规划做庄路线？',
+ hint:'♦已有5个铁赢张。其他花色还有：♠AK=2墩，♥AKQ=3墩，♣AK(明手)=2墩。总计12墩！先打♦看能否建立更多。',
+ solution:'赢墩计算：♦AKQJ10=5墩，♠AK=2墩，♥AKQ=3墩，♣AK=2墩，共12墩。做庄路线：先兑现♦AKQJ10五轮清光方块，再兑现♠AK、♥AKQ、♣AK。安全打法是先兑现长套赢张。超额3墩！'},
+
+{cat:'飞牌',diff:3,title:'深飞与安全打法',contract:'6♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','A'),_pc('♦','K'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'6♥小满贯，需要12墩。你有♥AKQJ109六张将牌，怎样安全地拿到12墩？',
+ hint:'♥6张大牌已是6个赢张。还需6墩：♠AK=2，♦AKQ=3，♣AKQ=3，共14个赢张！安全打法是先清将再兑现。',
+ solution:'赢墩：♥AKQJ109=6墩，♠AK=2墩，♦AKQ=3墩，♣AKQ=3墩，共14墩。做庄：先用♥清6轮将牌，再兑现其他顶张。超额2墩完成小满贯！'},
+
+{cat:'飞牌',diff:4,title:'将牌飞牌',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','7'),_pc('♠','6'),_pc('♠','5'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'4♠定约，需要10墩。将牌♠只有AKQJ四张顶张。怎样打将牌？',
+ hint:'♠AKQJ是4个将牌赢张。还有♥AKQ=3墩，♦AKQ=3墩，♣AKQ=3墩。总共13墩！不需要飞牌。',
+ solution:'赢墩：♠AKQJ=4墩，♥AKQ=3墩，♦AKQ=3墩，♣AKQ=3墩，共13墩。先清4轮将牌，再兑现其他花色顶张。超额3墩完成！'},
+
+// === 挤牌技术 (Squeeze) ===
+{cat:'挤牌',diff:3,title:'单挤入门',contract:'6NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'6NT小满贯，需要12墩。你有大量顶张。怎样确保12墩？',
+ hint:'数赢墩：♠AK+♥AKQ+♦AKQJ+♣AKQ=13墩。超额完成！',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AKQ=3墩，共12墩。正好完成6NT！先兑现长套♦，再兑现其他花色。'},
+
+{cat:'挤牌',diff:4,title:'维也纳妙招',contract:'6♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♣','A'),_pc('♣','K')],
+ N:[_pc('♠','7'),_pc('♠','6'),_pc('♠','5'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+ E:[_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','10'),_pc('♦','9'),_pc('♦','8'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5')],
+ W:[_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','7'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'6♠小满贯，需要12墩。你有♠8张大牌，怎样确保完成？',
+ hint:'♠8张已是8个赢张。还需4墩：♥AKQ=3墩，♦AK+♣AK=4墩。总计15墩！先清将再兑现。',
+ solution:'赢墩：♠AKQJ1098=7墩(8张去掉一张小的)，♥AKQ=3墩，♦A=1墩，♣AK=2墩，共13墩。超额完成！做庄：先清将牌，再兑现其他花色。'},
+
+{cat:'挤牌',diff:5,title:'双挤练习',contract:'7NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'7NT大满贯！需要13墩。你有全部顶张大牌。能拿到13墩吗？',
+ hint:'数赢墩：♠AKQ+♥AKQ+♦AKQJ+♣AKQ=13墩！正好13墩。',
+ solution:'赢墩：♠AKQ=3墩，♥AKQ=3墩，♦AKQJ=4墩，♣AKQ=3墩，共13墩。正好完成7NT大满贯！按顺序兑现所有大牌即可。'},
+
+// === 投入技术 (Endplay) ===
+{cat:'投入',diff:3,title:'投入法基础',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ N:[_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','7'),_pc('♠','6'),_pc('♠','5'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'3NT定约，需要9墩。你有♠AKQJ、♥AKQ、♦AKQ、♣AK(明手)。怎样拿到9墩？',
+ hint:'数赢墩：♠AKQJ=4墩，♥AKQ=3墩，♦AKQ=3墩，♣AK=2墩。共12墩！超额完成。',
+ solution:'赢墩：♠AKQJ=4墩，♥AKQ=3墩，♦AKQ=3墩，♣AK=2墩，共12墩。做庄路线：直接兑现所有顶张大牌。超额3墩！不需要投入法。'},
+
+{cat:'投入',diff:4,title:'终局投入',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'3NT定约，需要9墩。怎样利用投入法获得额外赢墩？',
+ hint:'已有赢墩：♠AK+♥AKQ+♦AKQJ+♣AK(明手)=12墩。先兑现长套赢张。',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AK=2墩，共11墩。做庄：先兑现♦长套，观察防守方信号，再兑现其他花色。超额2墩。'},
+
+// === 将吃技术 (Ruffing) ===
+{cat:'将吃',diff:2,title:'短套将吃',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♥','A'),_pc('♥','K'),_pc('♦','A'),_pc('♦','K'),_pc('♣','3'),_pc('♣','2')],
+ N:[_pc('♠','7'),_pc('♠','6'),_pc('♠','5'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ challenge:'4♠定约，需要10墩。你有♠8张大牌。怎样利用将吃？',
+ hint:'♠8张已是8个赢张。还需2墩：♥AK=2墩。总计10墩！先清将再兑现。',
+ solution:'赢墩：♠AKQJ1098=8墩(但只有7张)，实际♠7个赢张+♥AK=2墩+♦AK=2墩+♣AK(明手)=2墩，共13墩。先清将牌(打3轮♠)，再兑现其他花色。超额3墩！'},
+
+{cat:'将吃',diff:3,title:'交叉将吃',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9')],
+ N:[_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+ E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♦','5'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6')],
+ W:[_pc('♠','3'),_pc('♠','2'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'4♥定约，需要10墩。你有♥AKQJ109六张将牌和♦AKQJ10五张。怎样利用交叉将吃？',
+ hint:'♥6张大牌=6个赢张，♦AKQJ10=5个赢张。但打♦可能被将吃。考虑交叉将吃：先拔♦A，再用♠将吃♦。',
+ solution:'赢墩：♥AKQJ109=6墩，♦A=1墩，♠A=1墩，♣AK(明手)=2墩，共10墩。做庄路线：先兑现♠A、♣AK、♦A，然后用将牌交叉将吃♠和♣，最后清将。安全完成！'},
+
+{cat:'交叉将吃',diff:3,title:'交叉将吃做庄',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','10'),_pc('♥','9'),_pc('♥','8'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','7'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6')],
+ challenge:'4♠定约，需要10墩。你有♠AKQJ10五张将牌。怎样利用交叉将吃？',
+ hint:'♠5张大牌=5个赢张。还有♥A、♦AKQ、♣AK(明手)=7个赢张。总计12墩！先兑现边花顶张再清将。',
+ solution:'赢墩：♠AKQJ10=5墩，♥A=1墩，♦AKQ=3墩，♣AK=2墩，共11墩。做庄：先兑现♣AK、♦AKQ、♥A，然后用♠清将。超额1墩完成！'},
+
+// === 安全打法 (Safety Play) ===
+{cat:'安全打法',diff:3,title:'安全打法基础',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'4♥定约，需要10墩。你有♥AKQJ10五张将牌。怎样安全地拿到10墩？',
+ hint:'♥5张大牌=5个赢张。还有♠AK=2墩，♦AKQ=3墩，♣AK(明手)=2墩。共12墩！安全打法：先兑现确定的赢墩。',
+ solution:'赢墩：♥AKQJ10=5墩，♠AK=2墩，♦AKQ=3墩，♣AK=2墩，共12墩。安全打法：先兑现♠AK、♦AKQ、♣AK，再清将牌♥。这样即使将牌分布不均也不会出问题。超额2墩！'},
+
+{cat:'安全打法',diff:4,title:'安全打法选择',contract:'6NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'6NT小满贯，需要12墩。你有大量顶张大牌。怎样安全地完成？',
+ hint:'数赢墩：♠AK+♥AKQ+♦AKQJ+♣AKQ=12墩。正好12墩！按顺序兑现即可。',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AKQ=3墩，共12墩。安全打法：按花色顺序兑现所有大牌。先打最长的♦套(4个赢张)，再兑现其他。正好完成6NT！'},
+
+// === 消去技术 (Elimination) ===
+{cat:'消去',diff:3,title:'消去打法',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6')],
+ challenge:'3NT定约，需要9墩。怎样利用消去打法获得更多赢墩？',
+ hint:'已有赢墩：♠AKQ+♥AKQ+♦AKQ+♣AK(明手)=11墩。先消去短花色。',
+ solution:'赢墩：♠AKQ=3墩，♥AKQ=3墩，♦AKQ=3墩，♣AK=2墩，共11墩。消去打法：先兑现♣AK(明手短套)，再兑现其他花色。超额2墩完成！'},
+
+{cat:'消去',diff:4,title:'消去投入',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♥','A'),_pc('♥','K'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','7'),_pc('♠','6'),_pc('♠','5'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6')],
+ challenge:'3NT定约，需要9墩。你有♠AKQJ四张顶张。怎样利用消去打法？',
+ hint:'已有赢墩：♠AKQJ=4墩，♥AK=2墩，♦AKQ=3墩，♣AK(明手)=2墩。共11墩！',
+ solution:'赢墩：♠AKQJ=4墩，♥AK=2墩，♦AKQ=3墩，♣AK=2墩，共11墩。消去打法：先兑现♣AK(消去明手短套)，再兑现♠AKQJ，最后兑现♥AK和♦AKQ。超额2墩！'},
+
+// === 终局技术 (End Game) ===
+{cat:'终局',diff:4,title:'终局打法',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'3NT定约，需要9墩。怎样利用终局打法获得关键赢墩？',
+ hint:'已有赢墩：♠AK+♥AKQ+♦AKQJ+♣AK(明手)=11墩。先兑现长套♦。',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AK=2墩，共11墩。终局打法：先兑现♦长套(4轮)，观察防守方信号，再兑现其他花色。超额2墩完成！'},
+
+{cat:'终局',diff:5,title:'终局挤投',contract:'6♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♣','3'),_pc('♣','2')],
+ N:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ challenge:'6♠小满贯，需要12墩。你有♠AKQJ109六张将牌。怎样确保完成？',
+ hint:'♠6张大牌=6个赢张。还需6墩：♥AKQ=3墩，♦AK=2墩，♣AK(明手)=2墩。共13墩！',
+ solution:'赢墩：♠AKQJ109=6墩，♥AKQ=3墩，♦AK=2墩，♣AK=2墩，共13墩。做庄：先清将牌♠(6轮)，再兑现♥AKQ、♦AK、♣AK。超额1墩完成小满贯！'},
+
+// === 读牌技术 (Card Reading) ===
+{cat:'读牌',diff:3,title:'读牌推理基础',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'3NT定约，需要9墩。通过读牌推理规划做庄路线。',
+ hint:'读牌：从出牌信号判断防守方牌型分布。数赢墩：♠AK+♥AKQ+♦AKQJ+♣AK(明手)=12墩。',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AK=2墩，共11墩。读牌推理：观察防守方跟牌信号，判断关键牌位置。先兑现♦长套，再根据信号决定后续打法。超额2墩！'},
+
+{cat:'读牌',diff:4,title:'高级读牌',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','A'),_pc('♦','K'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'4♥定约，需要10墩。你有♥AKQJ10五张将牌。通过读牌规划做庄。',
+ hint:'♥5张大牌=5个赢张。还有♠AKQ=3墩，♦AK=2墩，♣AK(明手)=2墩。共12墩！读牌：观察防守方信号判断牌型。',
+ solution:'赢墩：♥AKQJ10=5墩，♠AKQ=3墩，♦AK=2墩，♣AK=2墩，共12墩。读牌技巧：先兑现♠AKQ，观察防守方跟牌，判断♠分布。再清将牌♥，最后兑现♦AK和♣AK。超额2墩完成！'},
+
+// === 更多飞牌技术 ===
+{cat:'飞牌',diff:2,title:'简单飞牌',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','A'),_pc('♦','K'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+ challenge:'4♥定约，需要10墩。你有♥AKQJ10五张将牌。怎样完成定约？',
+ hint:'♥5张大牌=5个赢张。还有♠AK=2墩，♦AKQ=3墩，♣AKQJ=4墩。共14墩！',
+ solution:'赢墩：♥AKQJ10=5墩，♠AK=2墩，♦AKQ=3墩，♣AKQJ=4墩，共14墩。做庄：先清将牌♥(5轮)，再兑现其他花色顶张。超额4墩完成！'},
+
+{cat:'飞牌',diff:3,title:'复合飞牌',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6')],
+ challenge:'3NT定约，需要9墩。你有♠AKQ、♥AKQ、♦AKQ。怎样规划？',
+ hint:'每门花色AKQ=3墩，三门共9墩！正好完成3NT。还有♣AK(明手)作为额外赢墩。',
+ solution:'赢墩：♠AKQ=3墩，♥AKQ=3墩，♦AKQ=3墩，共9墩。正好完成3NT！做庄：按花色顺序兑现AKQ。如果有额外赢墩(♣AK)则是超额。'},
+
+// === 更多挤牌 ===
+{cat:'挤牌',diff:4,title:'自动挤牌',contract:'6NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','3'),_pc('♣','2')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ challenge:'6NT小满贯，需要12墩。怎样利用自动挤牌确保完成？',
+ hint:'数赢墩：♠AKQ+♥AKQ+♦AKQJ+♣AK(明手)=12墩。正好12墩！',
+ solution:'赢墩：♠AKQ=3墩，♥AKQ=3墩，♦AKQJ=4墩，♣AK=2墩，共12墩。自动挤牌：先兑现♦长套(4轮)，防守方会被挤牌。再兑现其他花色。正好完成6NT！'},
+
+// === 更多投入 ===
+{cat:'投入',diff:3,title:'将吃投入',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','A'),_pc('♥','K'),_pc('♦','A'),_pc('♦','K'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','2'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'4♠定约，需要10墩。你有♠AKQJ109六张将牌。怎样利用将吃投入？',
+ hint:'♠6张大牌=6个赢张。还需4墩：♥AK=2墩，♦AK=2墩，♣AK(明手)=2墩。共12墩！',
+ solution:'赢墩：♠AKQJ109=6墩，♥AK=2墩，♦AK=2墩，♣AK=2墩，共12墩。将吃投入：先兑现♣AK(明手)，再清将牌♠，最后兑现♥AK和♦AK。超额2墩完成！'},
+
+// === 更多消去 ===
+{cat:'消去',diff:3,title:'消去法练习',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','A'),_pc('♦','K'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+ challenge:'4♥定约，需要10墩。你有♥AKQJ10五张将牌。怎样利用消去打法？',
+ hint:'♥5张大牌=5个赢张。还有♠AK=2墩，♦AKQ=3墩，♣AKQJ=4墩。共14墩！消去短花色后投入防守方。',
+ solution:'赢墩：♥AKQJ10=5墩，♠AK=2墩，♦AKQ=3墩，♣AKQJ=4墩，共14墩。消去打法：先兑现♠AK(消去短花色)，再清将牌♥，最后兑现♦AKQ和♣AKQJ。超额4墩！'},
+
+// === 更多终局 ===
+{cat:'终局',diff:4,title:'终局妙招',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','3'),_pc('♣','2'),_pc('♣','2')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','6'),_pc('♣','5')],
+ challenge:'3NT定约，需要9墩。怎样利用终局妙招获得额外赢墩？',
+ hint:'已有赢墩：♠AKQ+♥AK+♦AKQJ+♣AK(明手)=11墩。先兑现长套♦。',
+ solution:'赢墩：♠AKQ=3墩，♥AK=2墩，♦AKQJ=4墩，♣AK=2墩，共11墩。终局打法：先兑现♦AKQJ(4轮)，观察防守方信号。再兑现♠AKQ、♥AK、♣AK。超额2墩完成！'},
+
+// === 更多读牌 ===
+{cat:'读牌',diff:5,title:'高级读牌推理',contract:'6NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'6NT小满贯，需要12墩。通过高级读牌推理规划做庄路线。',
+ hint:'读牌：观察防守方信号，判断关键牌位置。数赢墩：♠AK+♥AKQ+♦AKQJ+♣AKQ=12墩。',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AKQ=3墩，共12墩。高级读牌：先兑现♦长套(4轮)，观察防守方跟牌信号。根据信号判断♦分布，决定是否需要飞牌。再兑现其他花色。正好完成6NT！'},
+
+// === 额外技术练习 ===
+{cat:'飞牌',diff:1,title:'赢墩计算',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+ challenge:'3NT定约，需要9墩。你有全部AKQ。数一数有多少赢墩？',
+ hint:'每门花色AKQ=3墩，四门共12墩！超过9墩的需要。',
+ solution:'赢墩：♠AKQ=3墩，♥AKQ=3墩，♦AKQ=3墩，♣AKQJ=4墩，共13墩。做庄：直接兑现所有顶张大牌。超额4墩完成3NT！'},
+
+{cat:'将吃',diff:2,title:'将吃基础',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'4♠定约，需要10墩。你有♠AKQJ10五张将牌。怎样完成？',
+ hint:'♠5张大牌=5个赢张。还有♥AK=2墩，♦AKQ=3墩，♣AKQ=3墩。共13墩！先清将再兑现。',
+ solution:'赢墩：♠AKQJ10=5墩，♥AK=2墩，♦AKQ=3墩，♣AKQ=3墩，共13墩。做庄：先清将牌♠(5轮)，再兑现♥AK、♦AKQ、♣AKQ。超额3墩完成！'},
+
+{cat:'安全打法',diff:2,title:'安全打法入门',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'4♥定约，需要10墩。怎样安全地拿到10墩？',
+ hint:'♥5张大牌=5个赢张。还有♠AK=2墩，♦AKQ=3墩，♣AKQ=3墩。共13墩！安全打法：先兑现边花顶张。',
+ solution:'赢墩：♥AKQJ10=5墩，♠AK=2墩，♦AKQ=3墩，♣AKQ=3墩，共13墩。安全打法：先兑现♠AK、♦AKQ、♣AKQ，再清将牌♥。这样避免被将吃的风险。超额3墩！'},
+
+{cat:'挤牌',diff:3,title:'挤牌基础',contract:'6NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'6NT小满贯，需要12墩。怎样利用挤牌确保完成？',
+ hint:'数赢墩：♠AK+♥AKQ+♦AKQJ+♣AKQ=12墩。正好12墩！按顺序兑现。',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AKQ=3墩，共12墩。做庄：先兑现♦长套(4轮)，防守方会被挤牌。再兑现其他花色。正好完成6NT！'},
+
+{cat:'读牌',diff:2,title:'读牌入门',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ N:[_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ E:[_pc('♠','8'),_pc('♠','7'),_pc('♠','6'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+ W:[_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+ challenge:'3NT定约，需要9墩。通过读牌规划做庄路线。',
+ hint:'读牌：观察防守方出牌，判断关键牌位置。数赢墩：每门AKQ=3墩，共12墩。',
+ solution:'赢墩：♠AKQ=3墩，♥AKQ=3墩，♦AKQ=3墩，♣AKQJ=4墩，共13墩。读牌入门：先兑现♣长套(4轮)，观察防守方信号。再兑现其他花色。超额4墩完成！'},
+
+{cat:'消去',diff:2,title:'消去入门',contract:'4♠',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','A'),_pc('♥','K'),_pc('♦','A'),_pc('♦','K'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J')],
+ N:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8'),_pc('♣','7')],
+ E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♥','9'),_pc('♥','8'),_pc('♥','7'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3')],
+ W:[_pc('♠','3'),_pc('♠','2'),_pc('♥','6'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♣','2')],
+ challenge:'4♠定约，需要10墩。你有♠AKQJ10五张将牌。怎样利用消去打法？',
+ hint:'♠5张大牌=5个赢张。还有♥AK=2墩，♦AK=2墩，♣AKQJ=4墩。共13墩！消去短花色后投入。',
+ solution:'赢墩：♠AKQJ10=5墩，♥AK=2墩，♦AK=2墩，♣AKQJ=4墩，共13墩。消去打法：先兑现♥AK(消去短花色)，再清将牌♠，最后兑现♦AK和♣AKQJ。超额3墩！'},
+
+{cat:'终局',diff:3,title:'终局基础',contract:'3NT',declarer:'S',
+ S:[_pc('♠','A'),_pc('♠','K'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q')],
+ N:[_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9'),_pc('♦','9'),_pc('♦','8'),_pc('♦','7'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9'),_pc('♣','8')],
+ E:[_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♦','6'),_pc('♦','5'),_pc('♦','4'),_pc('♣','7'),_pc('♣','6'),_pc('♣','5'),_pc('♣','4')],
+ W:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♠','3'),_pc('♠','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♦','3'),_pc('♦','2'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'3NT定约，需要9墩。怎样利用终局打法获得关键赢墩？',
+ hint:'已有赢墩：♠AK+♥AKQ+♦AKQJ+♣AKQ=13墩。超额完成！',
+ solution:'赢墩：♠AK=2墩，♥AKQ=3墩，♦AKQJ=4墩，♣AKQ=3墩，共12墩。终局打法：先兑现♦长套(4轮)，观察防守方信号。再兑现其他花色。超额3墩完成！'},
+
+{cat:'交叉将吃',diff:4,title:'交叉将吃高级',contract:'4♥',declarer:'S',
+ S:[_pc('♠','A'),_pc('♦','A'),_pc('♦','K'),_pc('♦','Q'),_pc('♦','J'),_pc('♦','10'),_pc('♦','9'),_pc('♥','A'),_pc('♥','K'),_pc('♥','Q'),_pc('♥','J'),_pc('♥','10'),_pc('♥','9')],
+ N:[_pc('♠','K'),_pc('♠','Q'),_pc('♠','J'),_pc('♠','10'),_pc('♠','9'),_pc('♠','8'),_pc('♠','7'),_pc('♣','A'),_pc('♣','K'),_pc('♣','Q'),_pc('♣','J'),_pc('♣','10'),_pc('♣','9')],
+ E:[_pc('♠','6'),_pc('♠','5'),_pc('♠','4'),_pc('♦','8'),_pc('♦','7'),_pc('♦','6'),_pc('♦','5'),_pc('♥','8'),_pc('♥','7'),_pc('♥','6'),_pc('♣','8'),_pc('♣','7'),_pc('♣','6')],
+ W:[_pc('♠','3'),_pc('♠','2'),_pc('♦','4'),_pc('♦','3'),_pc('♦','2'),_pc('♥','5'),_pc('♥','4'),_pc('♥','3'),_pc('♥','2'),_pc('♣','5'),_pc('♣','4'),_pc('♣','3'),_pc('♣','2')],
+ challenge:'4♥定约，需要10墩。你有♥AKQJ109六张将牌和♦AKQJ10五张。怎样利用交叉将吃？',
+ hint:'♥6张大牌=6个赢张，♦AKQJ10=5个赢张。但打♦可能被将吃。考虑交叉将吃。',
+ solution:'赢墩：♥AKQJ109=6墩，♦A=1墩，♠A=1墩，♣AK(明手)=2墩，共10墩。交叉将吃：先兑现♠A、♣AK、♦A，然后用将牌交叉将吃♠和♣，最后清将。安全完成！'}
+];
+
+function openPuzzle(){
+  document.getElementById('puzzle-overlay').classList.add('show');
+  PUZZLE_SCORE={correct:0,total:0};
+  renderPuzzleCategories();
+  nextPuzzle();
+}
+function closePuzzle(){document.getElementById('puzzle-overlay').classList.remove('show')}
+
+function renderPuzzleCategories(){
+  let html='';
+  PUZZLE_CATEGORIES.forEach(c=>{
+    html+='<button class="pz-cat'+(c===PUZZLE_CURRENT_CAT?' active':'')+'" onclick="filterPuzzle(\''+c+'\')">'+c+'</button>';
+  });
+  document.getElementById('pz-categories').innerHTML=html;
+}
+function filterPuzzle(cat){
+  PUZZLE_CURRENT_CAT=cat;
+  renderPuzzleCategories();
+  nextPuzzle();
+}
+
+function nextPuzzle(){
+  let filtered=PUZZLE_CURRENT_CAT==='全部'?PUZZLES:PUZZLES.filter(p=>p.cat===PUZZLE_CURRENT_CAT);
+  if(!filtered.length)return;
+  let pz=filtered[Math.floor(Math.random()*filtered.length)];
+  PUZZLE_CURRENT=pz;
+  
+  // Info tags
+  let info='<span class="pz-tag pz-contract">📜 '+pz.contract+' ('+PN[pz.declarer]+'主打)</span>';
+  info+='<span class="pz-tag pz-technique">🔧 '+pz.cat+'</span>';
+  let stars='';for(let i=0;i<pz.diff;i++)stars+='⭐';
+  info+='<span class="pz-tag pz-difficulty">'+stars+'</span>';
+  document.getElementById('pz-info').innerHTML=info;
+  
+  // Hands
+  let hands='';
+  [['N','n'],['S','s'],['W','w'],['E','e']].forEach(([pos,cls])=>{
+    let cards=pz[pos];
+    let grouped={};S4.forEach(s=>grouped[s]=[]);
+    cards.forEach(c=>{if(grouped[c.suit])grouped[c.suit].push(c.rank)});
+    let cardHtml='';
+    S4.forEach(s=>{
+      let color=SC[s]==='red'?'#ef9a9a':'#bbb';
+      cardHtml+='<div><span style="color:'+color+'">'+s+'</span> <span style="color:rgba(255,255,255,.7)">'+grouped[s].join(' ')+'</span></div>';
+    });
+    hands+='<div class="pz-hand '+cls+'"><div class="pz-hand-label">'+PN[pos]+'</div><div class="pz-hand-cards">'+cardHtml+'</div></div>';
+  });
+  document.getElementById('pz-hands').innerHTML=hands;
+  
+  // Challenge
+  document.getElementById('pz-challenge').innerHTML='<div class="pz-challenge-title">🎯 挑战</div><div class="pz-challenge-desc">'+pz.challenge+'</div>';
+  
+  // Hide hint/solution
+  document.getElementById('pz-hint').classList.remove('show');
+  document.getElementById('pz-solution').classList.remove('show');
+  
+  updatePuzzleScore();
+}
+
+function showPuzzleHint(){
+  if(!PUZZLE_CURRENT)return;
+  let el=document.getElementById('pz-hint');
+  el.innerHTML='💡 <b>提示：</b>'+PUZZLE_CURRENT.hint;
+  el.classList.add('show');
+}
+function showPuzzleSolution(){
+  if(!PUZZLE_CURRENT)return;
+  PUZZLE_SCORE.total++;
+  PUZZLE_SCORE.correct++;
+  let el=document.getElementById('pz-solution');
+  el.innerHTML='📖 <b>解答：</b>'+PUZZLE_CURRENT.solution;
+  el.classList.add('show');
+  updatePuzzleScore();
+  try{showLearnToast('📖 解答已显示','理解后点击下一题继续',2000)}catch(e){}
+}
+function updatePuzzleScore(){
+  document.getElementById('pz-correct').textContent=PUZZLE_SCORE.correct;
+  document.getElementById('pz-total').textContent=PUZZLE_SCORE.total;
+  document.getElementById('pz-pct').textContent=(PUZZLE_SCORE.total>0?Math.round(PUZZLE_SCORE.correct/PUZZLE_SCORE.total*100):0)+'%';
+}
+
+
+
 // ============ TOURNAMENT MODE ============
 var TOUR={hands:[],scores:[],current:0,total:0,results:[]};
 
@@ -10636,7 +11122,7 @@ function startTournament(){
   document.getElementById('btn-lead-trainer').style.display='none';
   document.getElementById('btn-dc').style.display='none';
   document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
   document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';
   document.getElementById('btn-perf').style.display='none';
@@ -12779,7 +13265,7 @@ function quickPlay(){
   try{document.getElementById('btn-lead-trainer').style.display='none'}catch(e){}
   try{document.getElementById('btn-dc').style.display='none'}catch(e){}
   try{document.getElementById('btn-conv').style.display='none'}catch(e){}
-  try{document.getElementById('btn-endgame').style.display='none'}catch(e){}
+  try{document.getElementById('btn-puzzle').style.display='none'}catch(e){}try{document.getElementById('btn-endgame').style.display='none'}catch(e){}
   try{document.getElementById('btn-tour').style.display='none'}catch(e){}
   try{document.getElementById('btn-history').style.display='none'}catch(e){}
   try{document.getElementById('btn-perf').style.display='none'}catch(e){}
@@ -13075,7 +13561,7 @@ function startRubberBridge(){
   document.getElementById('btn-lead-trainer').style.display='none';
   document.getElementById('btn-dc').style.display='none';
   document.getElementById('btn-conv').style.display='none';
-  document.getElementById('btn-endgame').style.display='none';
+  document.getElementById('btn-puzzle').style.display='none';document.getElementById('btn-endgame').style.display='none';
   document.getElementById('btn-tour').style.display='none';
   document.getElementById('btn-history').style.display='none';
   document.getElementById('btn-perf').style.display='none';
