@@ -2083,7 +2083,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 
 /* ============ FEATURE: CARD ANIMATION SMOOTHNESS ============ */
 .card{transition:transform .2s ease,box-shadow .2s ease,filter .2s ease,opacity .2s ease}
-#south-cards .card{transition:transform .15s cubic-bezier(.4,0,.2,1),box-shadow .15s ease}
+#hand-S .card{transition:transform .15s cubic-bezier(.4,0,.2,1),box-shadow .15s ease}
 .card-enter{animation:cardEnter .3s cubic-bezier(.175,.885,.32,1.275)}
 @keyframes cardEnter{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
 .trick-card{animation:trickLand .25s ease-out}
@@ -2100,7 +2100,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
   .card{min-width:44px;min-height:44px}
   button{min-height:44px}
   .tool-btn{min-width:44px;min-height:44px;font-size:16px}
-  #south-cards .card{margin:0 2px}
+  #hand-S .card{margin:0 2px}
   .lt-card-btn,.conv-opt,.eg-card-opt{min-height:44px;padding:10px 16px}
   #pro-banner{font-size:12px;padding:8px 16px}
   #eval-bar{width:20px;height:150px}
@@ -3276,35 +3276,6 @@ function getLastNonPass(){
     if(G.bids[i].bid!=='Pass')return G.bids[i];
   }
   return null;
-}
-function getBidExplanation(bid,pos){
-  if(bid==='Pass')return '不叫';
-  if(bid==='X')return '技术性加倍\n12+HCP，对未叫花色有支持';
-  if(bid==='XX')return '再加倍\n惩罚性，对定约有信心';
-  let suit=bid.slice(1),lv=+bid[0];
-  let suitCN=suit==='NT'?'无将':SN[suit];
-  let partner={'S':'N','N':'S','E':'W','W':'E'}[pos];
-  let realBids=G.bids.filter(b=>b.bid!=='Pass'&&b.bid!=='X'&&b.bid!=='XX');
-  let partnerHasBid=realBids.some(b=>b.pos===partner);
-  let context=realBids.length===0?'开叫':partnerHasBid?'应叫':'争叫';
-  let desc;
-  if(suit==='NT'){
-    if(lv===1)desc='15-17HCP，均型牌';
-    else if(lv===2)desc='20-21HCP，均型牌';
-    else if(lv===3)desc='25-27HCP，均型牌';
-    else desc='均型牌';
-  }else{
-    if(context==='开叫'){
-      if(lv===1)desc='12+HCP，5+'+suitCN+'套';
-      else if(lv===2)desc='强二开叫，8+赢墩';
-      else desc='阻击叫';
-    }else if(context==='应叫'){
-      desc='加叫，10+HCP，3+支持';
-    }else{
-      desc='争叫，10+HCP，5+'+suitCN+'套';
-    }
-  }
-  return context+bid+'：'+desc;
 }
 function showTooltip(btn,bid,pos){
   let tip=document.getElementById('bid-tooltip');
@@ -8632,7 +8603,7 @@ const STORY_LEVELS={
     guidance:[
       {type:'intro',text:'🧮 你主打大满贯7NT！需要赢全部13墩，有信心吗？'},
       {type:'explain',text:'💡 你有超强牌力，先出掉大牌消耗对手的牌。一步一步来！'},
-      {type:'highlight',target:'south-cards',text:'先出♠A开始！'},
+      {type:'highlight',target:'hand-S',text:'先出♠A开始！'},
       {type:'prompt',text:'出♠A！',validate:'spade-A'},
       {type:'complete',text:'🎉 大满贯！你已经学会了读牌计算，强牌时要确保赢墩数量够。'}
     ],
@@ -8672,7 +8643,7 @@ const STORY_LEVELS={
     guidance:[
       {type:'intro',text:'🏁 最后一关！你主打6NT小满贯，需要赢12墩！'},
       {type:'explain',text:'💡 用终局打法：先出掉其他赢墩，最后用♦投入对手，让他们被迫送墩。'},
-      {type:'highlight',target:'south-cards',text:'先出♠A！消耗对手的♠。'},
+      {type:'highlight',target:'hand-S',text:'先出♠A！消耗对手的♠。'},
       {type:'prompt',text:'出♠A！',validate:'spade-A'},
       {type:'complete',text:'🏆 恭喜通关！你已经掌握了桥牌的核心技巧，去正常游戏模式大展身手吧！'}
     ],
@@ -8926,7 +8897,7 @@ function highlightStoryCards(target){
     let suitText=c.querySelector('.s');
     if(!suitText)return;
     let suit=suitText.textContent;
-    if(target==='south-cards'||target==='south-j-spade'){
+    if(target==='hand-S'||target==='south-j-spade'){
       c.classList.add('recommended');
     } else if(targetSuit&&suit===targetSuit){
       c.classList.add('recommended');
@@ -13124,7 +13095,7 @@ function trackEvent(category,action,label){
     localStorage.setItem('bridge-events',JSON.stringify(events));
   }catch(e){}
 }
-function getAnalytics(){
+function getProAnalytics(){
   let events=JSON.parse(localStorage.getItem('bridge-events')||'[]');
   return{
     totalEvents:events.length,
@@ -14299,7 +14270,7 @@ function showQuickActions(x,y){
   setTimeout(function(){menu.remove()},5000);
 }
 document.addEventListener('contextmenu',function(e){
-  if(e.target.closest('#south-cards')||e.target.closest('#table')){
+  if(e.target.closest('#hand-S')||e.target.closest('#table')){
     e.preventDefault();
     showQuickActions(e.clientX,e.clientY);
   }
