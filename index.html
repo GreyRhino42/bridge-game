@@ -2116,6 +2116,20 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 @keyframes loadingPulse{0%,100%{opacity:.3}50%{opacity:1}}
 .loading-text{color:#ffd54f;font-size:18px;font-weight:700;letter-spacing:2px}
 .loading-sub{color:rgba(255,255,255,.4);font-size:12px;margin-top:8px}
+
+/* ============ FEATURE: Trick Animation Enhancement ✨ ============ */
+@keyframes cardFlyToCenter{
+  0%{transform:translate(var(--fly-x),var(--fly-y)) scale(0.5) rotate(var(--fly-r));opacity:0}
+  60%{transform:translate(0,0) scale(1.1) rotate(0deg);opacity:1}
+  100%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}
+}
+.card-flying{animation:cardFlyToCenter .4s cubic-bezier(.175,.885,.32,1.275)}
+
+/* ============ FEATURE: Quick Score Summary ⚡ ============ */
+#quick-score{position:fixed;bottom:8px;right:8px;padding:6px 12px;border-radius:12px;
+  font-size:11px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.6);z-index:40;display:none;backdrop-filter:blur(8px)}
+#quick-score.show{display:flex;gap:12px}
 </style>
 </head>
 <body>
@@ -2191,6 +2205,7 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
     </div>
     <div id="overlay"></div>
     <div id="trick-log" onclick="event.stopPropagation()"></div>
+    <div id="quick-score"><span id="qs-ns">NS: 0</span><span id="qs-ew">EW: 0</span></div>
     <div id="ai-features-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a2e;border:2px solid #00d4ff;border-radius:16px;padding:24px;z-index:1001;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;color:#e0e0e0;box-shadow:0 8px 32px rgba(0,212,255,.3)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3 style="margin:0;color:#00d4ff">🧠 AI 智能分析</h3>
@@ -5150,6 +5165,7 @@ function playCard(pos,card){
   playSound('card');
   try{playCardSound()}catch(e){}
   trackPlayedCard(card);
+  try{trackPlayedCardEnhanced(card)}catch(e){}
   if(G.defenseMode&&pos==='S'){
     try{showDefenseFeedback(card)}catch(e){}
   }
@@ -5368,6 +5384,7 @@ function resolveTrick(){
   try{updateEvalBar()}catch(e){}
   // Update trick progress ring
   try{updateTrickRing()}catch(e){}
+  try{updateQuickScore()}catch(e){}
   // AI Commentary
   try{
     let comment='';
@@ -5407,6 +5424,7 @@ function finishPlay(){
   try{hideEvalBar()}catch(e){}
   try{hideHandGoal();clearGameCardHighlights()}catch(e){}
   try{hideSmartHint()}catch(e){}
+  try{document.getElementById('quick-score').classList.remove('show')}catch(e){}
   G.phase='done';
   hideDummy();
   renderHands();
@@ -5778,8 +5796,69 @@ function loadSettings(){
 
 // ============ AI DIFFICULTY: track played cards ============
 let playedCards=[];
+var playedCardsTracker={};
 function trackPlayedCard(card){playedCards.push(cid(card))}
-function resetPlayedCards(){playedCards=[]}
+function resetPlayedCards(){playedCards=[];playedCardsTracker={}}
+
+// ============ FEATURE: Smart Card Sorting 🃏 ============
+function smartSortHand(hand){
+  if(!hand)return[];
+  let order={'♠':0,'♥':1,'♦':2,'♣':3};
+  return hand.slice().sort((a,b)=>{
+    if(order[a.suit]!==order[b.suit])return order[a.suit]-order[b.suit];
+    return RV[b.rank]-RV[a.rank];
+  });
+}
+
+// ============ FEATURE: Opponent Card Counter 🔢 ============
+function trackPlayedCardEnhanced(card){
+  if(!playedCardsTracker[card.suit])playedCardsTracker[card.suit]={};
+  playedCardsTracker[card.suit][card.rank]=true;
+}
+function getRemainingCards(suit){
+  let all=['A','K','Q','J','10','9','8','7','6','5','4','3','2'];
+  let played=playedCardsTracker[suit]||{};
+  return all.filter(r=>!played[r]);
+}
+function showCardCounter(){
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">🔢 记牌器</h3>';
+  S4.forEach(s=>{
+    let remaining=getRemainingCards(s);
+    let color=SC[s]==='red'?'#ef9a9a':'#bbb';
+    html+='<div style="margin-bottom:8px"><span style="font-size:18px;color:'+color+';margin-right:8px">'+s+'</span>';
+    html+='<span style="font-size:13px;color:rgba(255,255,255,.6)">'+(remaining.length?remaining.join(' '):'全部已出')+'</span></div>';
+  });
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// ============ FEATURE: Score History Chart 📈 ============
+function showScoreChart(){
+  if(!G.scoreHistory||G.scoreHistory.length===0)return;
+  let html='<div style="padding:16px"><h3 style="color:#ffd54f;margin-bottom:12px">📈 得分趋势</h3>';
+  let maxScore=Math.max(...G.scoreHistory.map(h=>Math.abs(h.score)),1);
+  html+='<div style="display:flex;align-items:end;gap:4px;height:120px">';
+  G.scoreHistory.forEach(h=>{
+    let pct=Math.abs(h.score)/maxScore*100;
+    let color=h.score>=0?'#4caf50':'#ef5350';
+    html+='<div style="flex:1;background:'+color+';height:'+Math.max(4,pct)+'%;border-radius:4px 4px 0 0;min-width:8px" title="'+h.contract+' '+(h.score>=0?'+':'')+h.score+'"></div>';
+  });
+  html+='</div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);margin-top:4px"><span>第1副</span><span>第'+G.scoreHistory.length+'副</span></div>';
+  html+='</div>';
+  document.getElementById('trick-log').innerHTML=html;
+  document.getElementById('trick-log').classList.add('show');
+}
+
+// ============ FEATURE: Quick Score Summary ⚡ ============
+function updateQuickScore(){
+  let el=document.getElementById('quick-score');
+  if(!el||G.phase!=='play')return;
+  document.getElementById('qs-ns').textContent='NS: '+G.totalNS;
+  document.getElementById('qs-ew').textContent='EW: '+G.totalEW;
+  el.classList.add('show');
+}
 
 // ============ SPEED-AWARE DELAY HELPER ============
 function spd(ms){return ms*(G?G.speed:1)}
