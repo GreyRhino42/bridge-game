@@ -2130,6 +2130,24 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
   font-size:11px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);
   color:rgba(255,255,255,.6);z-index:40;display:none;backdrop-filter:blur(8px)}
 #quick-score.show{display:flex;gap:12px}
+/* ============ FEATURE: Floating Suit Symbols (花色动画) ============ */
+.floating-suits{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;opacity:.03}
+.floating-suit{position:absolute;font-size:48px;animation:floatSuit 20s linear infinite}
+@keyframes floatSuit{
+  0%{transform:translateY(100vh) rotate(0deg)}
+  100%{transform:translateY(-100px) rotate(360deg)}
+}
+/* ============ FEATURE: Micro-interactions (微交互) ============ */
+@keyframes ripple{from{transform:scale(0);opacity:.5}to{transform:scale(4);opacity:0}}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.2);animation:ripple .6s ease-out;pointer-events:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.shake{animation:shake .3s ease}
+@keyframes pop{0%{transform:scale(.8)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.pop{animation:pop .3s ease}
+/* ============ FEATURE: Brand Watermark (品牌标识) ============ */
+.brand-watermark{position:fixed;bottom:4px;left:50%;transform:translateX(-50%);
+  font-size:9px;color:rgba(255,255,255,.08);letter-spacing:2px;z-index:1;
+  pointer-events:none;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -2989,6 +3007,9 @@ function init(){
   updateVuln();
   renderScoreHistory();
   try{checkComebackBonus()}catch(e){}
+  // Final polish: floating suits + adaptive UI
+  try{initFloatingSuits()}catch(e){}
+  try{adaptUI()}catch(e){}
 }
 
 // ---- Vulnerability & Score History ----
@@ -12031,10 +12052,20 @@ function playTone(freq,duration,type){
     osc.start(now);osc.stop(now+duration);
   }catch(e){}
 }
-function playWinSound(){playTone(523,0.15);setTimeout(function(){playTone(659,0.15)},150);setTimeout(function(){playTone(784,0.3)},300)}
-function playLoseSound(){playTone(330,0.2);setTimeout(function(){playTone(262,0.3)},200)}
-function playCardSound(){playTone(800+Math.random()*200,0.05,'triangle')}
-function playTrickSound(){playTone(440,0.1);setTimeout(function(){playTone(550,0.15)},100)}
+/* ============ FEATURE: Enhanced Sound Effects Library (音效库) ============ */
+function playChord(notes,duration){
+  notes.forEach(function(freq,i){
+    setTimeout(function(){playTone(freq,duration,'sine')},i*50);
+  });
+}
+function playVictoryChord(){playChord([523,659,784,1047],0.4)}
+function playDefeatChord(){playChord([330,294,262],0.5)}
+function playCardFlip(){playTone(1200,0.03,'triangle')}
+function playTrickWin(){playChord([440,554,659],0.2)}
+function playWinSound(){playVictoryChord()}
+function playLoseSound(){playDefeatChord()}
+function playCardSound(){playCardFlip()}
+function playTrickSound(){playTrickWin()}
 function animateScore(element,targetValue,duration){
   if(!element)return;
   let start=0;let startTime=null;
@@ -13790,6 +13821,54 @@ function showAboutPage(){
   document.getElementById('trick-log').classList.add('show');
 }
 
+/* ============ FEATURE: Floating Suit Symbols (花色动画) ============ */
+function initFloatingSuits(){
+  let container=document.createElement('div');
+  container.className='floating-suits';
+  let suits=['♠','♥','♦','♣'];
+  for(let i=0;i<8;i++){
+    let s=document.createElement('div');
+    s.className='floating-suit';
+    s.textContent=suits[i%4];
+    s.style.left=Math.random()*100+'%';
+    s.style.animationDelay=Math.random()*20+'s';
+    s.style.animationDuration=(15+Math.random()*15)+'s';
+    container.appendChild(s);
+  }
+  document.body.insertBefore(container,document.body.firstChild);
+}
+
+/* ============ FEATURE: Adaptive UI (自适应界面) ============ */
+function adaptUI(){
+  let stats=JSON.parse(localStorage.getItem('bridge-play-stats')||'{}');
+  let total=stats.totalHands||0;
+  // Hide tutorial elements for experienced players
+  if(total>=10){
+    document.querySelectorAll('.tutorial-tip').forEach(function(t){t.remove()});
+  }
+  // Show advanced tools for experienced players
+  if(total>=50){
+    var advancedBtns=['btn-suit-combo','btn-defense-lessons','btn-dict','btn-conv-card'];
+    advancedBtns.forEach(function(id){
+      let el=document.getElementById(id);
+      if(el)el.style.display='';
+    });
+  }
+}
+
+/* ============ FEATURE: Micro-interactions (微交互) ============ */
+function addRipple(el,e){
+  let r=document.createElement('div');r.className='ripple';
+  let rect=el.getBoundingClientRect();
+  r.style.left=(e.clientX-rect.left)+'px';r.style.top=(e.clientY-rect.top)+'px';
+  r.style.width=r.style.height='20px';
+  el.style.position='relative';el.style.overflow='hidden';
+  el.appendChild(r);setTimeout(function(){r.remove()},600);
+}
+document.addEventListener('click',function(e){
+  let btn=e.target.closest('button');
+  if(btn)addRipple(btn,e);
+});
 </script>
 <div id="daily-quote" style="text-align:center;font-size:12px;color:rgba(255,255,255,.3);padding:4px 0"></div>
 <div style="text-align:center;font-size:10px;color:rgba(255,255,255,.15);padding:4px">v2.0.0 · 小桥学牌 · 世界最好的桥牌教学软件</div>
@@ -13798,5 +13877,6 @@ function showAboutPage(){
   <button onclick="showProModal()">立即升级</button>
   <span class="dismiss" onclick="dismissProBanner()">✕</span>
 </div>
+<div class="brand-watermark">♠♥♦♣ XIAOQIAO BRIDGE ♣♦♥♠</div>
 </body>
 </html>
