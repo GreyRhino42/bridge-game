@@ -2244,6 +2244,789 @@ body.theme-midnight{--bg:#0a0a1a;--text:#e0e0ff;--card-bg:#1a1a3a;--accent:#7c4d
 body.in-game #status-main{display:none}
 body.in-game #status-game{display:block}
 body.in-game #hero-actions{display:none}
+
+/* =============================================================
+   MINECRAFT THEME OVERRIDE - Complete Art Style Redesign
+   ============================================================= */
+
+/* Global resets for Minecraft blocky style */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  transition: none !important;
+  animation-duration: 0s !important;
+  image-rendering: pixelated !important;
+}
+
+/* Body / Background - dark gray grid pattern */
+body {
+  background-color: #2C2C2C !important;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,0,0,.06) 15px, rgba(0,0,0,.06) 16px),
+    repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,0,0,.06) 15px, rgba(0,0,0,.06) 16px) !important;
+  font-family: 'Courier New', 'Consolas', monospace !important;
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  -webkit-font-smoothing: none !important;
+  image-rendering: pixelated !important;
+}
+
+/* All text elements get white + shadow */
+body, body *:not(.card):not(.card *):not(button):not(button *) {
+  color: #FFFFFF;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  font-family: 'Courier New', 'Consolas', monospace !important;
+}
+
+span, p, div, label, td, th {
+  color: #FFFFFF;
+}
+
+/* ============ MINECRAFT 3D BEVELED BUTTONS ============ */
+button,
+.hero-btn,
+.tool-btn,
+.drawer-item,
+.sc-tab,
+.sc-df,
+.sc-opt,
+.story-btn,
+#btn-go,
+#btn-just-play,
+#bid-btns button,
+#score-history-panel .sh-header button {
+  background-color: #7B7B7B !important;
+  color: #FFFFFF !important;
+  font-family: 'Courier New', 'Consolas', monospace !important;
+  font-weight: 700 !important;
+  border: 3px solid !important;
+  border-color: #FFFFFF #373737 #373737 #FFFFFF !important;
+  box-shadow: inset 1px 1px 0px #AAAAAA, inset -1px -1px 0px #555555 !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  cursor: pointer !important;
+  image-rendering: pixelated !important;
+  border-radius: 0 !important;
+  padding: 8px 20px !important;
+  font-size: 14px !important;
+  letter-spacing: 1px !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+button:hover,
+.hero-btn:hover,
+.tool-btn:hover,
+.drawer-item:hover,
+.sc-tab:hover,
+.sc-df:hover,
+.sc-opt:hover {
+  background-color: #8B8BA7 !important;
+  border-color: #FFFFA0 #373737 #373737 #FFFFA0 !important;
+  box-shadow: inset 1px 1px 0px #CCCC80, inset -1px -1px 0px #555555 !important;
+  transform: none !important;
+}
+
+button:active,
+.hero-btn:active,
+.tool-btn:active,
+.drawer-item:active,
+.sc-tab:active,
+.sc-df:active,
+.sc-opt:active {
+  border-color: #373737 #FFFFFF #FFFFFF #373737 !important;
+  box-shadow: inset -1px -1px 0px #AAAAAA, inset 1px 1px 0px #555555 !important;
+}
+
+/* Primary button (gold accent - start game, confirm) */
+.hero-btn.primary,
+#btn-go,
+#score-popup button,
+#bid-btns button:not(.bp):not(.bdbl):not(.rdbl) {
+  background: linear-gradient(to bottom, #FFFFA0, #FFAA00) !important;
+  color: #3F3F00 !important;
+  border-color: #FFFFA0 #555537 #555537 #FFFFA0 !important;
+  box-shadow: inset 1px 1px 0px rgba(255,255,255,.5), inset -1px -1px 0px #555537 !important;
+  text-shadow: 1px 1px 0px rgba(255,255,255,.3) !important;
+}
+
+.hero-btn.primary:hover,
+#btn-go:hover,
+#score-popup button:hover,
+#bid-btns button:not(.bp):not(.bdbl):not(.rdbl):hover {
+  background: linear-gradient(to bottom, #FFFFC0, #FFCC00) !important;
+  border-color: #FFFFC0 #555537 #555537 #FFFFC0 !important;
+  transform: none !important;
+}
+
+/* Pass / Gray buttons */
+#bid-btns button.bp {
+  background: linear-gradient(to bottom, #9E9E9E, #616161) !important;
+  color: #FFFFFF !important;
+  border-color: #9E9E9E #373737 #373737 #9E9E9E !important;
+}
+
+/* Double / Redouble buttons */
+#bid-btns button.bdbl {
+  background: linear-gradient(to bottom, #FFAA00, #E65100) !important;
+  color: #3F1F00 !important;
+  border-color: #FFAA00 #553300 #553300 #FFAA00 !important;
+}
+
+#bid-btns button.rdbl {
+  background: linear-gradient(to bottom, #FF5555, #B71C1C) !important;
+  color: #FFFFFF !important;
+  border-color: #FF5555 #550000 #550000 #FF5555 !important;
+}
+
+/* Secondary buttons */
+.hero-btn.secondary {
+  background-color: #7B7B7B !important;
+  border: 3px solid !important;
+  border-color: #FFFFFF #373737 #373737 #FFFFFF !important;
+  box-shadow: inset 1px 1px 0px #AAAAAA, inset -1px -1px 0px #555555 !important;
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  background-image: none !important;
+}
+
+/* Outline buttons */
+.hero-btn.outline {
+  background-color: #555555 !important;
+  border: 2px solid !important;
+  border-color: #8B8B8B #373737 #373737 #8B8B8B !important;
+  color: #AAAAAA !important;
+  text-shadow: 1px 1px 0px #3F3F3F !important;
+  background-image: none !important;
+}
+
+/* Tool buttons */
+.tool-btn {
+  background-color: #555555 !important;
+  border: 2px solid !important;
+  border-color: #AAAAAA #373737 #373737 #AAAAAA !important;
+  color: #FFFFFF !important;
+  text-shadow: 1px 1px 0px #3F3F3F !important;
+  font-size: 16px !important;
+  padding: 4px 8px !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: inset 1px 1px 0px #888888, inset -1px -1px 0px #333333 !important;
+}
+
+.tool-btn:hover {
+  background-color: #7B7B7B !important;
+  border-color: #FFFFA0 #373737 #373737 #FFFFA0 !important;
+  transform: none !important;
+}
+
+/* ============ CARDS AS INVENTORY SLOTS ============ */
+.card {
+  background-color: #8B8B8B !important;
+  border: 3px solid !important;
+  border-color: #373737 #FFFFFF #FFFFFF #373737 !important;
+  box-shadow: inset 1px 1px 0px #555555, 2px 2px 0px rgba(0,0,0,.5) !important;
+  border-radius: 0 !important;
+  color: #FFFFFF !important;
+  font-family: 'Courier New', monospace !important;
+  font-weight: 700 !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  image-rendering: pixelated !important;
+  background-image: none !important;
+}
+
+.card .r, .card .s {
+  color: #FFFFFF !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+}
+
+.card.red .r, .card.red .s {
+  color: #FF6666 !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+}
+
+.card.black .r, .card.black .s {
+  color: #FFFFFF !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+}
+
+.card.ok {
+  cursor: pointer !important;
+}
+
+.card.ok:hover {
+  background-color: #B8B8D8 !important;
+  border-color: #FFFFA0 #555555 #555555 #FFFFA0 !important;
+  box-shadow: inset 1px 1px 0px #CCCC80, 0 0 8px rgba(255,255,160,.4), 3px 3px 0px rgba(0,0,0,.5) !important;
+  transform: translateY(-12px) !important;
+  z-index: 20 !important;
+}
+
+.card.fd {
+  background: linear-gradient(to bottom, #373737, #1a1a2e, #373737) !important;
+  border-color: #555555 #222222 #222222 #555555 !important;
+  color: transparent !important;
+}
+
+.card.fd::before {
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,.04) 4px, rgba(255,255,255,.04) 5px),
+    repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(255,255,255,.04) 4px, rgba(255,255,255,.04) 5px) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+}
+
+.card.sm {
+  width: 32px !important;
+  height: 44px !important;
+}
+
+/* ============ PANELS - Gray beveled Minecraft style ============ */
+#bid-panel,
+#score-popup,
+#scenario-modal,
+#sc-detail-modal,
+#post-analysis,
+#settings-modal,
+#puzzle-panel,
+#conv-panel,
+#daily-panel,
+#tour-panel,
+#perf-panel,
+#endgame-panel {
+  background-color: #C6C6C6 !important;
+  border: 4px solid !important;
+  border-color: #FFFFFF #555555 #555555 #FFFFFF !important;
+  box-shadow: inset 2px 2px 0px #FFFFFF, inset -2px -2px 0px #555555, 8px 8px 0px rgba(0,0,0,.5) !important;
+  border-radius: 0 !important;
+  color: #404040 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-image: none !important;
+}
+
+#bid-panel h3,
+#score-popup h3,
+#scenario-modal h2,
+#sc-detail-modal h3,
+#post-analysis h3,
+.drawer-header h3 {
+  color: #404040 !important;
+  text-shadow: none !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+#bid-panel h3,
+#scenario-modal h2,
+#sc-detail-modal h3 {
+  color: #3F3F00 !important;
+  text-shadow: 1px 1px 0px rgba(255,255,255,.3) !important;
+}
+
+#bid-hist .bc,
+.sc-ctx-chip,
+.sc-info-tag,
+.tag {
+  background-color: #8B8B8B !important;
+  border: 2px solid !important;
+  border-color: #373737 #FFFFFF #FFFFFF #373737 !important;
+  color: #FFFFFF !important;
+  border-radius: 0 !important;
+  text-shadow: 1px 1px 0px #3F3F3F !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ============ INFO BAR - Minecraft Hotbar style ============ */
+#info-bar {
+  background: rgba(0, 0, 0, 0.75) !important;
+  border-bottom: 3px solid !important;
+  border-color: #555555 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#info-row1,
+#info-row2 {
+  background: transparent !important;
+  color: #FFFFFF !important;
+}
+
+#i-contract {
+  background-color: #555500 !important;
+  border: 2px solid !important;
+  border-color: #FFAA00 #555500 #555500 #FFAA00 !important;
+  color: #FFAA00 !important;
+  border-radius: 0 !important;
+  text-shadow: 1px 1px 0px #000000 !important;
+}
+
+/* ============ TABLE - Dark green grass ============ */
+#table {
+  background: #3A5F3A !important;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0,0,0,.04) 8px, rgba(0,0,0,.04) 9px),
+    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0,0,0,.04) 8px, rgba(0,0,0,.04) 9px) !important;
+  border: 4px solid !important;
+  border-color: #4A7F4A #2A4F2A #2A4F2A #4A7F4A !important;
+  box-shadow: inset 0 0 60px rgba(0,0,0,.4) !important;
+}
+
+#table::before {
+  opacity: 0.15 !important;
+}
+
+#table::after {
+  border: 2px solid rgba(218,165,32,.3) !important;
+  border-radius: 0 !important;
+  box-shadow: inset 0 0 20px rgba(0,0,0,.3) !important;
+}
+
+/* ============ STATUS BAR ============ */
+#status {
+  background: rgba(0, 0, 0, 0.8) !important;
+  border-top: 3px solid !important;
+  border-color: #555555 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  background-image: none !important;
+}
+
+/* ============ PLAYER LABELS ============ */
+.plabel {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 2px solid !important;
+  border-color: #555555 #AAAAAA #AAAAAA #555555 !important;
+  border-radius: 0 !important;
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #000000 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#lbl-N { color: #64B5F6 !important; }
+#lbl-S { color: #81C784 !important; }
+#lbl-E { color: #EF5350 !important; }
+#lbl-W { color: #FFB74D !important; }
+
+.plabel.active {
+  color: #FFAA00 !important;
+  text-shadow: 0 0 8px #FFAA00, 2px 2px 0px #000000 !important;
+  background: rgba(255, 170, 0, 0.2) !important;
+  border-color: #FFAA00 !important;
+}
+
+/* ============ HERO TITLE ============ */
+#hero-title {
+  font-family: 'Courier New', monospace !important;
+  color: #FFFFFF !important;
+  text-shadow: 3px 3px 0px #3F3F3F, -1px -1px 0px #555555 !important;
+}
+
+#hero-title span {
+  color: #FFAA00 !important;
+  text-shadow: 2px 2px 0px #3F2A00 !important;
+}
+
+#hero-subtitle {
+  color: #FFAA00 !important;
+  text-shadow: 2px 2px 0px #3F2A00 !important;
+}
+
+/* ============ DRAWER PANEL - Chest UI style ============ */
+#drawer-panel {
+  background-color: #C6C6C6 !important;
+  border-left: 4px solid !important;
+  border-color: #FFFFFF #555555 #555555 #FFFFFF !important;
+  color: #404040 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: -4px 0 0px #373737 !important;
+}
+
+.drawer-header {
+  border-bottom: 2px solid #555555 !important;
+}
+
+.drawer-header h3 {
+  color: #3F3F00 !important;
+}
+
+.drawer-header button {
+  background: none !important;
+  border: none !important;
+  color: #404040 !important;
+  box-shadow: none !important;
+}
+
+.drawer-item {
+  background: none !important;
+  border: none !important;
+  border-bottom: 1px solid #AAAAAA !important;
+  color: #404040 !important;
+  text-shadow: none !important;
+  font-family: 'Courier New', monospace !important;
+  padding: 10px 12px !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.drawer-item:hover {
+  background-color: #8B8BA7 !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.drawer-section-title {
+  color: #555555 !important;
+  text-shadow: none !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+}
+
+/* ============ SCORE POPUP ============ */
+#score-popup {
+  color: #404040 !important;
+}
+
+#score-popup hr {
+  border-color: #AAAAAA !important;
+}
+
+/* ============ OVERLAY ============ */
+#overlay,
+#scenario-overlay,
+#scenario-detail,
+#drawer-overlay {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ============ SCENARIO CARDS ============ */
+.sc-card {
+  background: #8B8B8B !important;
+  border: 3px solid !important;
+  border-color: #373737 #FFFFFF #FFFFFF #373737 !important;
+  border-radius: 0 !important;
+  color: #FFFFFF !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.sc-card:hover {
+  background: #9B9BB8 !important;
+  border-color: #FFFFA0 #555555 #555555 #FFFFA0 !important;
+  transform: none !important;
+  box-shadow: 3px 3px 0px rgba(0,0,0,.5) !important;
+}
+
+.sc-card-title {
+  color: #FFFFFF !important;
+}
+
+.sc-card-desc {
+  color: #CCCCCC !important;
+}
+
+.sc-card-diff {
+  color: #FFAA00 !important;
+}
+
+.sc-tab.active {
+  background-color: #555500 !important;
+  border-color: #FFAA00 !important;
+  color: #FFAA00 !important;
+}
+
+.sc-df.active {
+  background-color: #555500 !important;
+  border-color: #FFAA00 !important;
+  color: #FFAA00 !important;
+}
+
+.sc-opt.correct {
+  background: rgba(76,175,80,.3) !important;
+  border-color: #4CAF50 !important;
+  color: #81C784 !important;
+}
+
+.sc-opt.wrong {
+  background: rgba(244,67,54,.3) !important;
+  border-color: #F44336 !important;
+  color: #EF9A9A !important;
+}
+
+.sc-feedback {
+  border-radius: 0 !important;
+  border: 2px solid !important;
+}
+
+.sc-feedback.correct-fb {
+  background: rgba(76,175,80,.15) !important;
+  border-color: #4CAF50 !important;
+  color: #81C784 !important;
+}
+
+.sc-hand {
+  background: #555555 !important;
+  border: 3px solid !important;
+  border-color: #373737 #AAAAAA #AAAAAA #373737 !important;
+  border-radius: 0 !important;
+}
+
+.sc-hand-card {
+  background: #8B8B8B !important;
+  border: 2px solid !important;
+  border-color: #373737 #FFFFFF #FFFFFF #373737 !important;
+  border-radius: 0 !important;
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+  box-shadow: 2px 2px 0px rgba(0,0,0,.5) !important;
+}
+
+.sc-hand-card .r, .sc-hand-card .s {
+  color: #FFFFFF !important;
+}
+
+.sc-hand-card.red .r, .sc-hand-card.red .s {
+  color: #FF6666 !important;
+}
+
+.sc-hand-card.black .r, .sc-hand-card.black .s {
+  color: #FFFFFF !important;
+}
+
+/* ============ SCORE HISTORY PANEL ============ */
+#score-history-panel {
+  background: #C6C6C6 !important;
+  border-left: 4px solid !important;
+  border-color: #FFFFFF #555555 #555555 #FFFFFF !important;
+  color: #404040 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: -4px 0 0px #373737 !important;
+}
+
+#score-history-panel .sh-header {
+  border-bottom: 2px solid #555555 !important;
+}
+
+#score-history-panel .sh-header h3 {
+  color: #3F3F00 !important;
+  text-shadow: none !important;
+}
+
+#score-history-panel .sh-header button {
+  color: #404040 !important;
+  box-shadow: none !important;
+}
+
+#score-history-panel .sh-totals {
+  border-bottom: 2px solid #555555 !important;
+}
+
+.sh-total-box .label {
+  color: #555555 !important;
+  text-shadow: none !important;
+}
+
+.sh-total-box .value {
+  color: #404040 !important;
+  text-shadow: none !important;
+}
+
+.sh-total-box .value.ns-c {
+  color: #2E7D32 !important;
+}
+
+.sh-total-box .value.ew-c {
+  color: #C62828 !important;
+}
+
+#score-history-panel table {
+  color: #404040 !important;
+}
+
+#score-history-panel th {
+  color: #555555 !important;
+  border-bottom: 2px solid #555555 !important;
+  text-shadow: none !important;
+}
+
+#score-history-panel td {
+  color: #404040 !important;
+  border-bottom: 1px solid #AAAAAA !important;
+  text-shadow: none !important;
+}
+
+#score-history-panel tr:hover td {
+  background: #8B8BA7 !important;
+  color: #FFFFFF !important;
+}
+
+.td-ns { color: #2E7D32 !important; }
+.td-ew { color: #C62828 !important; }
+.td-made { color: #2E7D32 !important; }
+.td-down { color: #C62828 !important; }
+
+.sh-vul {
+  border-radius: 0 !important;
+  border: 1px solid !important;
+}
+
+.sh-vul.none { background: #8B8B8B !important; color: #AAAAAA !important; }
+.sh-vul.ns-v { background: #2E7D32 !important; color: #FFFFFF !important; }
+.sh-vul.ew-v { background: #C62828 !important; color: #FFFFFF !important; }
+.sh-vul.both-v { background: #555500 !important; color: #FFAA00 !important; }
+
+/* ============ TRICK SLOTS ============ */
+.ts {
+  transition: none !important;
+}
+
+#trick::before {
+  border-radius: 0 !important;
+  border: 2px dashed rgba(255,255,255,.2) !important;
+}
+
+/* ============ TOOLTIPS ============ */
+#info-row2 .tool-btn[title]:hover::after {
+  background-color: #100010 !important;
+  border: 2px solid !important;
+  border-color: #2D0050 #000000 #000000 #2D0050 !important;
+  padding: 4px 8px !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  text-shadow: 2px 2px 0px #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+/* ============ GUIDE TOOLTIPS ============ */
+.guide-tooltip {
+  background: #C6C6C6 !important;
+  border: 4px solid !important;
+  border-color: #FFFFFF #555555 #555555 #FFFFFF !important;
+  border-radius: 0 !important;
+  color: #404040 !important;
+  box-shadow: inset 1px 1px 0px #FFFFFF, inset -1px -1px 0px #555555, 6px 6px 0px rgba(0,0,0,.5) !important;
+}
+
+.guide-tooltip .tt-next,
+.guide-tooltip .tt-skip {
+  background-color: #7B7B7B !important;
+  border: 2px solid !important;
+  border-color: #FFFFFF #373737 #373737 #FFFFFF !important;
+  color: #FFFFFF !important;
+  border-radius: 0 !important;
+}
+
+.guide-progress {
+  background: #555500 !important;
+  border: 2px solid !important;
+  border-color: #FFAA00 #555500 #555500 #FFAA00 !important;
+  color: #FFAA00 !important;
+  border-radius: 0 !important;
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar { width: 12px !important; background: #555555 !important; }
+::-webkit-scrollbar-thumb { background: #8B8B8B !important; border: 2px solid #555555 !important; border-radius: 0 !important; }
+::-webkit-scrollbar-track { background: #373737 !important; }
+
+/* ============ BID HISTORY CHIPS ============ */
+.bc.pass { opacity: 0.5 !important; }
+.bc.bid-S { background: #1565C0 !important; color: #FFFFFF !important; border-color: #42A5F5 !important; }
+.bc.bid-N { background: #2E7D32 !important; color: #FFFFFF !important; border-color: #66BB6A !important; }
+.bc.bid-E { background: #C62828 !important; color: #FFFFFF !important; border-color: #EF5350 !important; }
+.bc.bid-W { background: #555500 !important; color: #FFAA00 !important; border-color: #FFAA00 !important; }
+.bc.dbl { background: #E65100 !important; color: #FFFFFF !important; border-color: #FF9800 !important; }
+.bc.rdbl { background: #B71C1C !important; color: #FFFFFF !important; border-color: #EF5350 !important; }
+
+/* ============ DUMMY HAND ============ */
+#dummy-label {
+  color: #FFAA00 !important;
+  text-shadow: 2px 2px 0px #3F2A00 !important;
+}
+
+/* ============ GAME STATUS ============ */
+#stxt-game {
+  color: #FFFFFF !important;
+  text-shadow: 2px 2px 0px #3F3F3F !important;
+}
+
+/* ============ DISABLE ALL SMOOTH ANIMATIONS ============ */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+@keyframes cardPlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes prBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes prShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ============ MINECRAFT LEVEL-UP GLOW ============ */
+@keyframes mc-level-up {
+  0% { text-shadow: 2px 2px 0px #3F3F3F; }
+  50% { text-shadow: 0 0 10px #80FF20, 0 0 20px #80FF20; }
+  100% { text-shadow: 2px 2px 0px #3F3F3F; }
+}
+
+/* ============ RESPONSIVE OVERRIDES ============ */
+@media(max-width:768px) {
+  button, .hero-btn, .tool-btn, .drawer-item {
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+  }
+  .card {
+    width: 40px !important;
+    height: 58px !important;
+  }
+  .card.sm {
+    width: 26px !important;
+    height: 38px !important;
+  }
+  #bid-panel {
+    min-width: auto !important;
+    width: 92vw !important;
+  }
+  #score-popup {
+    min-width: auto !important;
+    width: 88vw !important;
+  }
+}
 </style>
 </head>
 <body>
